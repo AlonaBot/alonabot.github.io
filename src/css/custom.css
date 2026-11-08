@@ -1,6 +1,6 @@
 /*
  * AlonaBot 文档站主题：纯白为底、墨色正文，浅蓝只用于链接、焦点和光环这类小面积点缀。
- * 暗色用中性的近黑色，不做偏蓝的底色。颜色全部经 Infima 变量注入。
+ * 暗色用中性的深灰，不做偏蓝的底色。颜色全部经 Infima 变量注入。
  */
 
 :root {
@@ -17,7 +17,6 @@
   --alona-line: #ececef;
   --alona-surface: #fafafb;
   --alona-halo: #7cc6f2;
-  --alona-bubble-bot: #f3f4f6;
 
   --ifm-background-color: #ffffff;
   --ifm-background-surface-color: #ffffff;
@@ -52,17 +51,16 @@ html[data-theme="dark"] {
   --ifm-color-primary-lightest: #d3ecfa;
 
   --alona-ink: #ececee;
-  --alona-muted: #9a9ca5;
-  --alona-line: #26272c;
-  --alona-surface: #17181b;
+  --alona-muted: #a0a2ab;
+  --alona-line: #34363d;
+  --alona-surface: #26282e;
   --alona-halo: #7cc6f2;
-  --alona-bubble-bot: #1f2024;
 
-  --ifm-background-color: #111214;
-  --ifm-background-surface-color: #111214;
-  --ifm-navbar-background-color: rgba(17, 18, 20, 0.92);
-  --ifm-footer-background-color: #111214;
-  --ifm-code-background: #1c1d21;
+  --ifm-background-color: #1e1f24;
+  --ifm-background-surface-color: #1e1f24;
+  --ifm-navbar-background-color: rgba(30, 31, 36, 0.92);
+  --ifm-footer-background-color: #1e1f24;
+  --ifm-code-background: #2a2c32;
   --docusaurus-highlighted-code-line-bg: rgba(124, 198, 242, 0.12);
 }
 

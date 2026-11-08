@@ -1,23 +1,13 @@
-// 首页：左侧是标题与入口，右侧把一段插件代码和它在聊天里的效果并排展示。
-import { useState, type ReactNode } from "react";
+// 首页：左侧是标题与入口，右侧上下排列一段插件代码和它在聊天里的效果。
+import type { ReactNode } from "react";
 import clsx from "clsx";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 
+import ChatDemo from "../components/ChatDemo";
+
 import styles from "./index.module.css";
-
-type Platform = {
-  id: string;
-  name: string;
-  chat: string;
-};
-
-// 示意用的平台与会话名；OneBot 11 Adapter 仍在实现中。
-const platforms: Platform[] = [
-  { id: "telegram", name: "Telegram", chat: "私聊 · @alona_demo_bot" },
-  { id: "onebot11", name: "OneBot 11", chat: "群聊 · 测试群" },
-];
 
 const features: { title: string; body: string }[] = [
   {
@@ -50,10 +40,10 @@ function CodeWindow(): ReactNode {
   return (
     <div className={styles.window}>
       <div className={styles.windowBar}>
-        <span className={styles.dots} aria-hidden="true">
-          <i />
-          <i />
-          <i />
+        <span className={styles.lights} aria-hidden="true">
+          <i className={styles.red} />
+          <i className={styles.yellow} />
+          <i className={styles.green} />
         </span>
         <span className={styles.fileName}>main.go</span>
       </div>
@@ -73,41 +63,6 @@ function CodeWindow(): ReactNode {
           {"\n    })\n}"}
         </code>
       </pre>
-    </div>
-  );
-}
-
-function ChatWindow(): ReactNode {
-  const [active, setActive] = useState(platforms[0]!);
-  return (
-    <div className={clsx(styles.window, styles.chat)}>
-      <div className={styles.tabs} role="tablist" aria-label="选择平台">
-        {platforms.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            role="tab"
-            aria-selected={p.id === active.id}
-            className={clsx(styles.tab, p.id === active.id && styles.tabActive)}
-            onClick={() => setActive(p)}
-          >
-            {p.name}
-          </button>
-        ))}
-      </div>
-      <div className={styles.chatMeta}>{active.chat}</div>
-      <div className={styles.messages} key={active.id}>
-        <div className={clsx(styles.row, styles.rowUser)}>
-          <span className={clsx(styles.bubble, styles.bubbleUser)}>/ping</span>
-        </div>
-        <div className={styles.row}>
-          <span className={styles.avatar} aria-hidden="true">
-            <span className={styles.halo} />
-          </span>
-          <span className={clsx(styles.bubble, styles.bubbleBot)}>pong</span>
-        </div>
-      </div>
-      <p className={styles.chatNote}>同一个插件，经不同的 Adapter 回复（示意）</p>
     </div>
   );
 }
@@ -141,7 +96,7 @@ export default function Home(): ReactNode {
         </div>
         <div className={styles.demo}>
           <CodeWindow />
-          <ChatWindow />
+          <ChatDemo />
         </div>
       </header>
       <main className="container">
