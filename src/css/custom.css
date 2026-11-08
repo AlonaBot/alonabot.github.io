@@ -1,0 +1,98 @@
+/*
+ * AlonaBot 文档站主题：亮色为晴空的天蓝与白，暗色为夜空的深蓝灰与冷白，樱粉只作点缀。
+ * 颜色全部经 Infima 变量注入，组件样式只引用这些变量。
+ */
+
+:root {
+  --ifm-color-primary: #1a9ae6;
+  --ifm-color-primary-dark: #1689cf;
+  --ifm-color-primary-darker: #1581c3;
+  --ifm-color-primary-darkest: #116aa0;
+  --ifm-color-primary-light: #3aa8ea;
+  --ifm-color-primary-lighter: #47aeeb;
+  --ifm-color-primary-lightest: #6ec0f0;
+
+  --alona-accent: #f08bb6;
+  --alona-accent-soft: #fde7f0;
+  --alona-cyan: #7fdde4;
+  --alona-sky-top: #d9f0ff;
+  --alona-sky-bottom: #f7fbff;
+  --alona-card-bg: #ffffff;
+  --alona-card-border: #d6ebf9;
+  --alona-halo: #ffd36e;
+
+  --ifm-background-color: #f7fbff;
+  --ifm-navbar-background-color: rgba(247, 251, 255, 0.86);
+  --ifm-footer-background-color: #eaf5fd;
+  --ifm-code-font-size: 92%;
+  --ifm-font-family-base: system-ui, -apple-system, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --ifm-heading-font-weight: 650;
+  --ifm-global-radius: 0.6rem;
+  --docusaurus-highlighted-code-line-bg: rgba(26, 154, 230, 0.12);
+}
+
+html[data-theme="dark"] {
+  --ifm-color-primary: #6cc4f7;
+  --ifm-color-primary-dark: #4bb6f5;
+  --ifm-color-primary-darker: #3aaff4;
+  --ifm-color-primary-darkest: #0c98ea;
+  --ifm-color-primary-light: #8dd2f9;
+  --ifm-color-primary-lighter: #9ed9fa;
+  --ifm-color-primary-lightest: #cfedfd;
+
+  --alona-accent: #f4a3c5;
+  --alona-accent-soft: rgba(244, 163, 197, 0.14);
+  --alona-cyan: #5cc8d2;
+  --alona-sky-top: #132238;
+  --alona-sky-bottom: #0e1726;
+  --alona-card-bg: #152132;
+  --alona-card-border: #22364f;
+  --alona-halo: #e9c46a;
+
+  --ifm-background-color: #0e1726;
+  --ifm-background-surface-color: #121d2e;
+  --ifm-navbar-background-color: rgba(14, 23, 38, 0.86);
+  --ifm-footer-background-color: #0b1320;
+  --docusaurus-highlighted-code-line-bg: rgba(108, 196, 247, 0.16);
+}
+
+.navbar {
+  backdrop-filter: saturate(160%) blur(10px);
+  box-shadow: 0 1px 0 var(--alona-card-border);
+}
+
+.footer--light {
+  border-top: 1px solid var(--alona-card-border);
+}
+
+/* 公告栏用樱粉提示，与主色区分。 */
+.theme-announcement-bar {
+  /* 公告栏的背景色以内联样式给出，这里需要 !important 才能随主题切换。 */
+  background: var(--alona-accent-soft) !important;
+  color: var(--ifm-font-color-base) !important;
+  border-bottom: 1px solid var(--alona-card-border);
+}
+
+.markdown h2 {
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--alona-card-border);
+}
+
+.markdown table {
+  display: table;
+  width: 100%;
+}
+
+.markdown blockquote {
+  border-left-color: var(--alona-cyan);
+}
+
+.menu__link--active:not(.menu__link--sublist) {
+  background: linear-gradient(90deg, rgba(26, 154, 230, 0.14), transparent);
+}
+
+.admonition-status,
+.alert--info {
+  --ifm-alert-border-color: var(--ifm-color-primary);
+}

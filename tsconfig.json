@@ -1,0 +1,8 @@
+{
+  // 只供编辑器与类型检查使用，构建由 Docusaurus 完成。
+  "extends": "@docusaurus/tsconfig",
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "exclude": [".docusaurus", "build"]
+}
