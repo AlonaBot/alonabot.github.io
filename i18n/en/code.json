@@ -3,49 +3,40 @@
     "message": "Process isolation"
   },
   "home.feature.isolation.body": {
-    "message": "One process per plugin"
+    "message": "Native Go subprocess · Crash isolation · Bounded restart"
   },
   "home.feature.replace.title": {
-    "message": "Swappable components"
+    "message": "Pluggable components"
   },
   "home.feature.replace.body": {
-    "message": "Adapters · Agent · WebUI"
+    "message": "Adapter · Agent · WebUI"
   },
   "home.feature.memory.title": {
-    "message": "Small footprint"
+    "message": "Low memory footprint"
   },
   "home.feature.memory.body": {
-    "message": "~7.5 MiB per plugin"
+    "message": "~7.5 MiB PSS per plugin · Link on demand"
   },
   "home.feature.platform.title": {
-    "message": "One plugin, every platform"
-  },
-  "home.feature.platform.body": {
     "message": "Unified event model"
   },
+  "home.feature.platform.body": {
+    "message": "Event · Actor · Target · Chain"
+  },
   "home.feature.rollback.title": {
-    "message": "Safe rollback"
+    "message": "Transactional updates"
   },
   "home.feature.rollback.body": {
-    "message": "Copy-first updates · Rollback"
+    "message": "Managed SQLite · Candidate copy · Atomic generation commit"
   },
   "home.feature.purego.title": {
-    "message": "Pure Go"
+    "message": "Pure Go build"
   },
   "home.feature.purego.body": {
-    "message": "Linux · Windows · macOS"
+    "message": "CGO_ENABLED=0 · linux / windows / darwin · amd64 / arm64"
   },
   "home.pageTitle": {
     "message": "Home"
-  },
-  "home.eyebrow": {
-    "message": "Chatbot framework for Go"
-  },
-  "home.title.line1": {
-    "message": "Write once."
-  },
-  "home.title.line2": {
-    "message": "Reply everywhere."
   },
   "home.cta.quickStart": {
     "message": "Quick start"
@@ -54,10 +45,10 @@
     "message": "Write a plugin"
   },
   "home.status": {
-    "message": "Early development"
+    "message": "In development"
   },
   "home.status.link": {
-    "message": "See status"
+    "message": "Implementation status"
   },
   "chat.bot": {
     "message": "bot"
@@ -447,5 +438,8 @@
   "theme.tags.tagsPageTitle": {
     "message": "Tags",
     "description": "The title of the tag list page"
+  },
+  "home.subtitle": {
+    "message": "Cross-platform · Multi-process · Chatbot framework for Go"
   }
 }

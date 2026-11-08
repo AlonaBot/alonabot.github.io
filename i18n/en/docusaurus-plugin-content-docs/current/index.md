@@ -10,31 +10,31 @@ AlonaBot is a lightweight, cross-platform chatbot framework in Go: one **Core** 
 
 | Component | Role |
 | --- | --- |
-| Plugin | Bot features, one process each |
-| Adapter | Connects a chat platform; official ones for Telegram and OneBot 11 |
-| Agent | Conversation, memory and tool calls (tools need user confirmation) |
-| WebUI | Admin interface, static files only |
+| Plugin | Business logic; one native Go subprocess each |
+| Adapter | Platform integration and event normalization; official Telegram and OneBot 11 |
+| Agent | Conversation loop, memory, tool calls (user-confirmed) |
+| WebUI | Admin interface; static component package |
 
-Components never talk to each other directly; everything goes through Core. Core handles routing, permissions, sending, plugin collaboration, scheduling, HTTP, configuration and installation.
+Components never communicate directly; all traffic goes through Core. Core owns event routing, permissions, message sending, the Service Broker, the Event Bus, scheduling, the public HTTP entry, configuration and secrets, and install generations.
 
 :::warning Early development
 
-These docs cover **0.1-beta**. Much is not implemented yet, and every page states its current status. When they disagree with the [specification](https://github.com/AlonaBot/AlonaBot/blob/main/spec/README.md), the specification wins.
+These docs cover **0.1-beta**. Most capabilities are not implemented yet; each page states its implementation status. When they disagree with the [specification](https://github.com/AlonaBot/AlonaBot/blob/main/spec/README.md), the specification wins.
 
 :::
 
-## Principles
+## Design principles
 
-- **Light**: about 7.5 MiB per plugin; link only what you use.
-- **Pleasant**: a plugin is a plain Go program; wrong signatures fail at compile time.
-- **Minimal config**: works out of the box.
-- **Evidence-based**: done means tested and run on the target platform; cross-compiling alone does not count.
+- **Low memory footprint**: ~7.5 MiB PSS per plugin (linux/amd64), linked on demand.
+- **Compile-time checks**: a mismatched hook signature fails to compile at the `sdk.Run` call.
+- **Minimal configuration**: usable with defaults.
+- **Evidence-based acceptance**: integration tests and target-platform runs; cross-compilation does not count.
 
 ## Scope of 0.1
 
-Commands and events, multi-turn conversations, service calls and broadcasts, schedules, configuration and databases, plugin HTTP, admin CLI, component install and update, English and Simplified Chinese text. Install via release archive, `install.sh` or `docker compose`, or embed it as a Go library and test plugins with `go test`.
+Command / text-match / event routing, multi-turn waits, Service calls and the Event Bus, scheduling, configuration and managed databases, plugin HTTP routes, admin CLI, component install and update, en / zh-CN text. Distribution: release archive, `install.sh` (systemd / launchd), `docker compose`; plus library mode and `go test` integration tests via `plugintest`.
 
-See [Status](guide/status.md) for what works today.
+Implementation status: [Status](guide/status.md).
 
 ## Next
 

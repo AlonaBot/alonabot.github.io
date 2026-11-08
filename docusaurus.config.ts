@@ -94,8 +94,8 @@ const config: Config = {
     announcementBar: {
       id: "early-development",
       content: isEnglish
-        ? "Early development · APIs may change"
-        : "早期开发中 · 接口可能变动",
+        ? "0.1-beta · API unstable"
+        : "0.1-beta · API 不稳定",
       isCloseable: true,
     },
     navbar: {

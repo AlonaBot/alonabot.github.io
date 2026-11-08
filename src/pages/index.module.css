@@ -32,9 +32,7 @@
 }
 
 .lead {
-  max-width: 32rem;
-  font-size: 1.1rem;
-  line-height: 1.75;
+  font-size: 1.15rem;
   color: var(--alona-muted);
 }
 

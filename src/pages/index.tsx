@@ -14,27 +14,27 @@ import styles from "./index.module.css";
 const features: { title: string; body: string }[] = [
   {
     title: translate({ id: "home.feature.isolation.title", message: "进程隔离" }),
-    body: translate({ id: "home.feature.isolation.body", message: "一插件一进程" }),
+    body: translate({ id: "home.feature.isolation.body", message: "Native Go 子进程 · 崩溃隔离 · 有限重启" }),
   },
   {
-    title: translate({ id: "home.feature.replace.title", message: "组件可替换" }),
-    body: translate({ id: "home.feature.replace.body", message: "适配器 · Agent · WebUI" }),
+    title: translate({ id: "home.feature.replace.title", message: "可替换组件" }),
+    body: translate({ id: "home.feature.replace.body", message: "Adapter · Agent · WebUI" }),
   },
   {
-    title: translate({ id: "home.feature.memory.title", message: "省内存" }),
-    body: translate({ id: "home.feature.memory.body", message: "约 7.5 MiB / 插件" }),
+    title: translate({ id: "home.feature.memory.title", message: "低内存占用" }),
+    body: translate({ id: "home.feature.memory.body", message: "单插件约 7.5 MiB PSS · 按需链接" }),
   },
   {
-    title: translate({ id: "home.feature.platform.title", message: "一份代码，多个平台" }),
-    body: translate({ id: "home.feature.platform.body", message: "统一事件模型" }),
+    title: translate({ id: "home.feature.platform.title", message: "统一事件模型" }),
+    body: translate({ id: "home.feature.platform.body", message: "Event · Actor · Target · Chain" }),
   },
   {
-    title: translate({ id: "home.feature.rollback.title", message: "失败可回退" }),
-    body: translate({ id: "home.feature.rollback.body", message: "副本更新 · 自动回滚" }),
+    title: translate({ id: "home.feature.rollback.title", message: "事务化更新" }),
+    body: translate({ id: "home.feature.rollback.body", message: "受管 SQLite · 候选副本 · 代次原子提交" }),
   },
   {
-    title: translate({ id: "home.feature.purego.title", message: "纯 Go" }),
-    body: translate({ id: "home.feature.purego.body", message: "Linux · Windows · macOS" }),
+    title: translate({ id: "home.feature.purego.title", message: "纯 Go 构建" }),
+    body: translate({ id: "home.feature.purego.body", message: "CGO_ENABLED=0 · linux / windows / darwin · amd64 / arm64" }),
   },
 ];
 
@@ -75,14 +75,11 @@ export default function Home(): ReactNode {
     <Layout title={translate({ id: "home.pageTitle", message: "首页" })} description={siteConfig.tagline}>
       <header className={clsx("container", styles.hero)}>
         <div className={styles.intro}>
-          <p className={styles.eyebrow}>
-            <Translate id="home.eyebrow">Go 聊天机器人框架</Translate> · 0.1-beta
+          <p className={styles.eyebrow}>0.1-beta</p>
+          <h1 className={styles.title}>AlonaBot</h1>
+          <p className={styles.lead}>
+            <Translate id="home.subtitle">跨平台 · 多进程 · Go 聊天机器人框架</Translate>
           </p>
-          <h1 className={styles.title}>
-            <Translate id="home.title.line1">一次编写</Translate>
-            <br />
-            <Translate id="home.title.line2">多平台回复</Translate>
-          </h1>
           <div className={styles.actions}>
             <Link className="button button--primary button--lg" to="/docs/guide/quick-start">
               <Translate id="home.cta.quickStart">快速开始</Translate>
@@ -92,9 +89,9 @@ export default function Home(): ReactNode {
             </Link>
           </div>
           <p className={styles.status}>
-            <Translate id="home.status">早期开发中</Translate> ·{" "}
+            <Translate id="home.status">实施中</Translate> ·{" "}
             <Link to="/docs/guide/status">
-              <Translate id="home.status.link">查看进度</Translate>
+              <Translate id="home.status.link">实现状态</Translate>
             </Link>
           </p>
         </div>

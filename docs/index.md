@@ -10,31 +10,31 @@ AlonaBot 是轻量级、跨平台的 Go 聊天机器人框架：一个 **Core**�
 
 | 组件 | 作用 |
 | --- | --- |
-| 插件 | 机器人功能，每个插件一个进程 |
-| 适配器 | 接入聊天平台，官方提供 Telegram、OneBot 11 |
-| Agent | 对话、记忆、工具调用（调用前需用户确认） |
-| WebUI | 管理界面，纯静态文件 |
+| 插件 | 业务逻辑，每个插件一个 Native Go 子进程 |
+| Adapter | 平台接入与事件标准化，官方提供 Telegram、OneBot 11 |
+| Agent | 对话循环、记忆、工具调用（需用户确认） |
+| WebUI | 管理界面，静态组件包 |
 
-组件之间不直接通信，一律经过 Core。Core 负责路由、权限、发送、插件协作、调度、HTTP、配置与安装。
+组件间无直接通信，均经 Core 中转。Core 负责事件路由、权限、消息发送、Service Broker、Event Bus、调度、公开 HTTP 入口、配置与 secret、安装代次。
 
 :::warning 早期开发中
 
-文档对应 **0.1-beta**，很多功能尚未实现，每页都标明了现状。与 [规格](https://github.com/AlonaBot/AlonaBot/blob/main/spec/README.md) 冲突时以规格为准。
+文档对应 **0.1-beta**，多数能力尚未实现，各页标注实现状态。与 [规格](https://github.com/AlonaBot/AlonaBot/blob/main/spec/README.md) 冲突时以规格为准。
 
 :::
 
-## 原则
+## 设计原则
 
-- **轻**：单个插件约 7.5 MiB，按需链接。
-- **顺手**：插件就是普通 Go 程序，签名写错编译期报错。
-- **少配置**：开箱即用。
-- **有证据**：以测试和目标平台运行记录为准，交叉编译不算。
+- **低内存占用**：单插件约 7.5 MiB PSS（linux/amd64），按需链接。
+- **编译期校验**：Hook 签名不符在 `sdk.Run` 调用处编译失败。
+- **最小配置**：缺省值开箱即用。
+- **证据驱动验收**：以集成测试与目标平台运行记录为准，交叉编译不计入。
 
 ## 0.1 范围
 
-命令与事件、多轮对话、服务调用与广播、定时任务、配置与数据库、插件 HTTP、管理 CLI、组件安装升级、中英文文案。支持发行包、`install.sh`、`docker compose` 安装，也可作为 Go 库嵌入，并用 `go test` 测试插件。
+命令 / 文本匹配 / 事件路由、多轮等待、Service 调用与 Event Bus、调度、配置与受管数据库、插件 HTTP 路由、管理 CLI、组件安装与更新、en / zh-CN 文案。分发形式：发行归档、`install.sh`（systemd / launchd）、`docker compose`；另支持库模式嵌入与基于 `plugintest` 的 `go test` 集成测试。
 
-已实现的部分见 [当前进度](guide/status.md)。
+实现状态见 [当前进度](guide/status.md)。
 
 ## 下一步
 
