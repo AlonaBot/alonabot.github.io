@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: Lifecycle
+title: Component Lifecycle
 description: The states a component process goes through and the hooks the SDK provides.
 ---
 

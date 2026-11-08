@@ -179,3 +179,11 @@ html[data-theme="dark"] .str {
   font-size: 0.9rem;
   color: var(--alona-muted);
 }
+
+.term {
+  white-space: nowrap;
+}
+
+.sep {
+  white-space: normal;
+}

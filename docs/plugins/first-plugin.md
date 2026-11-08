@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: 编写第一个插件
+title: 插件入门
 description: 用 sdk.Base 写一个能响应命令和事件的 Native Go 插件。
 ---
 

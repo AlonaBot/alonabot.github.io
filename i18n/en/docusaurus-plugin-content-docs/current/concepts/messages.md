@@ -1,6 +1,6 @@
 ---
 sidebar_position: 4
-title: Events and messages
+title: Event Model
 description: What Event, Actor, Target and message Chain mean.
 ---
 

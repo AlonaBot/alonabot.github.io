@@ -1,40 +1,4 @@
 {
-  "home.feature.isolation.title": {
-    "message": "Process isolation"
-  },
-  "home.feature.isolation.body": {
-    "message": "Native Go subprocess · Crash isolation · Bounded restart"
-  },
-  "home.feature.replace.title": {
-    "message": "Pluggable components"
-  },
-  "home.feature.replace.body": {
-    "message": "Adapter · Agent · WebUI"
-  },
-  "home.feature.memory.title": {
-    "message": "Low memory footprint"
-  },
-  "home.feature.memory.body": {
-    "message": "~7.5 MiB PSS per plugin · Link on demand"
-  },
-  "home.feature.platform.title": {
-    "message": "Unified event model"
-  },
-  "home.feature.platform.body": {
-    "message": "Event · Actor · Target · Chain"
-  },
-  "home.feature.rollback.title": {
-    "message": "Transactional updates"
-  },
-  "home.feature.rollback.body": {
-    "message": "Managed SQLite · Candidate copy · Atomic generation commit"
-  },
-  "home.feature.purego.title": {
-    "message": "Pure Go build"
-  },
-  "home.feature.purego.body": {
-    "message": "CGO_ENABLED=0 · linux / windows / darwin · amd64 / arm64"
-  },
   "home.pageTitle": {
     "message": "Home"
   },
@@ -42,7 +6,7 @@
     "message": "Quick start"
   },
   "home.cta.plugin": {
-    "message": "Write a plugin"
+    "message": "Plugin SDK"
   },
   "home.status": {
     "message": "In development"
@@ -441,5 +405,59 @@
   },
   "home.subtitle": {
     "message": "Cross-platform · Multi-process · Chatbot framework for Go"
+  },
+  "home.feature.isolation.title": {
+    "message": "Dependency isolation"
+  },
+  "home.feature.isolation.body": {
+    "message": "Separate process · Own go.mod · ~7.5 MiB PSS"
+  },
+  "home.feature.hotdeploy.title": {
+    "message": "Hot deploy"
+  },
+  "home.feature.hotdeploy.body": {
+    "message": "run --reload · Restarts changed components only · Keeps old build on failure"
+  },
+  "home.feature.rollback.title": {
+    "message": "Transactional updates"
+  },
+  "home.feature.rollback.body": {
+    "message": "Atomic generation commit · SQLite candidate copy · Rollback"
+  },
+  "home.feature.agent.title": {
+    "message": "Built-in Agent"
+  },
+  "home.feature.agent.body": {
+    "message": "Confirmed tool calls · MCP · Memory · llm.generate"
+  },
+  "home.feature.collab.title": {
+    "message": "Plugin collaboration"
+  },
+  "home.feature.collab.body": {
+    "message": "Service Broker · Event Bus · JSON Schema validation"
+  },
+  "home.feature.permission.title": {
+    "message": "Trusted permissions"
+  },
+  "home.feature.permission.body": {
+    "message": "Core-computed Actor permissions · Per-instance send grants · Secret references"
+  },
+  "home.feature.distribution.title": {
+    "message": "Signed distribution"
+  },
+  "home.feature.distribution.body": {
+    "message": "Ed25519 · Source-pinned updates · Component --replace"
+  },
+  "home.feature.sdk.title": {
+    "message": "Typed SDK"
+  },
+  "home.feature.sdk.body": {
+    "message": "Compile-time hook checks · Build-time codegen · Service Schema"
+  },
+  "home.feature.testing.title": {
+    "message": "Real-Core testing"
+  },
+  "home.feature.testing.body": {
+    "message": "plugintest · go test · Library mode"
   }
 }

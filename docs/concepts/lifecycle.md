@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: 生命周期
+title: 组件生命周期
 description: 组件进程从启动到停止经过的状态，以及 SDK 提供的 Hook。
 ---
 

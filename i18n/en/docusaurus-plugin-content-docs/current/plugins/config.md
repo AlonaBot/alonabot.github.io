@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: Configuration and secrets
+title: Config Schema and Secrets
 description: Declare plugin configuration in config_schema.json and read it at runtime.
 ---
 

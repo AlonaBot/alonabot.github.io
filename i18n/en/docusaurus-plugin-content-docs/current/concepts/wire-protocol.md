@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-title: Wire protocol
+title: Wire Protocol
 description: Frame format, transports and call semantics between Core and components.
 ---
 

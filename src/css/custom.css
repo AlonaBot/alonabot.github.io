@@ -146,3 +146,8 @@ html[data-theme="dark"] {
   --ifm-button-border-color: var(--alona-line);
   color: var(--alona-ink);
 }
+
+/* 概述页「核心优势」表：首列为短术语，不折行 */
+.advantages td:first-child {
+  white-space: nowrap;
+}

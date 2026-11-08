@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: 当前进度
+title: 实现状态
 description: AlonaBot 0.1-beta 已实现与尚未实现的能力。
 ---
 

@@ -108,10 +108,10 @@ const config: Config = {
         height: 32,
       },
       items: [
-        { type: "docSidebar", sidebarId: "guide", position: "left", label: "指南" },
-        { type: "docSidebar", sidebarId: "concepts", position: "left", label: "概念" },
-        { type: "docSidebar", sidebarId: "plugins", position: "left", label: "插件开发" },
-        { type: "docSidebar", sidebarId: "adapters", position: "left", label: "适配器" },
+        { type: "docSidebar", sidebarId: "guide", position: "left", label: "入门" },
+        { type: "docSidebar", sidebarId: "concepts", position: "left", label: "核心概念" },
+        { type: "docSidebar", sidebarId: "plugins", position: "left", label: "插件 SDK" },
+        { type: "docSidebar", sidebarId: "adapters", position: "left", label: "Adapter" },
         { type: "docsVersionDropdown", position: "right" },
         { type: "localeDropdown", position: "right" },
         { href: repoUrl, label: "GitHub", position: "right" },
@@ -123,25 +123,25 @@ const config: Config = {
         {
           title: "文档",
           items: [
-            { label: "介绍", to: "/docs/" },
+            { label: "概述", to: "/docs/" },
             { label: "快速开始", to: "/docs/guide/quick-start" },
-            { label: "插件开发", to: "/docs/plugins/first-plugin" },
+            { label: "插件 SDK", to: "/docs/plugins/first-plugin" },
           ],
         },
         {
           title: "规格",
           items: [
-            { label: "实施规格", href: `${repoUrl}/blob/main/spec/README.md` },
-            { label: "架构地图", href: `${repoUrl}/blob/main/ARCHITECTURE.md` },
-            { label: "决策记录", href: `${repoUrl}/blob/main/spec/adr/README.md` },
+            { label: "CONTRACTS", href: `${repoUrl}/blob/main/spec/CONTRACTS-v0.1.md` },
+            { label: "ARCHITECTURE", href: `${repoUrl}/blob/main/ARCHITECTURE.md` },
+            { label: "ADR", href: `${repoUrl}/blob/main/spec/adr/README.md` },
           ],
         },
         {
-          title: "参与",
+          title: "社区",
           items: [
             { label: "GitHub", href: repoUrl },
-            { label: "贡献流程", href: `${repoUrl}/blob/main/CONTRIBUTING.md` },
-            { label: "文档源码", href: docsRepoUrl },
+            { label: "CONTRIBUTING", href: `${repoUrl}/blob/main/CONTRIBUTING.md` },
+            { label: "文档仓库", href: docsRepoUrl },
           ],
         },
       ],

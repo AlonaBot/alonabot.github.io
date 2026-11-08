@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: Your first plugin
+title: Plugin Basics
 description: Write a native Go plugin that answers commands and events with sdk.Base.
 ---
 

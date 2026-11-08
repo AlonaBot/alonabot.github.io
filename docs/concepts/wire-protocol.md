@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-title: 线协议
+title: Wire 协议
 description: Core 与组件之间的帧格式、传输方式与调用语义。
 ---
 

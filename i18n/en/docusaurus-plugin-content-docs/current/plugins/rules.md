@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-title: Plugin rules
+title: Plugin Guidelines
 description: Rules plugins must follow for dependencies, storage, logging, lifecycle and collaboration.
 ---
 

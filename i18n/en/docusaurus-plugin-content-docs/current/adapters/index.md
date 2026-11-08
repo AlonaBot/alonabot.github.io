@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: Overview
+title: Adapter Overview
 description: What an adapter does in AlonaBot and where the official adapters stand.
 ---
 

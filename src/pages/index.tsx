@@ -13,28 +13,40 @@ import styles from "./index.module.css";
 // 首页特性：标题与一句说明，文案经 i18n 翻译。
 const features: { title: string; body: string }[] = [
   {
-    title: translate({ id: "home.feature.isolation.title", message: "进程隔离" }),
-    body: translate({ id: "home.feature.isolation.body", message: "Native Go 子进程 · 崩溃隔离 · 有限重启" }),
+    title: translate({ id: "home.feature.isolation.title", message: "依赖隔离" }),
+    body: translate({ id: "home.feature.isolation.body", message: "独立进程 · 独立 go.mod · ~7.5 MiB PSS" }),
   },
   {
-    title: translate({ id: "home.feature.replace.title", message: "可替换组件" }),
-    body: translate({ id: "home.feature.replace.body", message: "Adapter · Agent · WebUI" }),
-  },
-  {
-    title: translate({ id: "home.feature.memory.title", message: "低内存占用" }),
-    body: translate({ id: "home.feature.memory.body", message: "单插件约 7.5 MiB PSS · 按需链接" }),
-  },
-  {
-    title: translate({ id: "home.feature.platform.title", message: "统一事件模型" }),
-    body: translate({ id: "home.feature.platform.body", message: "Event · Actor · Target · Chain" }),
+    title: translate({ id: "home.feature.hotdeploy.title", message: "热部署" }),
+    body: translate({ id: "home.feature.hotdeploy.body", message: "run --reload · 仅重启变更组件 · 编译失败保留旧版" }),
   },
   {
     title: translate({ id: "home.feature.rollback.title", message: "事务化更新" }),
-    body: translate({ id: "home.feature.rollback.body", message: "受管 SQLite · 候选副本 · 代次原子提交" }),
+    body: translate({ id: "home.feature.rollback.body", message: "代次原子提交 · SQLite 候选副本 · 失败回滚" }),
   },
   {
-    title: translate({ id: "home.feature.purego.title", message: "纯 Go 构建" }),
-    body: translate({ id: "home.feature.purego.body", message: "CGO_ENABLED=0 · linux / windows / darwin · amd64 / arm64" }),
+    title: translate({ id: "home.feature.agent.title", message: "内置 Agent" }),
+    body: translate({ id: "home.feature.agent.body", message: "工具调用确认 · MCP · 记忆 · llm.generate" }),
+  },
+  {
+    title: translate({ id: "home.feature.collab.title", message: "插件协作" }),
+    body: translate({ id: "home.feature.collab.body", message: "Service Broker · Event Bus · JSON Schema 校验" }),
+  },
+  {
+    title: translate({ id: "home.feature.permission.title", message: "可信权限" }),
+    body: translate({ id: "home.feature.permission.body", message: "Core 计算 Actor 权限 · 实例发信许可 · Secret 引用" }),
+  },
+  {
+    title: translate({ id: "home.feature.distribution.title", message: "签名分发" }),
+    body: translate({ id: "home.feature.distribution.body", message: "Ed25519 · 来源锁定更新 · 组件 --replace" }),
+  },
+  {
+    title: translate({ id: "home.feature.sdk.title", message: "类型化 SDK" }),
+    body: translate({ id: "home.feature.sdk.body", message: "编译期 Hook 校验 · 构建期代码生成 · Service Schema" }),
+  },
+  {
+    title: translate({ id: "home.feature.testing.title", message: "真实 Core 测试" }),
+    body: translate({ id: "home.feature.testing.body", message: "plugintest · go test · 库模式" }),
   },
 ];
 
@@ -85,7 +97,7 @@ export default function Home(): ReactNode {
               <Translate id="home.cta.quickStart">快速开始</Translate>
             </Link>
             <Link className="button button--secondary button--lg" to="/docs/plugins/first-plugin">
-              <Translate id="home.cta.plugin">编写插件</Translate>
+              <Translate id="home.cta.plugin">插件 SDK</Translate>
             </Link>
           </div>
           <p className={styles.status}>
@@ -106,7 +118,14 @@ export default function Home(): ReactNode {
             <article key={f.title} className={styles.feature}>
               <span className={styles.index}>{String(i + 1).padStart(2, "0")}</span>
               <h2>{f.title}</h2>
-              <p>{f.body}</p>
+              <p>
+                {f.body.split(" · ").map((term, j) => (
+                  <span key={term} className={styles.term}>
+                    {j > 0 && <span className={styles.sep}> · </span>}
+                    {term}
+                  </span>
+                ))}
+              </p>
             </article>
           ))}
         </section>

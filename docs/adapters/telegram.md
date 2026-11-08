@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
 title: Telegram
-description: 官方 Telegram Adapter 的范围与当前进度。
+description: 官方 Telegram Adapter 的范围与实现状态。
 ---
 
 官方 Telegram Adapter 位于 `adapters/telegram/`，入口程序是 [alonabot-adapter-telegram](https://github.com/AlonaBot/AlonaBot/blob/main/adapters/telegram/cmd/alonabot-adapter-telegram/main.go)。

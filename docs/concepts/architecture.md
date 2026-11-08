@@ -54,6 +54,6 @@ AlonaBot 是一个 Go module（`github.com/AlonaBot/AlonaBot`），按职责分�
 
 ## 延伸阅读
 
-- [生命周期](lifecycle.md)
-- [线协议](wire-protocol.md)
+- [组件生命周期](lifecycle.md)
+- [Wire 协议](wire-protocol.md)
 - 规格：[DESIGN.md](https://github.com/AlonaBot/AlonaBot/blob/main/spec/DESIGN.md)、[CONTRACTS-v0.1.md](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md)

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 4
-title: 事件与消息
+title: 事件模型
 description: Event、Actor、Target 与消息 Chain 的含义。
 ---
 

@@ -56,5 +56,5 @@ http://localhost:7650/plugins/demo/...
 
 ## 下一步
 
-- 了解这个示例插件做了什么：[生命周期](../concepts/lifecycle.md)
-- 自己写一个：[编写第一个插件](../plugins/first-plugin.md)
+- 了解这个示例插件做了什么：[组件生命周期](../concepts/lifecycle.md)
+- 自己写一个：[插件入门](../plugins/first-plugin.md)

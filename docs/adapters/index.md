@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: 概览
+title: Adapter 概述
 description: Adapter 在 AlonaBot 中的职责，以及官方 Adapter 的进度。
 ---
 

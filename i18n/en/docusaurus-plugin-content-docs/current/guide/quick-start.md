@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: Quick start
+title: Quick Start
 description: Build AlonaBot from source and run an example plugin.
 ---
 
@@ -56,5 +56,5 @@ http://localhost:7650/plugins/demo/...
 
 ## Next
 
-- What the example does: [Lifecycle](../concepts/lifecycle.md)
-- Write your own: [Your first plugin](../plugins/first-plugin.md)
+- What the example does: [Component Lifecycle](../concepts/lifecycle.md)
+- Write your own: [Plugin Basics](../plugins/first-plugin.md)

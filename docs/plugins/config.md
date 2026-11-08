@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: 配置与 secret
+title: 配置 Schema 与 Secret
 description: 用 config_schema.json 声明插件配置，并在运行时读取。
 ---
 

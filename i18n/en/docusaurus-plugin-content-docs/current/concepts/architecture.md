@@ -54,6 +54,6 @@ A few hard rules: `sdk` never imports `internal/core`, `internal/core` never imp
 
 ## Further reading
 
-- [Lifecycle](lifecycle.md)
-- [Wire protocol](wire-protocol.md)
+- [Component Lifecycle](lifecycle.md)
+- [Wire Protocol](wire-protocol.md)
 - Specs: [DESIGN.md](https://github.com/AlonaBot/AlonaBot/blob/main/spec/DESIGN.md), [CONTRACTS-v0.1.md](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md)

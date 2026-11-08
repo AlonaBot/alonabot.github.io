@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: Status
+title: Implementation Status
 description: What AlonaBot 0.1-beta implements so far.
 ---
 
