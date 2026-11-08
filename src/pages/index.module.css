@@ -1,4 +1,5 @@
 .hero {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   gap: 3.5rem;
@@ -17,10 +18,25 @@
 }
 
 .eyebrow {
-  margin-bottom: 1rem;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-  color: var(--alona-muted);
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--alona-sky-line);
+  border-radius: 999px;
+  background: var(--alona-sky-soft);
+  font-size: 0.8rem;
+  color: var(--ifm-color-primary-darker);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--alona-pink);
 }
 
 .title {
@@ -52,8 +68,85 @@
 }
 
 .demo {
+  position: relative;
   display: grid;
   gap: 1rem;
+}
+
+.demo > :not(span) {
+  position: relative;
+  z-index: 1;
+}
+
+/* 演示区背后一圈大光环，略微倾斜，是首页唯一的大面积装饰。 */
+.bigHalo {
+  position: absolute;
+  z-index: 0;
+  top: -2.6rem;
+  left: 50%;
+  width: 118%;
+  height: 7rem;
+  border: 3px solid var(--alona-halo);
+  border-radius: 50%;
+  opacity: 0.55;
+  transform: translateX(-50%) rotate(-4deg);
+  pointer-events: none;
+}
+
+.spark {
+  position: absolute;
+  z-index: 2;
+  line-height: 1;
+  pointer-events: none;
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+
+.sparkA {
+  top: -2.2rem;
+  right: -0.6rem;
+  font-size: 1.3rem;
+  color: var(--alona-pink);
+}
+
+.sparkB {
+  top: 1.6rem;
+  left: -1.6rem;
+  font-size: 0.9rem;
+  color: var(--alona-halo);
+  animation-delay: 1.4s;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spark {
+    animation: none;
+  }
+}
+
+@media (max-width: 996px) {
+  .bigHalo {
+    width: 100%;
+  }
+
+  .sparkB {
+    left: 0.2rem;
+  }
+}
+
+/* 标题里的关键词：底部一道天蓝色的荧光笔。 */
+.mark {
+  background: linear-gradient(transparent 62%, var(--alona-mark) 62%, var(--alona-mark) 92%, transparent 92%);
 }
 
 .window {
@@ -168,7 +261,11 @@ html[data-theme="dark"] .str {
   margin-bottom: 0.75rem;
   font-family: var(--ifm-font-family-monospace);
   font-size: 0.8rem;
-  color: var(--alona-halo);
+  color: var(--ifm-color-primary);
+}
+
+.feature:hover .index {
+  color: var(--alona-pink);
 }
 
 .feature h2 {

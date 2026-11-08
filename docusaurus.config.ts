@@ -85,7 +85,7 @@ const config: Config = {
     announcementBar: {
       id: "early-development",
       content:
-        "AlonaBot 仍处于实施初期，接口与命令会随规格变化；各页面标注了当前已实现的范围。",
+        "AlonaBot 还在早期开发中，接口和命令可能会变。每一页都写了目前做到哪一步。",
       isCloseable: true,
     },
     navbar: {

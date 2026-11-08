@@ -11,28 +11,28 @@ import styles from "./index.module.css";
 
 const features: { title: string; body: string }[] = [
   {
-    title: "每个插件一个进程",
-    body: "插件是独立的 Native Go 子进程，只经 SDK 与 Core 通信。一个插件崩溃不影响其他插件，Core 按有限重启策略恢复它。",
+    title: "插件各跑各的",
+    body: "每个插件都是一个单独的 Go 程序。哪个插件出了问题，只影响它自己，Core 会把它重新拉起来。",
   },
   {
-    title: "组件都能替换",
-    body: "Adapter、Agent 与 WebUI 和插件一样可安装。官方提供 Telegram 与 OneBot 11 Adapter，社区组件可以直接替换它们。",
+    title: "官方组件也能换",
+    body: "Telegram 和 OneBot 11 适配器、Agent、管理界面都只是官方给的一种选择。社区有更合适的，直接换上就行。",
   },
   {
-    title: "常驻内存很小",
-    body: "只用 SDK 的插件进程实测约 7.5 MiB。SDK 按需拆包，不导入数据库包就不链接驱动。",
+    title: "占的内存很少",
+    body: "一个只用 SDK 的插件大约 7.5 MiB。用不到的库不会被编进去，没用数据库就不带数据库驱动。",
   },
   {
-    title: "一种线协议",
-    body: "长度前缀的 Protobuf Envelope，TCP loopback 与 stdio 编码相同，单帧上限 4 MiB。",
+    title: "换平台不用改代码",
+    body: "插件拿到的是统一格式的事件和消息，平台之间的差别交给适配器去处理。",
   },
   {
-    title: "数据有退路",
-    body: "业务数据放在 Core 托管的 SQLite 中，更新与重载使用候选副本，准备失败回到旧数据。",
+    title: "改坏了能退回去",
+    body: "插件的数据放在 Core 管理的 SQLite 里。更新插件或改配置时先在副本上试，失败了数据还是原来的样子。",
   },
   {
-    title: "五个目标平台",
-    body: "Linux、Windows 与 macOS 的 amd64/arm64。Core 以 CGO_ENABLED=0 纯 Go 构建；目前只在 darwin/arm64 上做过运行验证。",
+    title: "三大系统都能跑",
+    body: "Linux、Windows、macOS 的 amd64 和 arm64，纯 Go 构建，不需要 C 编译器。目前只在 Apple Silicon 的 Mac 上实际跑过。",
   },
 ];
 
@@ -77,10 +77,10 @@ export default function Home(): ReactNode {
           <h1 className={styles.title}>
             写一次插件，
             <br />
-            在每个平台上回复。
+            在<span className={styles.mark}>每个平台</span>上回复。
           </h1>
           <p className={styles.lead}>
-            AlonaBot 由一个轻量的 Core 和可替换的组件组成。插件是普通的 Go 程序，跑在自己的进程里。
+            用 Go 写聊天机器人。插件就是普通的 Go 程序，消息来自 Telegram 还是 QQ，交给 Core 和适配器去操心。
           </p>
           <div className={styles.actions}>
             <Link className="button button--primary button--lg" to="/docs/guide/quick-start">
@@ -91,10 +91,13 @@ export default function Home(): ReactNode {
             </Link>
           </div>
           <p className={styles.status}>
-            框架仍在实施初期，已实现的范围见 <Link to="/docs/guide/status">当前进度</Link>。
+            还在早期开发中，做到哪一步可以看 <Link to="/docs/guide/status">当前进度</Link>。
           </p>
         </div>
         <div className={styles.demo}>
+          <span className={styles.bigHalo} aria-hidden="true" />
+          <span className={clsx(styles.spark, styles.sparkA)} aria-hidden="true">✦</span>
+          <span className={clsx(styles.spark, styles.sparkB)} aria-hidden="true">✦</span>
           <CodeWindow />
           <ChatDemo />
         </div>
