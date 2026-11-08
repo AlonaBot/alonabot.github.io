@@ -23,7 +23,7 @@ npm run serve   # 预览 build/ 的结果
 | --- | --- |
 | `docs/` | 文档正文，按 `guide`、`concepts`、`plugins`、`adapters` 分组，侧边栏见 `sidebars.ts` |
 | `src/pages/` | 首页：标题与入口，旁边是一段插件代码和它在聊天中的效果 |
-| `src/css/custom.css` | 主题：纯白为底、墨色正文，天蓝与樱粉作为点缀（光环、主按钮、标题高亮、导航细线）；暗色为中性深灰 |
+| `src/css/custom.css` | 主题：纯白为底、墨色正文，浅蓝只用于链接、焦点与光环；暗色为中性近黑 |
 | `static/img/` | 占位 logo（亮/暗两版）、favicon 与分享卡片；正式 logo 确定后替换 |
 
 ## 版本

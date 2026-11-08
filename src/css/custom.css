@@ -1,5 +1,5 @@
 /*
- * AlonaBot 文档站主题：纯白为底、墨色正文；天蓝与樱粉作为主题记号，出现在光环、主按钮、标题高亮和导航细线上。
+ * AlonaBot 文档站主题：纯白为底、墨色正文，浅蓝只用于链接、焦点和光环这类小面积点缀。
  * 暗色用中性的深灰，不做偏蓝的底色。颜色全部经 Infima 变量注入。
  */
 
@@ -17,10 +17,6 @@
   --alona-line: #ececef;
   --alona-surface: #fafafb;
   --alona-halo: #7cc6f2;
-  --alona-pink: #f39bbf;
-  --alona-mark: #d4ecfb;
-  --alona-sky-soft: #f1f8fe;
-  --alona-sky-line: #d3eafa;
 
   --ifm-background-color: #ffffff;
   --ifm-background-surface-color: #ffffff;
@@ -59,10 +55,6 @@ html[data-theme="dark"] {
   --alona-line: #34363d;
   --alona-surface: #26282e;
   --alona-halo: #7cc6f2;
-  --alona-pink: #f4a9c8;
-  --alona-mark: rgba(124, 198, 242, 0.18);
-  --alona-sky-soft: rgba(124, 198, 242, 0.1);
-  --alona-sky-line: rgba(124, 198, 242, 0.28);
 
   --ifm-background-color: #1e1f24;
   --ifm-background-surface-color: #1e1f24;
@@ -76,18 +68,6 @@ html[data-theme="dark"] {
   backdrop-filter: saturate(160%) blur(10px);
   box-shadow: none;
   border-bottom: 1px solid var(--alona-line);
-}
-
-/* 导航栏底部一条天蓝到樱粉的细线，是全站共同的主题记号。 */
-.navbar::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--alona-halo), var(--alona-pink) 70%, transparent);
-  opacity: 0.75;
 }
 
 .footer {
@@ -122,16 +102,6 @@ html[data-theme="dark"] {
   width: 100%;
 }
 
-.markdown h1:first-child::after {
-  content: "";
-  display: block;
-  width: 2.5rem;
-  height: 3px;
-  margin-top: 0.6rem;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--alona-halo), var(--alona-pink));
-}
-
 .markdown blockquote {
   border-left-color: var(--alona-halo);
 }
@@ -153,21 +123,16 @@ html[data-theme="dark"] {
 }
 
 .button.button--primary {
-  --ifm-button-background-color: var(--ifm-color-primary);
-  --ifm-button-border-color: var(--ifm-color-primary);
-  color: #ffffff;
-  box-shadow: 0 6px 16px color-mix(in srgb, var(--ifm-color-primary) 28%, transparent);
+  --ifm-button-background-color: var(--alona-ink);
+  --ifm-button-border-color: var(--alona-ink);
+  color: var(--ifm-background-color);
 }
 
 .button.button--primary:hover {
-  --ifm-button-background-color: var(--ifm-color-primary-dark);
-  --ifm-button-border-color: var(--ifm-color-primary-dark);
-  color: #ffffff;
-}
-
-html[data-theme="dark"] .button.button--primary,
-html[data-theme="dark"] .button.button--primary:hover {
-  color: #10202c;
+  --ifm-button-background-color: var(--alona-ink);
+  --ifm-button-border-color: var(--alona-ink);
+  color: var(--ifm-background-color);
+  opacity: 0.86;
 }
 
 .button.button--secondary {

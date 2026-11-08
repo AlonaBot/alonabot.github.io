@@ -77,7 +77,7 @@ export default function Home(): ReactNode {
           <h1 className={styles.title}>
             写一次插件，
             <br />
-            在<span className={styles.mark}>每个平台</span>上回复。
+            在每个平台上回复。
           </h1>
           <p className={styles.lead}>
             用 Go 写聊天机器人。插件就是普通的 Go 程序，消息来自 Telegram 还是 QQ，交给 Core 和适配器去操心。
@@ -95,9 +95,6 @@ export default function Home(): ReactNode {
           </p>
         </div>
         <div className={styles.demo}>
-          <span className={styles.bigHalo} aria-hidden="true" />
-          <span className={clsx(styles.spark, styles.sparkA)} aria-hidden="true">✦</span>
-          <span className={clsx(styles.spark, styles.sparkB)} aria-hidden="true">✦</span>
           <CodeWindow />
           <ChatDemo />
         </div>
