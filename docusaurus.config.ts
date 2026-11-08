@@ -10,9 +10,14 @@ const docsRepoUrl = "https://github.com/AlonaBot/docs";
 // 当前文档对应的框架版本；发布正式版时用 `npm run docusaurus docs:version <版本>` 存档。
 const currentVersion = "0.1-beta";
 
+// 构建时 Docusaurus 按语言分别加载配置；标语与公告不在翻译文件中，在这里按语言取值。
+const isEnglish = process.env.DOCUSAURUS_CURRENT_LOCALE === "en";
+
 const config: Config = {
   title: "AlonaBot",
-  tagline: "轻量级、跨平台的 Go 聊天机器人框架",
+  tagline: isEnglish
+    ? "A lightweight, cross-platform chatbot framework in Go"
+    : "轻量级、跨平台的 Go 聊天机器人框架",
   favicon: "img/favicon.svg",
 
   url: process.env.SITE_URL ?? "https://alonabot.github.io",
@@ -27,7 +32,11 @@ const config: Config = {
 
   i18n: {
     defaultLocale: "zh-Hans",
-    locales: ["zh-Hans"],
+    locales: ["zh-Hans", "en"],
+    localeConfigs: {
+      "zh-Hans": { label: "简体中文", htmlLang: "zh-Hans" },
+      en: { label: "English", htmlLang: "en" },
+    },
   },
 
   future: {
@@ -84,8 +93,9 @@ const config: Config = {
     },
     announcementBar: {
       id: "early-development",
-      content:
-        "AlonaBot 还在早期开发中，接口和命令可能会变。每一页都写了目前做到哪一步。",
+      content: isEnglish
+        ? "Early development: APIs may change. Each page shows its status."
+        : "早期开发中，接口可能变动，各页标注了现状。",
       isCloseable: true,
     },
     navbar: {
@@ -103,6 +113,7 @@ const config: Config = {
         { type: "docSidebar", sidebarId: "plugins", position: "left", label: "插件开发" },
         { type: "docSidebar", sidebarId: "adapters", position: "left", label: "适配器" },
         { type: "docsVersionDropdown", position: "right" },
+        { type: "localeDropdown", position: "right" },
         { href: repoUrl, label: "GitHub", position: "right" },
       ],
     },

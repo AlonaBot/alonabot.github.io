@@ -9,7 +9,9 @@
     "build": "docusaurus build",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "write-translations": "docusaurus write-translations",
+    "start:en": "docusaurus start --locale en"
   },
   "engines": {
     "node": ">=20.0"

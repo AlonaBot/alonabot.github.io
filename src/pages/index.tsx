@@ -2,6 +2,7 @@
 import type { ReactNode } from "react";
 import clsx from "clsx";
 import Link from "@docusaurus/Link";
+import Translate, { translate } from "@docusaurus/Translate";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 
@@ -9,30 +10,31 @@ import ChatDemo from "../components/ChatDemo";
 
 import styles from "./index.module.css";
 
+// 首页特性：标题与一句说明，文案经 i18n 翻译。
 const features: { title: string; body: string }[] = [
   {
-    title: "插件各跑各的",
-    body: "每个插件都是一个单独的 Go 程序。哪个插件出了问题，只影响它自己，Core 会把它重新拉起来。",
+    title: translate({ id: "home.feature.isolation.title", message: "进程隔离" }),
+    body: translate({ id: "home.feature.isolation.body", message: "每个插件一个进程，崩了不连累别人。" }),
   },
   {
-    title: "官方组件也能换",
-    body: "Telegram 和 OneBot 11 适配器、Agent、管理界面都只是官方给的一种选择。社区有更合适的，直接换上就行。",
+    title: translate({ id: "home.feature.replace.title", message: "组件可替换" }),
+    body: translate({ id: "home.feature.replace.body", message: "适配器、Agent、WebUI 都能换成社区版。" }),
   },
   {
-    title: "占的内存很少",
-    body: "一个只用 SDK 的插件大约 7.5 MiB。用不到的库不会被编进去，没用数据库就不带数据库驱动。",
+    title: translate({ id: "home.feature.memory.title", message: "省内存" }),
+    body: translate({ id: "home.feature.memory.body", message: "单个插件约 7.5 MiB，用不到的库不编进去。" }),
   },
   {
-    title: "换平台不用改代码",
-    body: "插件拿到的是统一格式的事件和消息，平台之间的差别交给适配器去处理。",
+    title: translate({ id: "home.feature.platform.title", message: "一份代码，多个平台" }),
+    body: translate({ id: "home.feature.platform.body", message: "统一的事件与消息格式，换平台不改插件。" }),
   },
   {
-    title: "改坏了能退回去",
-    body: "插件的数据放在 Core 管理的 SQLite 里。更新插件或改配置时先在副本上试，失败了数据还是原来的样子。",
+    title: translate({ id: "home.feature.rollback.title", message: "失败可回退" }),
+    body: translate({ id: "home.feature.rollback.body", message: "更新先在副本上试，失败就回到旧数据。" }),
   },
   {
-    title: "三大系统都能跑",
-    body: "Linux、Windows、macOS 的 amd64 和 arm64，纯 Go 构建，不需要 C 编译器。目前只在 Apple Silicon 的 Mac 上实际跑过。",
+    title: translate({ id: "home.feature.purego.title", message: "纯 Go" }),
+    body: translate({ id: "home.feature.purego.body", message: "Linux、Windows、macOS，无需 CGO。" }),
   },
 ];
 
@@ -70,28 +72,33 @@ function CodeWindow(): ReactNode {
 export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
   return (
-    <Layout title="首页" description={siteConfig.tagline}>
+    <Layout title={translate({ id: "home.pageTitle", message: "首页" })} description={siteConfig.tagline}>
       <header className={clsx("container", styles.hero)}>
         <div className={styles.intro}>
-          <p className={styles.eyebrow}>Go 聊天机器人框架 · 0.1-beta</p>
+          <p className={styles.eyebrow}>
+            <Translate id="home.eyebrow">Go 聊天机器人框架</Translate> · 0.1-beta
+          </p>
           <h1 className={styles.title}>
-            写一次插件，
+            <Translate id="home.title.line1">写一次插件，</Translate>
             <br />
-            在每个平台上回复。
+            <Translate id="home.title.line2">在每个平台上回复。</Translate>
           </h1>
           <p className={styles.lead}>
-            用 Go 写聊天机器人。插件就是普通的 Go 程序，消息来自 Telegram 还是 QQ，交给 Core 和适配器去操心。
+            <Translate id="home.lead">用 Go 写插件，平台差异交给 Core 和适配器。</Translate>
           </p>
           <div className={styles.actions}>
             <Link className="button button--primary button--lg" to="/docs/guide/quick-start">
-              快速开始
+              <Translate id="home.cta.quickStart">快速开始</Translate>
             </Link>
             <Link className="button button--secondary button--lg" to="/docs/plugins/first-plugin">
-              编写插件
+              <Translate id="home.cta.plugin">编写插件</Translate>
             </Link>
           </div>
           <p className={styles.status}>
-            还在早期开发中，做到哪一步可以看 <Link to="/docs/guide/status">当前进度</Link>。
+            <Translate id="home.status">早期开发中</Translate> ·{" "}
+            <Link to="/docs/guide/status">
+              <Translate id="home.status.link">查看进度</Translate>
+            </Link>
           </p>
         </div>
         <div className={styles.demo}>

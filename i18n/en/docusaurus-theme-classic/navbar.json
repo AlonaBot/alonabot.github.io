@@ -1,0 +1,30 @@
+{
+  "title": {
+    "message": "AlonaBot",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "AlonaBot",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.指南": {
+    "message": "Guide",
+    "description": "Navbar item with label 指南"
+  },
+  "item.label.概念": {
+    "message": "Concepts",
+    "description": "Navbar item with label 概念"
+  },
+  "item.label.插件开发": {
+    "message": "Plugins",
+    "description": "Navbar item with label 插件开发"
+  },
+  "item.label.适配器": {
+    "message": "Adapters",
+    "description": "Navbar item with label 适配器"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

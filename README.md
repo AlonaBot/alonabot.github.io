@@ -13,6 +13,7 @@ npm ci          # 按 package-lock.json 安装依赖
 npm start       # 本地开发服务器，默认 http://localhost:3000
 npm run build   # 构建到 build/，链接或锚点失效时构建失败
 npm run serve   # 预览 build/ 的结果
+npm run start:en  # 以英文启动开发服务器（开发服务器一次只加载一种语言）
 ```
 
 站点地址由环境变量覆盖：`SITE_URL`（缺省 `https://alonabot.github.io`）与 `BASE_URL`（缺省 `/`）。
@@ -25,6 +26,14 @@ npm run serve   # 预览 build/ 的结果
 | `src/pages/` | 首页：标题与入口，旁边是一段插件代码和它在聊天中的效果 |
 | `src/css/custom.css` | 主题：纯白为底、墨色正文，浅蓝只用于链接、焦点与光环；暗色为中性近黑 |
 | `static/img/` | 占位 logo（亮/暗两版）、favicon 与分享卡片；正式 logo 确定后替换 |
+
+## 多语言
+
+缺省语言是简体中文（`zh-Hans`），英文（`en`）发布在 `/en/` 下，导航栏右侧切换。
+
+- 文档正文：中文在 `docs/`，英文在 `i18n/en/docusaurus-plugin-content-docs/current/`，两边目录与文件名一一对应。改一边时同步另一边。
+- 首页、导航、页脚与组件文案：源码里用 `<Translate>` 或 `translate()` 写中文，英文在 `i18n/en/` 下的 JSON 中。新增文案后运行 `npm run write-translations -- --locale en`，再补英文。
+- 标语与公告栏不在翻译文件中，在 `docusaurus.config.ts` 里按语言取值。
 
 ## 版本
 
@@ -47,4 +56,4 @@ npm run docusaurus docs:version 0.1
 
 ## 写作约定
 
-正文用简体中文，标识符、命令与协议名保留原文。引用主仓库文件时使用 `https://github.com/AlonaBot/AlonaBot/blob/main/...` 的完整链接。不使用第三方游戏或作品的角色立绘、官方 logo、字体与截图。
+中文与英文都写得简短直接，标识符、命令与协议名保留原文。引用主仓库文件时使用 `https://github.com/AlonaBot/AlonaBot/blob/main/...` 的完整链接。不使用第三方游戏或作品的角色立绘、官方 logo、字体与截图。
