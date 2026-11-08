@@ -1,144 +1,314 @@
 .hero {
-  position: relative;
-  overflow: hidden;
-  padding: 5.5rem 1rem 4.5rem;
-  text-align: center;
-  background: linear-gradient(180deg, var(--alona-sky-top) 0%, var(--alona-sky-bottom) 100%);
-  border-bottom: 1px solid var(--alona-card-border);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 3.5rem;
+  align-items: center;
+  padding-top: 5rem;
+  padding-bottom: 4.5rem;
 }
 
-/* 两朵用径向渐变画的云，只作背景装饰。 */
-.cloudA,
-.cloudB {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0));
-  pointer-events: none;
-}
-
-.cloudA {
-  width: 420px;
-  height: 160px;
-  top: 40px;
-  left: -80px;
-}
-
-.cloudB {
-  width: 520px;
-  height: 180px;
-  bottom: -40px;
-  right: -120px;
-}
-
-[data-theme="dark"] .cloudA,
-[data-theme="dark"] .cloudB {
-  background: radial-gradient(closest-side, rgba(108, 196, 247, 0.12), rgba(108, 196, 247, 0));
-}
-
-.logo {
-  position: relative;
-  filter: drop-shadow(0 10px 24px rgba(26, 154, 230, 0.28));
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
+@media (max-width: 996px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
   }
-  50% {
-    transform: translateY(-8px);
+}
+
+.eyebrow {
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--alona-muted);
+}
+
+.title {
+  margin-bottom: 1.25rem;
+  font-size: clamp(2.1rem, 4.6vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.lead {
+  max-width: 32rem;
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: var(--alona-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.status {
+  margin: 1.75rem 0 0;
+  font-size: 0.875rem;
+  color: var(--alona-muted);
+}
+
+.demo {
+  display: grid;
+  gap: 1rem;
+}
+
+.window {
+  overflow: hidden;
+  border: 1px solid var(--alona-line);
+  border-radius: 0.75rem;
+  background: var(--ifm-background-color);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 12px 32px rgba(16, 24, 40, 0.06);
+}
+
+.windowBar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--alona-line);
+  background: var(--alona-surface);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.dots i {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--alona-line);
+}
+
+.fileName {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  color: var(--alona-muted);
+}
+
+.code {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.code code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--alona-ink);
+}
+
+.kw {
+  color: var(--alona-muted);
+  font-weight: 600;
+}
+
+.fn {
+  color: var(--ifm-color-primary-darker);
+}
+
+.str {
+  color: #c0567f;
+}
+
+html[data-theme="dark"] .str {
+  color: #f0a3c2;
+}
+
+.chat {
+  padding-bottom: 0.4rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 0.6rem 0;
+  border-bottom: 1px solid var(--alona-line);
+}
+
+.tab {
+  padding: 0.4rem 0.8rem 0.5rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--alona-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--alona-ink);
+}
+
+.tabActive {
+  border-bottom-color: var(--alona-ink);
+  color: var(--alona-ink);
+  font-weight: 600;
+}
+
+.chatMeta {
+  padding: 0.6rem 1rem 0;
+  font-size: 0.75rem;
+  color: var(--alona-muted);
+}
+
+.messages {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.8rem 1rem 0.4rem;
+}
+
+.row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.55rem;
+  animation: pop 0.35s ease both;
+}
+
+.row + .row {
+  animation-delay: 0.45s;
+}
+
+.rowUser {
+  justify-content: flex-end;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .logo {
+  .row {
     animation: none;
   }
 }
 
-.title {
-  position: relative;
-  margin: 1rem 0 0.5rem;
-  font-size: clamp(2.4rem, 6vw, 3.6rem);
-  color: var(--ifm-color-primary-darker);
-}
-
-[data-theme="dark"] .title {
-  color: var(--ifm-color-primary-lighter);
-}
-
-.tagline {
-  position: relative;
-  font-size: 1.25rem;
-  color: var(--ifm-color-emphasis-700);
-}
-
-.actions {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  justify-content: center;
-  margin-top: 1.75rem;
-}
-
-@media (max-width: 480px) {
-  .tagline {
-    font-size: 1.05rem;
-  }
-}
-
-.status {
-  position: relative;
-  margin: 2.25rem 0 0;
+.bubble {
+  padding: 0.45rem 0.85rem;
+  border-radius: 1rem;
   font-size: 0.9rem;
-  color: var(--ifm-color-emphasis-600);
+  line-height: 1.4;
 }
 
-.status::before {
-  content: "";
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  margin-right: 0.5rem;
+.bubbleUser {
+  border-bottom-right-radius: 0.3rem;
+  background: var(--alona-ink);
+  color: var(--ifm-background-color);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.bubbleBot {
+  border-bottom-left-radius: 0.3rem;
+  background: var(--alona-bubble-bot);
+}
+
+/* 机器人头像：白色圆形，头顶一圈浅蓝光环。 */
+.avatar {
+  position: relative;
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 1.5px solid var(--alona-ink);
   border-radius: 50%;
-  background: var(--alona-accent);
-  vertical-align: middle;
+  background: var(--ifm-background-color);
+}
+
+/* 两只眼睛，与 logo 一致。 */
+.avatar::before,
+.avatar::after {
+  content: "";
+  position: absolute;
+  top: 45%;
+  width: 0.2rem;
+  height: 0.2rem;
+  border-radius: 50%;
+  background: var(--alona-ink);
+}
+
+.avatar::before {
+  left: 32%;
+}
+
+.avatar::after {
+  right: 32%;
+}
+
+.halo {
+  position: absolute;
+  top: -0.55rem;
+  left: 50%;
+  width: 1.35rem;
+  height: 0.4rem;
+  border: 2px solid var(--alona-halo);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.chatNote {
+  margin: 0.5rem 1rem 0.4rem;
+  font-size: 0.75rem;
+  color: var(--alona-muted);
 }
 
 .features {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.25rem;
-  padding: 3rem 0 4rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--alona-line);
+  margin-bottom: 5rem;
 }
 
-.card {
-  padding: 1.4rem 1.5rem;
-  border: 1px solid var(--alona-card-border);
-  border-radius: 0.9rem;
-  background: var(--alona-card-bg);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+@media (max-width: 996px) {
+  .features {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(26, 154, 230, 0.12);
+.feature {
+  padding: 2rem 1.75rem 2rem 0;
+  border-bottom: 1px solid var(--alona-line);
 }
 
-.card h2 {
+@media (min-width: 997px) {
+  .feature:not(:nth-child(3n + 1)) {
+    padding-left: 1.75rem;
+    border-left: 1px solid var(--alona-line);
+  }
+}
+
+.index {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  color: var(--alona-halo);
+}
+
+.feature h2 {
   margin-bottom: 0.5rem;
-  font-size: 1.15rem;
-  color: var(--ifm-color-primary-darker);
+  font-size: 1.1rem;
 }
 
-[data-theme="dark"] .card h2 {
-  color: var(--ifm-color-primary-light);
-}
-
-.card p {
+.feature p {
   margin: 0;
-  color: var(--ifm-color-emphasis-800);
-  line-height: 1.7;
+  color: var(--alona-muted);
+  line-height: 1.75;
 }

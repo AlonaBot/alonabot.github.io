@@ -93,6 +93,7 @@ const config: Config = {
       logo: {
         alt: "AlonaBot",
         src: "img/logo.svg",
+        srcDark: "img/logo-dark.svg",
         width: 32,
         height: 32,
       },
@@ -137,7 +138,7 @@ const config: Config = {
     },
     prism: {
       theme: prismThemes.github,
-      darkTheme: prismThemes.oneDark,
+      darkTheme: prismThemes.vsDark,
       additionalLanguages: ["bash", "go", "json", "yaml", "protobuf"],
     },
     docs: {

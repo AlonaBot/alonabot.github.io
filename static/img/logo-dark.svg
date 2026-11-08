@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AlonaBot">
+  <!-- 占位 logo：墨线对话气泡，头顶一圈浅蓝光环。原创图形，正式 logo 确定后替换。 -->
+  <ellipse cx="32" cy="10" rx="13" ry="3.6" fill="none" stroke="#7cc6f2" stroke-width="3"/>
+  <path d="M12 26c0-4.4 3.6-8 8-8h24c4.4 0 8 3.6 8 8v14c0 4.4-3.6 8-8 8H30l-9 8v-8h-1c-4.4 0-8-3.6-8-8z"
+        fill="none" stroke="#ececee" stroke-width="3.2" stroke-linejoin="round"/>
+  <circle cx="25" cy="33" r="2.6" fill="#ececee"/>
+  <circle cx="39" cy="33" r="2.6" fill="#ececee"/>
+</svg>

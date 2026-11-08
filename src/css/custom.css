@@ -1,82 +1,102 @@
 /*
- * AlonaBot 文档站主题：亮色为晴空的天蓝与白，暗色为夜空的深蓝灰与冷白，樱粉只作点缀。
- * 颜色全部经 Infima 变量注入，组件样式只引用这些变量。
+ * AlonaBot 文档站主题：纯白为底、墨色正文，浅蓝只用于链接、焦点和光环这类小面积点缀。
+ * 暗色用中性的近黑色，不做偏蓝的底色。颜色全部经 Infima 变量注入。
  */
 
 :root {
-  --ifm-color-primary: #1a9ae6;
-  --ifm-color-primary-dark: #1689cf;
-  --ifm-color-primary-darker: #1581c3;
-  --ifm-color-primary-darkest: #116aa0;
-  --ifm-color-primary-light: #3aa8ea;
-  --ifm-color-primary-lighter: #47aeeb;
-  --ifm-color-primary-lightest: #6ec0f0;
+  --ifm-color-primary: #2a8bd0;
+  --ifm-color-primary-dark: #267dbb;
+  --ifm-color-primary-darker: #2476b1;
+  --ifm-color-primary-darkest: #1d6192;
+  --ifm-color-primary-light: #3f98d6;
+  --ifm-color-primary-lighter: #4b9fd9;
+  --ifm-color-primary-lightest: #6fb3e2;
 
-  --alona-accent: #f08bb6;
-  --alona-accent-soft: #fde7f0;
-  --alona-cyan: #7fdde4;
-  --alona-sky-top: #d9f0ff;
-  --alona-sky-bottom: #f7fbff;
-  --alona-card-bg: #ffffff;
-  --alona-card-border: #d6ebf9;
-  --alona-halo: #ffd36e;
+  --alona-ink: #16181d;
+  --alona-muted: #6b7280;
+  --alona-line: #ececef;
+  --alona-surface: #fafafb;
+  --alona-halo: #7cc6f2;
+  --alona-bubble-bot: #f3f4f6;
 
-  --ifm-background-color: #f7fbff;
-  --ifm-navbar-background-color: rgba(247, 251, 255, 0.86);
-  --ifm-footer-background-color: #eaf5fd;
-  --ifm-code-font-size: 92%;
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #ffffff;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.92);
+  --ifm-footer-background-color: #ffffff;
+  --ifm-font-color-base: var(--alona-ink);
+  --ifm-heading-color: var(--alona-ink);
+  --ifm-toc-border-color: var(--alona-line);
+  --ifm-hr-border-color: var(--alona-line);
+  --ifm-table-border-color: var(--alona-line);
+  --ifm-table-stripe-background: var(--alona-surface);
+  --ifm-code-background: #f4f4f6;
+  --ifm-code-font-size: 90%;
   --ifm-font-family-base: system-ui, -apple-system, "Segoe UI", "PingFang SC",
     "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --ifm-font-family-monospace: ui-monospace, "SF Mono", "JetBrains Mono", Menlo,
+    Consolas, monospace;
   --ifm-heading-font-weight: 650;
-  --ifm-global-radius: 0.6rem;
-  --docusaurus-highlighted-code-line-bg: rgba(26, 154, 230, 0.12);
+  --ifm-global-radius: 0.5rem;
+  --ifm-menu-color-background-active: transparent;
+  --ifm-menu-color-background-hover: var(--alona-surface);
+  --docusaurus-highlighted-code-line-bg: rgba(42, 139, 208, 0.1);
 }
 
 html[data-theme="dark"] {
-  --ifm-color-primary: #6cc4f7;
-  --ifm-color-primary-dark: #4bb6f5;
-  --ifm-color-primary-darker: #3aaff4;
-  --ifm-color-primary-darkest: #0c98ea;
-  --ifm-color-primary-light: #8dd2f9;
-  --ifm-color-primary-lighter: #9ed9fa;
-  --ifm-color-primary-lightest: #cfedfd;
+  --ifm-color-primary: #7cc6f2;
+  --ifm-color-primary-dark: #5fb9ef;
+  --ifm-color-primary-darker: #51b2ee;
+  --ifm-color-primary-darkest: #2a9fe8;
+  --ifm-color-primary-light: #99d3f5;
+  --ifm-color-primary-lighter: #a8d9f6;
+  --ifm-color-primary-lightest: #d3ecfa;
 
-  --alona-accent: #f4a3c5;
-  --alona-accent-soft: rgba(244, 163, 197, 0.14);
-  --alona-cyan: #5cc8d2;
-  --alona-sky-top: #132238;
-  --alona-sky-bottom: #0e1726;
-  --alona-card-bg: #152132;
-  --alona-card-border: #22364f;
-  --alona-halo: #e9c46a;
+  --alona-ink: #ececee;
+  --alona-muted: #9a9ca5;
+  --alona-line: #26272c;
+  --alona-surface: #17181b;
+  --alona-halo: #7cc6f2;
+  --alona-bubble-bot: #1f2024;
 
-  --ifm-background-color: #0e1726;
-  --ifm-background-surface-color: #121d2e;
-  --ifm-navbar-background-color: rgba(14, 23, 38, 0.86);
-  --ifm-footer-background-color: #0b1320;
-  --docusaurus-highlighted-code-line-bg: rgba(108, 196, 247, 0.16);
+  --ifm-background-color: #111214;
+  --ifm-background-surface-color: #111214;
+  --ifm-navbar-background-color: rgba(17, 18, 20, 0.92);
+  --ifm-footer-background-color: #111214;
+  --ifm-code-background: #1c1d21;
+  --docusaurus-highlighted-code-line-bg: rgba(124, 198, 242, 0.12);
 }
 
 .navbar {
   backdrop-filter: saturate(160%) blur(10px);
-  box-shadow: 0 1px 0 var(--alona-card-border);
+  box-shadow: none;
+  border-bottom: 1px solid var(--alona-line);
 }
 
-.footer--light {
-  border-top: 1px solid var(--alona-card-border);
+.footer {
+  border-top: 1px solid var(--alona-line);
 }
 
-/* 公告栏用樱粉提示，与主色区分。 */
+/* 公告栏的背景色以内联样式给出，这里需要 !important 才能随主题切换。 */
 .theme-announcement-bar {
-  /* 公告栏的背景色以内联样式给出，这里需要 !important 才能随主题切换。 */
-  background: var(--alona-accent-soft) !important;
-  color: var(--ifm-font-color-base) !important;
-  border-bottom: 1px solid var(--alona-card-border);
+  background: var(--ifm-background-color) !important;
+  color: var(--alona-muted) !important;
+  border-bottom: 1px solid var(--alona-line);
+  font-size: 0.85rem;
+}
+
+/* 侧边栏当前项：左侧一条细线，不铺底色。 */
+.menu__link--active:not(.menu__link--sublist) {
+  font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--ifm-color-primary);
+  border-radius: 0;
+}
+
+.theme-doc-sidebar-container {
+  border-right-color: var(--alona-line) !important;
 }
 
 .markdown h2 {
-  padding-bottom: 0.3rem;
-  border-bottom: 1px solid var(--alona-card-border);
+  margin-top: 2.5rem;
 }
 
 .markdown table {
@@ -85,14 +105,46 @@ html[data-theme="dark"] {
 }
 
 .markdown blockquote {
-  border-left-color: var(--alona-cyan);
+  border-left-color: var(--alona-halo);
 }
 
-.menu__link--active:not(.menu__link--sublist) {
-  background: linear-gradient(90deg, rgba(26, 154, 230, 0.14), transparent);
+.markdown a {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--ifm-color-primary) 35%, transparent);
+  text-underline-offset: 0.2em;
 }
 
-.admonition-status,
-.alert--info {
-  --ifm-alert-border-color: var(--ifm-color-primary);
+.markdown a:hover {
+  text-decoration-color: var(--ifm-color-primary);
+}
+
+/* 代码块：浅灰底与细边，不用整块深色。 */
+.theme-code-block {
+  border: 1px solid var(--alona-line);
+  box-shadow: none !important;
+}
+
+.button.button--primary {
+  --ifm-button-background-color: var(--alona-ink);
+  --ifm-button-border-color: var(--alona-ink);
+  color: var(--ifm-background-color);
+}
+
+.button.button--primary:hover {
+  --ifm-button-background-color: var(--alona-ink);
+  --ifm-button-border-color: var(--alona-ink);
+  color: var(--ifm-background-color);
+  opacity: 0.86;
+}
+
+.button.button--secondary {
+  --ifm-button-background-color: transparent;
+  --ifm-button-border-color: var(--alona-line);
+  color: var(--alona-ink);
+}
+
+.button.button--secondary:hover {
+  --ifm-button-background-color: var(--alona-surface);
+  --ifm-button-border-color: var(--alona-line);
+  color: var(--alona-ink);
 }

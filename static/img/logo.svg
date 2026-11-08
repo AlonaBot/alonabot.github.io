@@ -1,14 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AlonaBot">
-  <!-- 占位 logo：晴空色圆形里一个对话气泡，头顶一圈光环。原创图形，正式 logo 确定后替换。 -->
-  <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#5cc2f5"/>
-      <stop offset="1" stop-color="#1a8fdb"/>
-    </linearGradient>
-  </defs>
-  <circle cx="32" cy="34" r="28" fill="url(#sky)"/>
-  <ellipse cx="32" cy="9.5" rx="15" ry="4.2" fill="none" stroke="#ffd36e" stroke-width="3"/>
-  <path d="M17 23.5c0-3.6 2.9-6.5 6.5-6.5h17c3.6 0 6.5 2.9 6.5 6.5v12c0 3.6-2.9 6.5-6.5 6.5H31l-7.5 6.5V42h0c-3.6 0-6.5-2.9-6.5-6.5z" fill="#ffffff"/>
-  <path d="M26 37l6-15 6 15M28.3 31.5h7.4" fill="none" stroke="#1a8fdb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="44.5" cy="20" r="2.4" fill="#f08bb6"/>
+  <!-- 占位 logo：墨线对话气泡，头顶一圈浅蓝光环。原创图形，正式 logo 确定后替换。 -->
+  <ellipse cx="32" cy="10" rx="13" ry="3.6" fill="none" stroke="#7cc6f2" stroke-width="3"/>
+  <path d="M12 26c0-4.4 3.6-8 8-8h24c4.4 0 8 3.6 8 8v14c0 4.4-3.6 8-8 8H30l-9 8v-8h-1c-4.4 0-8-3.6-8-8z"
+        fill="#ffffff" stroke="#16181d" stroke-width="3.2" stroke-linejoin="round"/>
+  <circle cx="25" cy="33" r="2.6" fill="#16181d"/>
+  <circle cx="39" cy="33" r="2.6" fill="#16181d"/>
 </svg>
