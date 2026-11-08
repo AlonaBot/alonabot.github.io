@@ -14,27 +14,27 @@ import styles from "./index.module.css";
 const features: { title: string; body: string }[] = [
   {
     title: translate({ id: "home.feature.isolation.title", message: "进程隔离" }),
-    body: translate({ id: "home.feature.isolation.body", message: "每个插件一个进程，崩了不连累别人。" }),
+    body: translate({ id: "home.feature.isolation.body", message: "一插件一进程" }),
   },
   {
     title: translate({ id: "home.feature.replace.title", message: "组件可替换" }),
-    body: translate({ id: "home.feature.replace.body", message: "适配器、Agent、WebUI 都能换成社区版。" }),
+    body: translate({ id: "home.feature.replace.body", message: "适配器 · Agent · WebUI" }),
   },
   {
     title: translate({ id: "home.feature.memory.title", message: "省内存" }),
-    body: translate({ id: "home.feature.memory.body", message: "单个插件约 7.5 MiB，用不到的库不编进去。" }),
+    body: translate({ id: "home.feature.memory.body", message: "约 7.5 MiB / 插件" }),
   },
   {
     title: translate({ id: "home.feature.platform.title", message: "一份代码，多个平台" }),
-    body: translate({ id: "home.feature.platform.body", message: "统一的事件与消息格式，换平台不改插件。" }),
+    body: translate({ id: "home.feature.platform.body", message: "统一事件模型" }),
   },
   {
     title: translate({ id: "home.feature.rollback.title", message: "失败可回退" }),
-    body: translate({ id: "home.feature.rollback.body", message: "更新先在副本上试，失败就回到旧数据。" }),
+    body: translate({ id: "home.feature.rollback.body", message: "副本更新 · 自动回滚" }),
   },
   {
     title: translate({ id: "home.feature.purego.title", message: "纯 Go" }),
-    body: translate({ id: "home.feature.purego.body", message: "Linux、Windows、macOS，无需 CGO。" }),
+    body: translate({ id: "home.feature.purego.body", message: "Linux · Windows · macOS" }),
   },
 ];
 
@@ -79,13 +79,10 @@ export default function Home(): ReactNode {
             <Translate id="home.eyebrow">Go 聊天机器人框架</Translate> · 0.1-beta
           </p>
           <h1 className={styles.title}>
-            <Translate id="home.title.line1">写一次插件，</Translate>
+            <Translate id="home.title.line1">一次编写</Translate>
             <br />
-            <Translate id="home.title.line2">在每个平台上回复。</Translate>
+            <Translate id="home.title.line2">多平台回复</Translate>
           </h1>
-          <p className={styles.lead}>
-            <Translate id="home.lead">用 Go 写插件，平台差异交给 Core 和适配器。</Translate>
-          </p>
           <div className={styles.actions}>
             <Link className="button button--primary button--lg" to="/docs/guide/quick-start">
               <Translate id="home.cta.quickStart">快速开始</Translate>

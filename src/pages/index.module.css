@@ -178,6 +178,6 @@ html[data-theme="dark"] .str {
 
 .feature p {
   margin: 0;
+  font-size: 0.9rem;
   color: var(--alona-muted);
-  line-height: 1.75;
 }

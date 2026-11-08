@@ -3,37 +3,37 @@
     "message": "Process isolation"
   },
   "home.feature.isolation.body": {
-    "message": "One process per plugin. A crash stays contained."
+    "message": "One process per plugin"
   },
   "home.feature.replace.title": {
     "message": "Swappable components"
   },
   "home.feature.replace.body": {
-    "message": "Swap in community adapters, Agents or WebUIs."
+    "message": "Adapters · Agent · WebUI"
   },
   "home.feature.memory.title": {
     "message": "Small footprint"
   },
   "home.feature.memory.body": {
-    "message": "About 7.5 MiB per plugin. Unused libraries stay out."
+    "message": "~7.5 MiB per plugin"
   },
   "home.feature.platform.title": {
     "message": "One plugin, every platform"
   },
   "home.feature.platform.body": {
-    "message": "Unified events and messages. No code changes per platform."
+    "message": "Unified event model"
   },
   "home.feature.rollback.title": {
     "message": "Safe rollback"
   },
   "home.feature.rollback.body": {
-    "message": "Updates run on a copy. Failures keep the old data."
+    "message": "Copy-first updates · Rollback"
   },
   "home.feature.purego.title": {
     "message": "Pure Go"
   },
   "home.feature.purego.body": {
-    "message": "Linux, Windows and macOS. No CGO."
+    "message": "Linux · Windows · macOS"
   },
   "home.pageTitle": {
     "message": "Home"
@@ -42,13 +42,10 @@
     "message": "Chatbot framework for Go"
   },
   "home.title.line1": {
-    "message": "Write a plugin once,"
+    "message": "Write once."
   },
   "home.title.line2": {
-    "message": "reply on every platform."
-  },
-  "home.lead": {
-    "message": "Write plugins in Go. Core and adapters handle the platforms."
+    "message": "Reply everywhere."
   },
   "home.cta.quickStart": {
     "message": "Quick start"
