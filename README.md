@@ -53,7 +53,7 @@ npm run docusaurus docs:version 0.1
 - `@docusaurus/core`、`@docusaurus/preset-classic` 3.10.2
 - 开发依赖 `@docusaurus/module-type-aliases`、`@docusaurus/tsconfig`、`@docusaurus/types` 3.10.2
 - `@mdx-js/react` 3.1.1、`clsx` 2.1.1、`prism-react-renderer` 2.4.1、`react` 与 `react-dom` 19.3.1
-- 本地搜索 `@easyops-cn/docusaurus-search-local` 0.55.3
+- 本地搜索 `@easyops-cn/docusaurus-search-local` 0.55.3（中文分词依赖 `@node-rs/jieba` 的预编译包，安装时不需要编译工具链；2026-11-09 维护者确认保留）
 
 新增依赖前先征得维护者同意。
 
