@@ -32,7 +32,8 @@ npm run start:en  # 以英文启动开发服务器（开发服务器一次只加
 缺省语言是简体中文（`zh-Hans`），英文（`en`）发布在 `/en/` 下，导航栏右侧切换。
 
 - 文档正文：中文在 `docs/`，英文在 `i18n/en/docusaurus-plugin-content-docs/current/`，两边目录与文件名一一对应。改一边时同步另一边。
-- 首页、导航、页脚与组件文案：源码里用 `<Translate>` 或 `translate()` 写中文，英文在 `i18n/en/` 下的 JSON 中。新增文案后运行 `npm run write-translations -- --locale en`，再补英文。
+- 首页、导航、页脚与组件文案：源码里用 `<Translate>` 或 `translate()` 写中文；中文与英文的翻译文件分别在 `i18n/zh-Hans/` 和 `i18n/en/` 下，两边的 JSON 结构一致。新增文案后运行 `npm run write-translations -- --locale zh-Hans` 和 `npm run write-translations -- --locale en`，再补英文。
+- `i18n/zh-Hans/` 只放界面文案，不放文档正文：缺省语言的正文以 `docs/` 为准，在 `i18n/zh-Hans/docusaurus-plugin-content-docs/current/` 下另放一份会覆盖 `docs/`。
 - 标语与公告栏不在翻译文件中，在 `docusaurus.config.ts` 里按语言取值。
 
 ## 版本
@@ -45,9 +46,11 @@ npm run docusaurus docs:version 0.1
 
 ## 依赖
 
+构建只需要 Node.js 与 npm，不需要 Go 或其他编译工具链。
+
 经维护者批准（2026-11-08）的依赖，版本精确锁定：
 
-- `@docusaurus/core`、`@docusaurus/preset-classic`、`@docusaurus/faster` 3.10.2
+- `@docusaurus/core`、`@docusaurus/preset-classic` 3.10.2
 - 开发依赖 `@docusaurus/module-type-aliases`、`@docusaurus/tsconfig`、`@docusaurus/types` 3.10.2
 - `@mdx-js/react` 3.1.1、`clsx` 2.1.1、`prism-react-renderer` 2.4.1、`react` 与 `react-dom` 19.3.1
 - 本地搜索 `@easyops-cn/docusaurus-search-local` 0.55.3

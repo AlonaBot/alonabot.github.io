@@ -1,0 +1,10 @@
+{
+  "version.label": {
+    "message": "0.1-beta",
+    "description": "The label for version current"
+  },
+  "sidebar.guide.category.入门": {
+    "message": "入门",
+    "description": "The label for category '入门' in sidebar 'guide'"
+  }
+}

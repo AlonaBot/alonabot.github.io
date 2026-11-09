@@ -42,7 +42,6 @@ const config: Config = {
   future: {
     // 级联层 polyfill 会让 Infima 默认变量的优先级高于 custom.css，暂不启用。
     v4: { useCssCascadeLayers: false, removeLegacyPostBuildHeadAttribute: true },
-    faster: true,
   },
 
   markdown: {
