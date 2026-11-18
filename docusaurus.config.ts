@@ -120,8 +120,8 @@ const config: Config = {
           title: "文档",
           items: [
             { label: "概述", to: "/docs/" },
-            { label: "快速开始", to: "/docs/guide/quick-start" },
-            { label: "插件 SDK", to: "/docs/plugins/first-plugin" },
+            { label: "快速开始", to: "/docs/quick-start" },
+            { label: "教程", to: "/docs/tutorial/project" },
           ],
         },
         {

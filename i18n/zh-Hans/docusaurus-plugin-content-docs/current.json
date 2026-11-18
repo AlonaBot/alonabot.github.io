@@ -11,9 +11,17 @@
     "message": "进阶",
     "description": "The label for category '进阶' in sidebar 'docs'"
   },
-  "sidebar.docs.category.接入平台": {
-    "message": "接入平台",
-    "description": "The label for category '接入平台' in sidebar 'docs'"
+  "sidebar.docs.category.使用与部署": {
+    "message": "使用与部署",
+    "description": "The label for category '使用与部署' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.开发组件": {
+    "message": "开发组件",
+    "description": "The label for category '开发组件' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.参考": {
+    "message": "参考",
+    "description": "The label for category '参考' in sidebar 'docs'"
   },
   "sidebar.docs.category.原理": {
     "message": "原理",

@@ -11,9 +11,17 @@
     "message": "Going Further",
     "description": "The label for category '进阶' in sidebar 'docs'"
   },
-  "sidebar.docs.category.接入平台": {
-    "message": "Platforms",
-    "description": "The label for category '接入平台' in sidebar 'docs'"
+  "sidebar.docs.category.使用与部署": {
+    "message": "Running a Bot",
+    "description": "The label for category '使用与部署' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.开发组件": {
+    "message": "Building Components",
+    "description": "The label for category '开发组件' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.参考": {
+    "message": "Reference",
+    "description": "The label for category '参考' in sidebar 'docs'"
   },
   "sidebar.docs.category.原理": {
     "message": "Internals",
