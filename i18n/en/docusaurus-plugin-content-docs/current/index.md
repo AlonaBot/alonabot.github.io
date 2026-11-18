@@ -3,52 +3,49 @@ slug: /
 sidebar_position: 0
 sidebar_label: Overview
 title: AlonaBot Overview
-description: A lightweight, cross-platform chatbot framework in Go.
+description: Build chatbots in Go with one SDK for platform integration and real-reply testing.
 ---
 
-AlonaBot is a lightweight, cross-platform chatbot framework in Go: one **Core** plus swappable components.
+AlonaBot is a cross-platform chatbot framework in Go. You write the plugin’s business logic; **Core** handles routing, permissions, messages, configuration, storage and component management, while **adapters** connect chat platforms.
 
 | Component | Role |
 | --- | --- |
-| Plugin | Business logic; one native Go subprocess each |
-| Adapter | Platform integration and event normalization; official Telegram and OneBot 11 |
-| Agent | Conversation loop, memory, tool calls (user-confirmed) |
-| WebUI | Admin interface; static component package |
+| Plugin | Commands, event handlers and business services; each installed plugin runs a native Go process |
+| Adapter | Platform integration, event normalization and sending; official Telegram and OneBot 11 |
+| Agent | Model calls, conversations, tool confirmation, MCP, memory and scheduled tasks |
+| WebUI | Admin login, overview, components and bot accounts; static pages served by Core |
 
-Components never communicate directly; all traffic goes through Core. Core owns event routing, permissions, message sending, the Service Broker, the Event Bus, scheduling, the public HTTP entry, configuration and secrets, and install generations.
+These docs cover **0.1-beta**, with an evolving API. This overview follows main as of 2026-11-18. See [Implementation Status](guide/status.md) for implemented features and upcoming work, and the repository [specification](https://github.com/AlonaBot/AlonaBot/blob/main/spec/README.md) for behavioral contracts.
 
-:::warning Early development
+## Grow from one plugin
 
-These docs cover **0.1-beta**. Most capabilities are not implemented yet; each page states its implementation status. When they disagree with the [specification](https://github.com/AlonaBot/AlonaBot/blob/main/spec/README.md), the specification wins.
+### Write once, reuse across platforms
 
-:::
+Commands, events and messages share one SDK. Adapters supply normalized events and instance capabilities, so business code can choose features such as buttons and editing. See [Adapter Overview](adapters/index.md) for platform progress; start with [Commands and Events](plugins/commands.md) and [Messages and Media](plugins/messages.md).
 
-## Key advantages
+### Test real replies locally
 
-<div className="advantages">
+`plugintest` assembles a real Core, SDK sessions and a test adapter inside `go test`. Inject text, button clicks or tasks to check replies, permissions, managed storage and multi-turn waits. The [testing guide](plugins/testing.md) starts with a complete `/ping` assertion.
 
-| Advantage | Mechanism | Reference |
-| --- | --- | --- |
-| Dependency isolation | One process and one `go.mod` per plugin; dependencies and crashes never leak across plugins. An SDK-only plugin is ~7.5 MiB PSS | [§7.1](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#71-native-进程与安装边界) |
-| Hot deploy | `alonabot run --reload`: Core stays up and restarts only changed components; adapter connections and other plugins are untouched; a failed build keeps the old version | [§15.4](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#154-开发运行与热部署) |
-| Transactional updates | Managed SQLite candidate copy + atomic ActiveGeneration commit; a failed prepare returns to the old generation and data | [§6.3](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#63-sqlite-候选与维护), [§12](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#12-跨层状态机与恢复不变量) |
-| Built-in Agent | Conversation loop, memory, MCP; tool calls require user confirmation per policy; plugins call models via `llm.generate` without vendor SDKs | [§13](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#13-agent-基础) |
-| Plugin collaboration | Typed Service calls admitted by the Service Broker, a non-persistent Event Bus, JSON Schema validation of inputs and outputs; JSON Services can be exposed as Agent tools | [§3](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#3-跨插件调用动态-router-与权限), [§13.1](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#131-工具与调用策略) |
-| Trusted permissions | Core computes Actor permissions, so plugins cannot forge them; proactive sends are gated by per-instance send grants; config secrets are stored as immutable references | [§2.3](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#23-权限与-hook), [§5.3](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#53-secret-与翻译) |
-| Signed distribution | Packages and `release.json` are Ed25519-signed and updates are pinned to the original source; official Adapter / Agent / WebUI can be swapped with `--replace` | [§9.2](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#92-来源摘要与签名), [§9.3](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#93-cli-的最小完整动作) |
-| Typed SDK | Mismatched hook signatures fail at compile time; registration code and Service Schemas are generated at build time with no runtime reflection scan | [§9.1](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#91-manifest-与构建产物) |
-| Real-Core testing | `plugintest` starts a real Core and test adapter inside `go test`; library mode embeds Core in any Go program | [§15.5](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#155-库模式), [§17](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#17-插件测试套件) |
+### Reload a plugin, keep the rest running
 
-</div>
+Use `alonabot run --reload` during development. Core stays running and restarts only changed components; a failed build keeps the previous version. This lets you observe replies as you edit. Commands are in [Quick Start](guide/quick-start.md).
 
-## Scope of 0.1
+### Choose dependencies per plugin
 
-Command / text-match / event routing, multi-turn waits, Service calls and the Event Bus, scheduling, configuration and managed databases, plugin HTTP routes, admin CLI, component install and update, en / zh-CN text. Distribution: release archive, `install.sh` (systemd / launchd), `docker compose`; plus library mode and `go test` integration tests via `plugintest`.
+Native plugins build as separate executables. Each build selects its dependencies, and installed plugins run and expose failures by component. Authors can use their own `go.mod` or reuse the containing repository's module, as the introductory project does. Import only the SDK packages you use to reduce initialization and resident resources. See [Architecture](concepts/architecture.md) for responsibilities and state ownership.
 
-Implementation status: [Implementation Status](guide/status.md).
+### Keep managed data when an update fails
 
-## Next
+When updating an installed component, Core first creates a managed SQLite candidate copy. Failed candidate preparation restores the previous generation and database. [Managed storage](plugins/storage.md) follows this update path; plugins arrange recovery for their own files and external databases.
 
-- [Quick Start](guide/quick-start.md)
-- [Architecture](concepts/architecture.md)
-- [Plugin Basics](plugins/first-plugin.md)
+### Reuse services and models
+
+Expose existing functionality as a Service and broadcast notifications on the non-persistent Event Bus. Use `sdk/llm` to call the Agent with centrally managed model configuration. See [Services, Events and Models](plugins/services.md).
+
+## Choose an entry point
+
+- [Quick Start](guide/quick-start.md): run Core and a development plugin locally.
+- [Write Your First Plugin](plugins/first-plugin.md): start with `New() *sdk.Plugin`, command registration and component builds.
+- [Test Your Plugin](plugins/testing.md): check business results with `go test`.
+- [Configuration](plugins/config.md), [Background Work and Interactions](plugins/background.md), [HTTP and Plugin Pages](plugins/http.md): add capabilities as your plugin needs them.

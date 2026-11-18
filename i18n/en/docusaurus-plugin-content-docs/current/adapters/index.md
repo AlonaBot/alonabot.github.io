@@ -1,26 +1,31 @@
 ---
 sidebar_position: 1
 title: Adapter Overview
-description: What an adapter does in AlonaBot and where the official adapters stand.
+description: Connect platforms through adapters and reuse plugin logic based on instance capabilities.
 ---
 
-An adapter connects one chat platform to Core. It is a non-plugin component with its own process, run with `sdk/adapter` and `sdk.RunAdapter`. It owns the platform API client, receiving and normalization, send plans, media fetch, platform permissions and a local mock server.
+An adapter connects a chat platform to Core, using `sdk/adapter` and `sdk.RunAdapter`. It owns platform APIs, receiving and normalization, send plans, media fetch and platform permissions.
 
-Command routing, Core policy, cursor persistence and button tokens **do not** belong to adapters; Core owns them. That is why a plugin behaves the same on every platform.
+Core handles command routing, permission policies, cursor persistence and button tokens. Plugins use one [command](../plugins/commands.md) and [message SDK](../plugins/messages.md), then choose features such as buttons, editing and media based on instance capability declarations.
 
 ## Official adapters
 
-| Adapter | Program | Status |
-| --- | --- | --- |
-| [Telegram](telegram.md) | `adapters/telegram/` | Partial: receiving, normalization, inbound media |
-| [OneBot 11](onebot11.md) | `adapters/onebot11/` | Not started |
+- **[Telegram](telegram.md)**: receiving, inbound media, sending/receipts, buttons/callbacks, text editing, platform permissions and proxy modes are implemented.
+- **[OneBot 11](onebot11.md)**: forward WebSocket, receiving/normalization and platform permissions are implemented; sending and media are upcoming.
 
-## Replacing an official adapter
+For local development, observe replies with the [loopback adapter](../guide/quick-start.md), then check business logic with [plugintest](../plugins/testing.md). Check adapter progress and instance configuration before connecting a real platform.
 
-Only one adapter, Agent or WebUI of each kind can be installed. Replacing an official one with a community component needs `--replace` at install time. Install commands are still being implemented.
+## Install and replace
 
-## Conventions
+Adapters for different platforms can coexist, such as Telegram and OneBot 11. One adapter implementation owns each `adapter_id` and may have multiple instances. Agent and WebUI each have one implementation.
 
-- The implementation lives in an importable package (e.g. `telegram.New()`); the program entry only calls `sdk.RunAdapter`. The instance config schema is `instance_schema.json` in the package.
-- Platform permissions and extension events live in constant packages `adapters/<id>/perm` and `adapters/<id>/event`, so plugins can import them without linking the adapter runtime.
-- Every platform has a local mock server with controllable faults. Mock results never replace verification on the real platform.
+Add `--replace` when installing a replacement for an existing component of the same kind. Install, source update and recovery commands are in the repository [development guide](https://github.com/AlonaBot/AlonaBot/blob/main/docs/development.md).
+
+## Develop an adapter
+
+- Keep the implementation in an importable package, such as `telegram.New()`, with an entry calling `sdk.RunAdapter`. Instance configuration goes in `adapter_config_schema.json` in that package.
+- Platform permissions and extension events live in constant packages `adapters/<id>/perm` and `adapters/<id>/event`, available for separate plugin imports.
+- Descriptor / instance reports declare capabilities. Declare implemented features only; platform actions also need a name, version and input/result schemas.
+- Use local mock servers to verify faults and receipts. Record real-platform environments and results separately in [TEST-MATRIX](https://github.com/AlonaBot/AlonaBot/blob/main/spec/TEST-MATRIX.md).
+
+Sources: [Adapter SDK](https://github.com/AlonaBot/AlonaBot/tree/main/sdk/adapter), [adapter implementation plan](https://github.com/AlonaBot/AlonaBot/blob/main/spec/plan/adapters/README.md).

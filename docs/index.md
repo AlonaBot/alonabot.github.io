@@ -3,52 +3,49 @@ slug: /
 sidebar_position: 0
 sidebar_label: 概述
 title: AlonaBot 概述
-description: 轻量级、跨平台的 Go 聊天机器人框架。
+description: 用 Go 编写聊天机器人，通过统一 SDK 接入不同平台并测试真实回复。
 ---
 
-AlonaBot 是轻量级、跨平台的 Go 聊天机器人框架：一个 **Core**，加上可替换的组件。
+AlonaBot 是跨平台的 Go 聊天机器人框架。你编写插件的业务逻辑，**Core** 负责路由、权限、消息、配置、存储和组件管理，**Adapter** 接入聊天平台。
 
 | 组件 | 作用 |
 | --- | --- |
-| 插件 | 业务逻辑，每个插件一个 Native Go 子进程 |
-| Adapter | 平台接入与事件标准化，官方提供 Telegram、OneBot 11 |
-| Agent | 对话循环、记忆、工具调用（需用户确认） |
-| WebUI | 管理界面，静态组件包 |
+| 插件 | 命令、事件处理和业务服务；安装后各自运行 Native Go 进程 |
+| Adapter | 平台接入、事件标准化与发送；官方提供 Telegram、OneBot 11 |
+| Agent | 模型调用、对话、工具确认、MCP、记忆与定时任务 |
+| WebUI | 管理登录、总览、组件与机器人账号；由 Core 提供静态页面 |
 
-组件间无直接通信，均经 Core 中转。Core 负责事件路由、权限、消息发送、Service Broker、Event Bus、调度、公开 HTTP 入口、配置与 secret、安装代次。
+文档对应 **0.1-beta**，API 仍在变化。本文按 2026-11-18 的主仓库 main 整理，已实现能力与后继工作见[实现状态](guide/status.md)。行为契约见主仓库的[规格](https://github.com/AlonaBot/AlonaBot/blob/main/spec/README.md)。
 
-:::warning 早期开发中
+## 从一个插件逐步扩展
 
-文档对应 **0.1-beta**，多数能力尚未实现，各页标注实现状态。与 [规格](https://github.com/AlonaBot/AlonaBot/blob/main/spec/README.md) 冲突时以规格为准。
+### 一次编写，多平台复用
 
-:::
+命令、事件和消息使用同一套 SDK。Adapter 提供标准化事件和实例能力，业务代码据此选择按钮、编辑等功能；平台实现进度见 [Adapter 概述](adapters/index.md)。从[命令与事件](plugins/commands.md)、[消息与媒体](plugins/messages.md)开始。
 
-## 核心优势
+### 本机验证真实回复
 
-<div className="advantages">
+`plugintest` 在 `go test` 中装配真实 Core、SDK Session 和测试 Adapter。直接注入文本、按钮或任务，检查回复、权限、受管数据库与多轮等待。[测试指南](plugins/testing.md)从 `/ping` 的完整断言开始。
 
-| 优势 | 机制 | 依据 |
-| --- | --- | --- |
-| 依赖隔离 | 每个插件独立进程、独立 `go.mod`，依赖与崩溃互不影响；只用 SDK 的插件约 7.5 MiB PSS | [§7.1](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#71-native-进程与安装边界) |
-| 热部署 | `alonabot run --reload`：Core 常驻，只重启变更组件，Adapter 连接与其他插件不受影响；编译失败保留旧版本 | [§15.4](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#154-开发运行与热部署) |
-| 事务化更新 | 受管 SQLite 候选副本 + ActiveGeneration 原子提交，准备失败回到旧代次与旧数据 | [§6.3](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#63-sqlite-候选与维护)、[§12](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#12-跨层状态机与恢复不变量) |
-| 内置 Agent | 对话循环、记忆、MCP；工具调用按策略需用户确认；插件经 `llm.generate` 调用模型，无需内嵌厂商 SDK | [§13](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#13-agent-基础) |
-| 插件协作 | Service Broker 准入的类型化 Service 调用，非持久 Event Bus 广播，输入输出按 JSON Schema 校验；JSON Service 可声明为 Agent 工具 | [§3](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#3-跨插件调用动态-router-与权限)、[§13.1](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#131-工具与调用策略) |
-| 可信权限 | Actor 权限由 Core 计算，插件不可伪造；主动发送按实例发信许可准入；配置中的 secret 以不可变引用存储 | [§2.3](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#23-权限与-hook)、[§5.3](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#53-secret-与翻译) |
-| 签名分发 | 安装包与 `release.json` 使用 Ed25519 签名，更新锁定原来源；官方 Adapter / Agent / WebUI 可用 `--replace` 替换 | [§9.2](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#92-来源摘要与签名)、[§9.3](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#93-cli-的最小完整动作) |
-| 类型化 SDK | Hook 签名不符在编译期失败；注册代码与 Service Schema 在构建期生成，运行时不做反射扫描 | [§9.1](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#91-manifest-与构建产物) |
-| 真实 Core 测试 | `plugintest` 在 `go test` 中启动真实 Core 与测试 Adapter；库模式可将 Core 嵌入任意 Go 程序 | [§15.5](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#155-库模式)、[§17](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md#17-插件测试套件) |
+### 改插件，其他组件继续运行
 
-</div>
+开发时使用 `alonabot run --reload`。Core 保持运行，只重启变化的组件，构建失败继续运行旧版本，方便边修改边观察回复。具体命令见[快速开始](guide/quick-start.md)。
 
-## 0.1 范围
+### 各插件自主选择依赖
 
-命令 / 文本匹配 / 事件路由、多轮等待、Service 调用与 Event Bus、调度、配置与受管数据库、插件 HTTP 路由、管理 CLI、组件安装与更新、en / zh-CN 文案。分发形式：发行归档、`install.sh`（systemd / launchd）、`docker compose`；另支持库模式嵌入与基于 `plugintest` 的 `go test` 集成测试。
+Native 插件分别构建为独立可执行文件，依赖版本随各自构建确定，安装后按组件运行和定位故障。作者可使用独立 `go.mod`，也可像入门工程一样复用所在仓库的模块。只导入用到的 SDK 包，减少额外初始化和常驻资源。职责与状态归属见[架构](concepts/architecture.md)。
 
-实现状态见 [实现状态](guide/status.md)。
+### 更新失败保留受管数据
 
-## 下一步
+安装组件更新时，Core 先创建受管 SQLite 候选副本，候选准备失败恢复旧代次与旧数据库。业务数据采用[受管存储](plugins/storage.md)可以沿用这条更新路径；自管文件和外部数据库由插件安排恢复。
 
-- [快速开始](guide/quick-start.md)
-- [架构](concepts/architecture.md)
-- [插件入门](plugins/first-plugin.md)
+### 复用服务与模型
+
+已有业务能力可注册为 Service，通知可通过非持久 Event Bus 广播。需要模型时，使用 `sdk/llm` 调用 Agent，统一管理模型配置。用法见[服务、广播与模型](plugins/services.md)。
+
+## 选择入口
+
+- [快速开始](guide/quick-start.md)：在本机运行 Core 与开发插件。
+- [编写第一个插件](plugins/first-plugin.md)：从 `New() *sdk.Plugin`、命令注册和组件构建开始。
+- [测试插件](plugins/testing.md)：用 `go test` 检查业务结果。
+- [配置](plugins/config.md)、[后台与交互](plugins/background.md)、[HTTP 与插件页面](plugins/http.md)：按业务需要添加能力。

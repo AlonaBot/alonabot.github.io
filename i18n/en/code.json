@@ -6,7 +6,7 @@
     "message": "Quick start"
   },
   "home.cta.plugin": {
-    "message": "Plugin SDK"
+    "message": "Write your first plugin"
   },
   "home.status": {
     "message": "In development"
@@ -404,60 +404,45 @@
     "description": "The title of the tag list page"
   },
   "home.subtitle": {
-    "message": "Cross-platform · Multi-process · Chatbot framework for Go"
+    "message": "Build your bot in Go. Bring it to the chat platforms you choose."
   },
-  "home.feature.isolation.title": {
-    "message": "Dependency isolation"
+  "home.feature.platform.title": {
+    "message": "Write once, reuse across platforms"
   },
-  "home.feature.isolation.body": {
-    "message": "Separate process · Own go.mod · ~7.5 MiB PSS"
-  },
-  "home.feature.hotdeploy.title": {
-    "message": "Hot deploy"
-  },
-  "home.feature.hotdeploy.body": {
-    "message": "run --reload · Restarts changed components only · Keeps old build on failure"
-  },
-  "home.feature.rollback.title": {
-    "message": "Transactional updates"
-  },
-  "home.feature.rollback.body": {
-    "message": "Atomic generation commit · SQLite candidate copy · Rollback"
-  },
-  "home.feature.agent.title": {
-    "message": "Built-in Agent"
-  },
-  "home.feature.agent.body": {
-    "message": "Confirmed tool calls · MCP · Memory · llm.generate"
-  },
-  "home.feature.collab.title": {
-    "message": "Plugin collaboration"
-  },
-  "home.feature.collab.body": {
-    "message": "Service Broker · Event Bus · JSON Schema validation"
-  },
-  "home.feature.permission.title": {
-    "message": "Trusted permissions"
-  },
-  "home.feature.permission.body": {
-    "message": "Core-computed Actor permissions · Per-instance send grants · Secret references"
-  },
-  "home.feature.distribution.title": {
-    "message": "Signed distribution"
-  },
-  "home.feature.distribution.body": {
-    "message": "Ed25519 · Source-pinned updates · Component --replace"
-  },
-  "home.feature.sdk.title": {
-    "message": "Typed SDK"
-  },
-  "home.feature.sdk.body": {
-    "message": "Compile-time hook checks · Build-time codegen · Service Schema"
+  "home.feature.platform.body": {
+    "message": "Use one command and message SDK; adapters handle platform differences and expose each instance’s capabilities."
   },
   "home.feature.testing.title": {
-    "message": "Real-Core testing"
+    "message": "Test real replies locally"
   },
   "home.feature.testing.body": {
-    "message": "plugintest · go test · Library mode"
+    "message": "Run a real Core with plugintest inside go test to check replies, permissions, storage and multi-turn interactions."
+  },
+  "home.feature.hotdeploy.title": {
+    "message": "Reload a plugin, keep the rest running"
+  },
+  "home.feature.hotdeploy.body": {
+    "message": "run --reload restarts only changed components. A failed build keeps the previous version running."
+  },
+  "home.feature.isolation.title": {
+    "message": "Choose dependencies per plugin"
+  },
+  "home.feature.isolation.body": {
+    "message": "Native plugins build and run separately. Each build selects its dependencies, and failures can be diagnosed by component."
+  },
+  "home.feature.rollback.title": {
+    "message": "Keep managed data when an update fails"
+  },
+  "home.feature.rollback.body": {
+    "message": "Installed component updates use a SQLite candidate copy; failed preparation restores the previous generation and database."
+  },
+  "home.feature.collab.title": {
+    "message": "Reuse services and models"
+  },
+  "home.feature.collab.body": {
+    "message": "Share existing functionality through Service calls, Bus broadcasts and the Agent’s model interface."
+  },
+  "home.support": {
+    "message": "Start with /ping, then add storage, buttons and model calls."
   }
 }

@@ -1,121 +1,81 @@
 ---
 sidebar_position: 1
 title: Plugin Basics
-description: Write a native Go plugin that answers commands and events with sdk.Base.
+description: Create a plugin that replies to /ping, then build and run it with the current SDK.
 ---
 
-A plugin is an ordinary Go `main` package: define a root type that embeds `sdk.Base`, chain-register handlers in its registration methods, then call `sdk.Run`.
+Send `/ping`, receive `pong`. Export `New() *sdk.Plugin`, create a plugin object and register the command.
 
-## Minimal plugin: answer a command
+## Create the project
 
-```go title="main.go"
-package main
+Clone the main repository and build the CLI as shown in [Quick Start](../guide/quick-start.md). From the repository root, create a project that reuses its `go.mod`:
+
+```fish
+bin/alonabot init ./alonabot-plugin-ping
+```
+
+`init` requires an empty directory and creates `plugin.go`, `plugin.yaml`, `config_schema.json` and `i18n/`. The component ID comes from `plugin.yaml`: `alonabot-plugin-ping` here. Exporting `New()` lets the same package run in a separate process or in-process during `go test`.
+
+Replace the generated `plugin.go` with:
+
+```go title="alonabot-plugin-ping/plugin.go"
+package plugin
 
 import (
-	"log/slog"
-	"os"
-
-	"github.com/AlonaBot/AlonaBot/sdk"
-	"github.com/AlonaBot/AlonaBot/sdk/message"
+    "github.com/AlonaBot/AlonaBot/sdk"
+    "github.com/AlonaBot/AlonaBot/sdk/message"
 )
 
-// Ping is the root plugin; embedding sdk.Base gives default hooks.
-type Ping struct{ sdk.Base }
-
-// Commands registers /ping; Core sends the returned Chain as the reply.
-func (*Ping) Commands(r *sdk.CommandRegistry) {
-	r.Command("ping").Handle(func(*sdk.Context) (message.Chain, error) {
-		return message.Chain{message.Text("pong")}, nil
-	})
-}
-
-func main() {
-	if err := sdk.Run(&Ping{}); err != nil {
-		slog.Error("plugin stopped with an error", "err", err)
-		os.Exit(1)
-	}
+func New() *sdk.Plugin {
+    p := sdk.NewPlugin()
+    p.Command("ping").Description("Check whether the bot is responding").
+        Handle(func(*sdk.Context) (message.Content, error) {
+            return message.Text("pong"), nil
+        })
+    return p
 }
 ```
 
-Build it and run it with the development entry:
+Each call to `New()` returns an independent object. Register routes and lifecycle callbacks here, and create business state here so tests do not share it.
 
-```sh
-go build -o bin/ping .
-bin/alonabot run --data-dir ./data --plugin-id ping --entry bin/ping
+## Check and build
+
+```fish
+bin/alonabot check ./alonabot-plugin-ping
+bin/alonabot build ./alonabot-plugin-ping
 ```
 
-## Two kinds of handlers
+`check` validates the project, configuration, translations and handler signatures. `build` runs the same checks and writes the component binary to the project's `bin/`. Keep the source as an importable package: the builder creates an entry calling `sdk.Run(New())` and embeds the manifest, schemas and translations through a Go overlay.
 
-- **Auto-reply**: returns `(message.Chain, error)`. Core sends a non-empty Chain once after the handler returns, after all explicit sends in that call.
-- **Manual**: returns only `error` and calls `c.Send` itself.
+There are no generated files to maintain. Use `alonabot build` for components; `go build` still builds the Core CLI. For a project outside the repository, specify `--module example.com/ping`. A development CLI asks you to select an SDK version with `go get github.com/AlonaBot/AlonaBot@<version>`; see the [author tools](https://github.com/AlonaBot/AlonaBot/blob/main/docs/development.md#开发运行与热部署).
 
-Both may call `c.Send`.
+## Run and observe replies
 
-## Command groups and arguments
-
-```go
-func (p *Demo) Commands(r *sdk.CommandRegistry) {
-	g := r.Group("demo")
-	g.Command("hello").Handle(p.Hello) // /demo hello
-	g.Command("echo").Handle(p.Echo)   // /demo echo <text> <times>
-}
-
-// Echo binds arguments by position from the command text: /demo echo hi 3
-func (p *Demo) Echo(c *sdk.Context, text string, times int64) error {
-	for i := int64(0); i < times; i++ {
-		if _, err := c.Send(message.Chain{message.Text(text)}); err != nil {
-			return err
-		}
-	}
-	return nil
-}
+```fish
+bin/alonabot run ./alonabot-plugin-ping --data-dir ./data --reload
 ```
 
-Handler parameters can also be `sdk.UserID`, `*pb.ImageSegment` and `*pb.MessageChain`. Dispatch prefers the longest full path or alias.
+This starts Core and the plugin. Calling `/ping` from chat also requires a configured, running Adapter instance. [Quick Start](../guide/quick-start.md) provides a local loopback Adapter and steps to observe replies. `run` accepts multiple component directories. `--reload` rebuilds changed sources or resources, restarts only changed components, and keeps the old component running if compilation fails.
 
-## Handling events
+TCP loopback is the default transport; `--stdio` switches development components to stdio. Press Ctrl-C to stop Core and its components.
 
-To handle events without a command, register them in `Events`:
+## Choose a reply style
 
-```go
-func (*Echo) Events(r *sdk.EventRegistry) {
-	r.On("echo", "message.created").Handle(func(c *sdk.Context) error {
-		var chain message.Chain
-		for _, s := range c.Event().GetEventPayload().GetMessageCreated().GetChain().GetSegments() {
-			if t := s.GetText(); t != nil {
-				chain = append(chain, message.Text(t.GetText()))
-			}
-		}
-		if len(chain) == 0 {
-			return nil
-		}
-		_, err := c.Send(chain)
-		return err
-	})
-}
-```
+- Return `(message.Content, error)`: on success, non-empty content is sent once after all explicit sends in the call. Return `nil` or an empty Chain to skip the automatic reply.
+- Return `error`: reply explicitly with `c.Reply(text)` or `c.Send(content)` and return the original sending error.
 
-## Registration rules
+Both styles can send explicitly. Content can be a single `message.Text("pong")` or a `message.Chain{...}`. The first handler parameter is always `*sdk.Context`.
 
-- Commands, text matches, events, Services and Event Bus subscriptions are **chain-registered only in the root plugin's registration methods** and end with `Handle`. A missing `Handle`, a repeated call or a call after it makes `Collect` fail.
-- Permissions are `sdk.Permission` values: `sdk.Anyone`, `sdk.User`, `sdk.Admin`, `sdk.ChatAdmin`, `sdk.PermissionName`, combined with `Or`, e.g. `Permission(sdk.Admin.Or(sdk.ChatAdmin))`. Commands and text matches use the nearest explicit setting and require `user` if none is set. Use `c.Has` inside a handler to check the current Actor.
-- The plugin ID comes only from `plugin.yaml`.
+## Continue
 
-## Generating registration code
+- [Commands and Events](commands.md): groups, arguments, permissions, text matching and typed events.
+- [Messages and Media](messages.md): mixed content, send receipts, edits and streamed text.
+- [Configuration Schema and Secrets](config.md): read-only configuration and secret values.
+- [Data Storage](storage.md): KV, managed SQLite and plugin files.
+- [Services, Events and Models](services.md): shared APIs, notifications and generation.
+- [Background Tasks and Interaction](background.md): replies, reminders and buttons.
+- [HTTP and Plugin Pages](http.md): private routes and page assets.
+- [Test Plugins with plugintest](testing.md): assert replies, interactions and model calls in go test.
+- [Plugin Rules](rules.md): resources, storage and distribution.
 
-For real builds, registration code is generated at build time; nothing scans the disk at runtime. In the plugin's entry directory:
-
-```sh
-alonabot plugin generate --dir ./myplugin   # leaves the file untouched if nothing changed
-alonabot plugin check --dir ./myplugin      # exits 1 if the generated file is stale
-```
-
-Both filter sources by `--goos`, `--goarch` and `--tags`, defaulting to the current environment. Source problems print as `file:line:col: message`.
-
-## Full examples
-
-`examples/plugins/` in the repository has three:
-
-- [lifecycle](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/lifecycle/main.go): the smallest runnable plugin; logs each hook.
-- [echo](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/echo/main.go): manual event replies in a real session.
-- [showcase](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/showcase/main.go): every public SDK signature together, including config callbacks, HTTP and schedules. The SDK does not support schedules yet, so running it returns UNSUPPORTED.
+Repository examples: [lifecycle](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/lifecycle/main.go) for explicit callbacks and HTTP, [echo](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/echo/main.go) for commands, events and services, and [showcase](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/showcase/main.go) for configuration, HTTP and tasks together.

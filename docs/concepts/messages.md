@@ -4,7 +4,7 @@ title: 事件模型
 description: Event、Actor、Target 与消息 Chain 的含义。
 ---
 
-插件收到的是 Core 标准化之后的事件，与平台无关。精确定义见 [MESSAGE-MODEL.md](https://github.com/AlonaBot/AlonaBot/blob/main/spec/MESSAGE-MODEL.md)。
+插件收到 Core 标准化之后的事件。标准事件使用 SDK 类型，平台扩展事件保留自己的名称与 JSON 载荷。精确定义见 [MESSAGE-MODEL.md](https://github.com/AlonaBot/AlonaBot/blob/main/spec/MESSAGE-MODEL.md)。
 
 ## Event、Actor 与 Target
 
@@ -16,6 +16,8 @@ description: Event、Actor、Target 与消息 Chain 的含义。
 
 公共 JSON 中的各种 ID 都是字符串，时间是 UTC Unix 毫秒整数。缺失的字段就是缺失，不会用虚构的用户或零 ID 填补。
 
+在 Go Handler 中，`c.Event()` 返回 `*message.Event`：`ID` / `Type` 标识事件，`OccurredAt` 是 `time.Time`，`Actor` 可缺省，`Payload` 使用 `*message.CreatedPayload` 等类型化载荷，`Session` 是平台会话字符串。插件代码使用[类型化事件登记](../plugins/commands.md)和[消息构造函数](../plugins/messages.md)。
+
 ## 常见事件类型
 
 | `event_type` | 说明 |
@@ -25,6 +27,7 @@ description: Event、Actor、Target 与消息 Chain 的含义。
 | `button.clicked` | 按钮被点击；Actor 是本次点击的用户 |
 | `member.joined` / `member.left` | 成员进出 |
 | `reaction.added` | 表情回应 |
+| `command.invoked` | 命令身份与调用结果，省略参数和聊天内容 |
 | `scheduled` | 定时任务触发 |
 | `bot.online` / `bot.offline` | Core 在 Adapter 实例上下线时生成 |
 
@@ -33,7 +36,11 @@ description: Event、Actor、Target 与消息 Chain 的含义。
 命令按权限名准入：
 
 - `user`：具有可信 Actor 的用户。命令与文本匹配缺省要求它。
-- `admin`：Core 配置的机器人管理员，按 Adapter 实例与外部用户 ID 标识。
+- `admin`：Core 配置的机器人管理员，按 Adapter ID 与外部用户 ID 标识。
 - `chat_admin` 与 Adapter 声明的平台权限（例如 `onebot11.group_owner`）：只在该会话内有效，不会因此取得 Core 管理权限。
 
 Core 的全局禁止规则始终生效，动态策略在每次派发前重新检查。
+
+## 按平台能力使用
+
+事件定义描述公共模型，各 Adapter 报告已实现的事件与操作。使用按钮、编辑或平台扩展时先核对 [Adapter 进度](../adapters/index.md)，本机断言可在[plugintest](../plugins/testing.md)中设置对应能力。

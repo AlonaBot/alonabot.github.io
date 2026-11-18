@@ -18,14 +18,21 @@ npm run start:en  # 以英文启动开发服务器（开发服务器一次只加
 
 站点地址由环境变量覆盖：`SITE_URL`（缺省 `https://alonabot.github.io`）与 `BASE_URL`（缺省 `/`）。
 
+开发服务器与生产构建同时运行时，使用独立的生成目录并关闭持久缓存，避免构建其他语言时覆盖开发路由：
+
+```sh
+env DOCUSAURUS_NO_PERSISTENT_CACHE=1 DOCUSAURUS_GENERATED_FILES_DIR_NAME=.docusaurus-dev npm start
+env DOCUSAURUS_NO_PERSISTENT_CACHE=1 DOCUSAURUS_GENERATED_FILES_DIR_NAME=.docusaurus-build npm run build
+```
+
 ## 目录
 
 | 路径 | 内容 |
 | --- | --- |
 | `docs/` | 文档正文，按 `guide`、`concepts`、`plugins`、`adapters` 分组，侧边栏见 `sidebars.ts` |
 | `src/pages/` | 首页：标题与入口，旁边是一段插件代码和它在聊天中的效果 |
-| `src/css/custom.css` | 主题：纯白为底、墨色正文，浅蓝只用于链接、焦点与光环；暗色为中性近黑 |
-| `static/img/` | 占位 logo（亮/暗两版）、favicon 与分享卡片；正式 logo 确定后替换 |
+| `src/css/custom.css` | 主题：与官方 WebUI 共用蓝灰底色与青蓝强调色，提供亮暗阅读主题 |
+| `static/img/` | 复用官方 WebUI A 形标识的亮暗 Logo、自适应 favicon 与分享卡（SVG 源 / PNG 发布资源） |
 
 ## 多语言
 
@@ -38,7 +45,7 @@ npm run start:en  # 以英文启动开发服务器（开发服务器一次只加
 
 ## 版本
 
-当前文档对应框架 **0.1-beta**（`docusaurus.config.ts` 的 `currentVersion`）。框架发布版本时，用下面的命令把当前文档存成快照，再把 `currentVersion` 改成下一个开发版本：
+当前文档对照主仓库 main 的 `e0a38d7c1de9061abc51ba1c82423bfdbbd4805c`（2026-11-18），对应框架 **0.1-beta**（`docusaurus.config.ts` 的 `currentVersion`）。框架发布版本时，用下面的命令把当前文档存成快照，再把 `currentVersion` 改成下一个开发版本：
 
 ```sh
 npm run docusaurus docs:version 0.1
