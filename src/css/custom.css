@@ -1,26 +1,23 @@
-/*
- * AlonaBot 文档站主题：纯白为底、墨色正文，浅蓝只用于链接、焦点和光环这类小面积点缀。
- * 暗色用中性的深灰，不做偏蓝的底色。颜色全部经 Infima 变量注入。
- */
+/* 与官方 WebUI 共用蓝灰底色、青蓝强调色和亮暗层次。 */
 
 :root {
-  --ifm-color-primary: #2a8bd0;
-  --ifm-color-primary-dark: #267dbb;
-  --ifm-color-primary-darker: #2476b1;
-  --ifm-color-primary-darkest: #1d6192;
-  --ifm-color-primary-light: #3f98d6;
-  --ifm-color-primary-lighter: #4b9fd9;
-  --ifm-color-primary-lightest: #6fb3e2;
+  --ifm-color-primary: #0e7c92;
+  --ifm-color-primary-dark: #0c7083;
+  --ifm-color-primary-darker: #0b6a80;
+  --ifm-color-primary-darkest: #095666;
+  --ifm-color-primary-light: #10889f;
+  --ifm-color-primary-lighter: #1192aa;
+  --ifm-color-primary-lightest: #14a0bb;
 
-  --alona-ink: #16181d;
-  --alona-muted: #6b7280;
-  --alona-line: #ececef;
-  --alona-surface: #fafafb;
-  --alona-halo: #7cc6f2;
+  --alona-ink: #1f2a44;
+  --alona-muted: #5e6b82;
+  --alona-line: #dfe5ec;
+  --alona-surface: #ffffff;
+  --alona-accent: #22b8cf;
 
-  --ifm-background-color: #ffffff;
+  --ifm-background-color: #f3f6f9;
   --ifm-background-surface-color: #ffffff;
-  --ifm-navbar-background-color: rgba(255, 255, 255, 0.92);
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.96);
   --ifm-footer-background-color: #ffffff;
   --ifm-font-color-base: var(--alona-ink);
   --ifm-heading-color: var(--alona-ink);
@@ -28,7 +25,7 @@
   --ifm-hr-border-color: var(--alona-line);
   --ifm-table-border-color: var(--alona-line);
   --ifm-table-stripe-background: var(--alona-surface);
-  --ifm-code-background: #f4f4f6;
+  --ifm-code-background: #eaf0f5;
   --ifm-code-font-size: 90%;
   --ifm-font-family-base: system-ui, -apple-system, "Segoe UI", "PingFang SC",
     "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
@@ -38,30 +35,30 @@
   --ifm-global-radius: 0.5rem;
   --ifm-menu-color-background-active: transparent;
   --ifm-menu-color-background-hover: var(--alona-surface);
-  --docusaurus-highlighted-code-line-bg: rgba(42, 139, 208, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(14, 124, 146, 0.1);
 }
 
 html[data-theme="dark"] {
-  --ifm-color-primary: #7cc6f2;
-  --ifm-color-primary-dark: #5fb9ef;
-  --ifm-color-primary-darker: #51b2ee;
-  --ifm-color-primary-darkest: #2a9fe8;
-  --ifm-color-primary-light: #99d3f5;
-  --ifm-color-primary-lighter: #a8d9f6;
-  --ifm-color-primary-lightest: #d3ecfa;
+  --ifm-color-primary: #22b8cf;
+  --ifm-color-primary-dark: #1fa6ba;
+  --ifm-color-primary-darker: #1d9db0;
+  --ifm-color-primary-darkest: #188291;
+  --ifm-color-primary-light: #39bfd4;
+  --ifm-color-primary-lighter: #44c3d6;
+  --ifm-color-primary-lightest: #67d7e8;
 
-  --alona-ink: #ececee;
-  --alona-muted: #a0a2ab;
-  --alona-line: #34363d;
-  --alona-surface: #26282e;
-  --alona-halo: #7cc6f2;
+  --alona-ink: #e5eaf3;
+  --alona-muted: #94a1b8;
+  --alona-line: #28334a;
+  --alona-surface: #151c2b;
+  --alona-accent: #22b8cf;
 
-  --ifm-background-color: #1e1f24;
-  --ifm-background-surface-color: #1e1f24;
-  --ifm-navbar-background-color: rgba(30, 31, 36, 0.92);
-  --ifm-footer-background-color: #1e1f24;
-  --ifm-code-background: #2a2c32;
-  --docusaurus-highlighted-code-line-bg: rgba(124, 198, 242, 0.12);
+  --ifm-background-color: #0d121e;
+  --ifm-background-surface-color: #151c2b;
+  --ifm-navbar-background-color: rgba(21, 28, 43, 0.96);
+  --ifm-footer-background-color: #151c2b;
+  --ifm-code-background: #1c2538;
+  --docusaurus-highlighted-code-line-bg: rgba(34, 184, 207, 0.12);
 }
 
 .navbar {
@@ -80,6 +77,15 @@ html[data-theme="dark"] {
   color: var(--alona-muted) !important;
   border-bottom: 1px solid var(--alona-line);
   font-size: 0.85rem;
+}
+
+.theme-announcement-bar .close {
+  color: var(--alona-muted);
+  opacity: 1;
+}
+
+.theme-announcement-bar .close:hover {
+  color: var(--alona-ink);
 }
 
 /* 侧边栏当前项：左侧一条细线，不铺底色。 */
@@ -103,7 +109,7 @@ html[data-theme="dark"] {
 }
 
 .markdown blockquote {
-  border-left-color: var(--alona-halo);
+  border-left-color: var(--alona-accent);
 }
 
 .markdown a {
@@ -125,13 +131,13 @@ html[data-theme="dark"] {
 .button.button--primary {
   --ifm-button-background-color: var(--alona-ink);
   --ifm-button-border-color: var(--alona-ink);
-  color: var(--ifm-background-color);
+  color: var(--alona-surface);
 }
 
 .button.button--primary:hover {
   --ifm-button-background-color: var(--alona-ink);
   --ifm-button-border-color: var(--alona-ink);
-  color: var(--ifm-background-color);
+  color: var(--alona-surface);
   opacity: 0.86;
 }
 
@@ -145,9 +151,4 @@ html[data-theme="dark"] {
   --ifm-button-background-color: var(--alona-surface);
   --ifm-button-border-color: var(--alona-line);
   color: var(--alona-ink);
-}
-
-/* 概述页「核心优势」表：首列为短术语，不折行 */
-.advantages td:first-child {
-  white-space: nowrap;
 }

@@ -16,8 +16,8 @@ const isEnglish = process.env.DOCUSAURUS_CURRENT_LOCALE === "en";
 const config: Config = {
   title: "AlonaBot",
   tagline: isEnglish
-    ? "A lightweight, cross-platform chatbot framework in Go"
-    : "轻量级、跨平台的 Go 聊天机器人框架",
+    ? "Build your bot in Go. Bring it to the chat platforms you choose."
+    : "用 Go 写业务，接入你选择的聊天平台。",
   favicon: "img/favicon.svg",
 
   url: process.env.SITE_URL ?? "https://alonabot.github.io",
@@ -85,7 +85,7 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: "img/social-card.svg",
+    image: "img/social-card.png",
     colorMode: {
       defaultMode: "light",
       respectPrefersColorScheme: true,

@@ -1,121 +1,81 @@
 ---
 sidebar_position: 1
 title: 插件入门
-description: 用 sdk.Base 写一个能响应命令和事件的 Native Go 插件。
+description: 创建一个回复 /ping 的插件，用当前 SDK 构建并运行。
 ---
 
-插件是一个普通的 Go `main` 包：定义一个嵌入 `sdk.Base` 的根类型，在注册方法里链式注册 Handler，最后调用 `sdk.Run`。
+发出 `/ping`，收到 `pong`。这个插件只需要导出 `New() *sdk.Plugin`，创建插件对象并登记命令。
 
-## 最小插件：回复命令
+## 创建工程
 
-```go title="main.go"
-package main
+先按[快速开始](../guide/quick-start.md)克隆主仓库并构建 CLI。以下在仓库根目录执行，工程复用仓库的 `go.mod`：
+
+```fish
+bin/alonabot init ./alonabot-plugin-ping
+```
+
+`init` 要求空目录，生成 `plugin.go`、`plugin.yaml`、`config_schema.json` 和 `i18n/`。组件 ID 来自 `plugin.yaml`，这里为 `alonabot-plugin-ping`；包导出 `New()`，方便独立进程运行和 `go test` 中的同进程测试。
+
+把生成的 `plugin.go` 替换为：
+
+```go title="alonabot-plugin-ping/plugin.go"
+package plugin
 
 import (
-	"log/slog"
-	"os"
-
-	"github.com/AlonaBot/AlonaBot/sdk"
-	"github.com/AlonaBot/AlonaBot/sdk/message"
+    "github.com/AlonaBot/AlonaBot/sdk"
+    "github.com/AlonaBot/AlonaBot/sdk/message"
 )
 
-// Ping 是根插件，嵌入 sdk.Base 获得全部 Hook 的默认实现。
-type Ping struct{ sdk.Base }
-
-// Commands 注册 /ping 命令，返回的 Chain 由 Core 自动回复。
-func (*Ping) Commands(r *sdk.CommandRegistry) {
-	r.Command("ping").Handle(func(*sdk.Context) (message.Chain, error) {
-		return message.Chain{message.Text("pong")}, nil
-	})
-}
-
-func main() {
-	if err := sdk.Run(&Ping{}); err != nil {
-		slog.Error("plugin stopped with an error", "err", err)
-		os.Exit(1)
-	}
+func New() *sdk.Plugin {
+    p := sdk.NewPlugin()
+    p.Command("ping").Description("Check whether the bot is responding").
+        Handle(func(*sdk.Context) (message.Content, error) {
+            return message.Text("pong"), nil
+        })
+    return p
 }
 ```
 
-构建并用开发入口运行它：
+`New()` 每次返回独立对象。在这里登记路由和生命周期回调，业务状态也在这里创建，避免不同测试共享状态。
 
-```sh
-go build -o bin/ping .
-bin/alonabot run --data-dir ./data --plugin-id ping --entry bin/ping
+## 检查与构建
+
+```fish
+bin/alonabot check ./alonabot-plugin-ping
+bin/alonabot build ./alonabot-plugin-ping
 ```
 
-## 两种 Handler
+`check` 核对工程、配置、翻译和 Handler 签名；`build` 执行相同检查并输出组件二进制到工程的 `bin/`。作者源码中保持可导入包，构建器生成调用 `sdk.Run(New())` 的入口，并通过 Go overlay 编入 manifest、Schema 和翻译。
 
-- **自动回复型**：返回 `(message.Chain, error)`。非空的 Chain 由 Core 在 Handler 返回后发送一次，排在这次调用的所有显式发送之后。
-- **手动型**：只返回 `error`，在 Handler 里自己调用 `c.Send`。
+工程无需保存生成文件。编译组件使用 `alonabot build`；`go build` 仍用于构建 Core CLI。创建仓库外的工程时可指定 `--module example.com/ping`；开发版 CLI 会提示你用 `go get github.com/AlonaBot/AlonaBot@<version>` 选定 SDK 版本，详细步骤见[作者工具说明](https://github.com/AlonaBot/AlonaBot/blob/main/docs/development.md#开发运行与热部署)。
 
-两种都可以调用 `c.Send`。
+## 运行与查看回复
 
-## 命令分组与参数
-
-```go
-func (p *Demo) Commands(r *sdk.CommandRegistry) {
-	g := r.Group("demo")
-	g.Command("hello").Handle(p.Hello) // /demo hello
-	g.Command("echo").Handle(p.Echo)   // /demo echo <text> <times>
-}
-
-// Echo 的参数按位置从命令文本绑定：/demo echo hi 3
-func (p *Demo) Echo(c *sdk.Context, text string, times int64) error {
-	for i := int64(0); i < times; i++ {
-		if _, err := c.Send(message.Chain{message.Text(text)}); err != nil {
-			return err
-		}
-	}
-	return nil
-}
+```fish
+bin/alonabot run ./alonabot-plugin-ping --data-dir ./data --reload
 ```
 
-Handler 参数还可以是 `sdk.UserID`、`*pb.ImageSegment` 与 `*pb.MessageChain`。命令派发按最长的完整路径或别名优先。
+这会启动 Core 和插件。要从聊天中调用 `/ping`，还需配置并启动 Adapter 实例；[快速开始](../guide/quick-start.md)提供本地回环 Adapter 和可见回复步骤。`run` 可以同时接受多个组件目录，`--reload` 在源码或资源变化后重新构建，只重启变化的组件，编译失败时旧组件继续运行。
 
-## 响应事件
+默认传输为 TCP loopback；使用 `--stdio` 切换开发组件的传输。按 Ctrl-C 停止 Core 与组件。
 
-不经命令、直接处理事件时，在 `Events` 中显式注册：
+## 选择回复方式
 
-```go
-func (*Echo) Events(r *sdk.EventRegistry) {
-	r.On("echo", "message.created").Handle(func(c *sdk.Context) error {
-		var chain message.Chain
-		for _, s := range c.Event().GetEventPayload().GetMessageCreated().GetChain().GetSegments() {
-			if t := s.GetText(); t != nil {
-				chain = append(chain, message.Text(t.GetText()))
-			}
-		}
-		if len(chain) == 0 {
-			return nil
-		}
-		_, err := c.Send(chain)
-		return err
-	})
-}
-```
+- 返回 `(message.Content, error)`：成功返回的非空内容自动回复一次，排在本次调用的全部显式发送之后。`nil` 或空 Chain 表示跳过自动回复。
+- 返回 `error`：用 `c.Reply(text)` 或 `c.Send(content)` 显式回复。发送错误原样返回。
 
-## 注册规则
+两种 Handler 都可以显式发送，内容既可以是 `message.Text("pong")`，也可以是 `message.Chain{...}`。Handler 的第一个参数始终为 `*sdk.Context`。
 
-- 命令、文本匹配、事件、Service 与 Event Bus 订阅**只在根插件的注册方法中链式注册**，以 `Handle` 结束。漏写 `Handle`、重复调用或在它之后继续调用，都会让 `Collect` 报错。
-- 权限写成 `sdk.Permission`：`sdk.Anyone`、`sdk.User`、`sdk.Admin`、`sdk.ChatAdmin`、`sdk.PermissionName`，用 `Or` 取并集，例如 `Permission(sdk.Admin.Or(sdk.ChatAdmin))`。命令与文本匹配取最近一层的显式设置，都没有时要求 `user`。Handler 内用 `c.Has` 判断当前 Actor 的权限。
-- 插件 ID 只来自 `plugin.yaml`。
+## 接着写
 
-## 生成注册代码
+- [命令与事件](commands.md)：分组、参数、权限、文本匹配和类型化事件。
+- [发送消息与媒体](messages.md)：混合消息、发送回执、编辑与流式文本。
+- [配置 Schema 与 Secret](config.md)：读取只读配置，保存秘密值。
+- [存储数据](storage.md)：KV、受管 SQLite 和插件文件。
+- [服务、广播与模型](services.md)：共享接口、变化通知与模型调用。
+- [后台任务与交互](background.md)：等待回复、提醒与按钮。
+- [HTTP 与插件页面](http.md)：私有路由与页面套件。
+- [用 plugintest 测试插件](testing.md)：在 go test 中断言回复、交互与模型调用。
+- [插件规范](rules.md)：资源、存储和发布约定。
 
-正式构建时，插件的注册代码由构建期生成器生成，不在运行时扫描磁盘。在插件入口目录执行：
-
-```sh
-alonabot plugin generate --dir ./myplugin   # 内容不变时不改文件
-alonabot plugin check --dir ./myplugin      # 生成内容过期时以退出码 1 结束
-```
-
-两者按 `--goos`、`--goarch`、`--tags` 筛选源码，缺省取当前环境。源码问题逐行输出为 `文件:行:列: 说明`。
-
-## 完整示例
-
-仓库的 `examples/plugins/` 下有三个示例：
-
-- [lifecycle](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/lifecycle/main.go)：可以真实运行的最小插件，每个 Hook 记一条日志。
-- [echo](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/echo/main.go)：真实 Session 中的手动事件回复。
-- [showcase](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/showcase/main.go)：SDK 全部公共签名的组合方式，包括配置回调、HTTP 与定时任务。SDK 尚不支持定时任务，直接运行它会返回 UNSUPPORTED。
+仓库示例：[lifecycle](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/lifecycle/main.go) 展示显式生命周期回调与 HTTP，[echo](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/echo/main.go) 展示命令、事件与服务，[showcase](https://github.com/AlonaBot/AlonaBot/blob/main/examples/plugins/showcase/main.go) 展示配置、HTTP 和任务的组合。

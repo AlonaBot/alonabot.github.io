@@ -4,6 +4,8 @@ import { useState, type ReactNode } from "react";
 import clsx from "clsx";
 import { translate } from "@docusaurus/Translate";
 
+import useBaseUrl from "@docusaurus/useBaseUrl";
+
 import styles from "./styles.module.css";
 
 type PlatformId = "telegram" | "qq";
@@ -13,11 +15,14 @@ const tabs: { id: PlatformId; label: string }[] = [
   { id: "qq", label: "OneBot 11 · QQ" },
 ];
 
-// BotAvatar 是机器人头像：圆形，两只眼睛，头顶一圈光环。
+// BotAvatar 与导航栏使用同一套亮暗标识。
 function BotAvatar({ size = "md" }: { size?: "sm" | "md" }): ReactNode {
+  const light = useBaseUrl("/img/logo.svg");
+  const dark = useBaseUrl("/img/logo-dark.svg");
   return (
     <span className={clsx(styles.botAvatar, size === "sm" && styles.botAvatarSm)} aria-hidden="true">
-      <span className={styles.halo} />
+      <img className={styles.logoLight} src={light} alt="" />
+      <img className={styles.logoDark} src={dark} alt="" />
     </span>
   );
 }
@@ -101,13 +106,12 @@ export default function ChatDemo(): ReactNode {
   const [active, setActive] = useState<PlatformId>("telegram");
   return (
     <div className={styles.frame}>
-      <div className={styles.tabs} role="tablist" aria-label={translate({ id: "chat.choosePlatform", message: "选择平台" })}>
+      <div className={styles.tabs} role="group" aria-label={translate({ id: "chat.choosePlatform", message: "选择平台" })}>
         {tabs.map((t) => (
           <button
             key={t.id}
             type="button"
-            role="tab"
-            aria-selected={t.id === active}
+            aria-pressed={t.id === active}
             className={clsx(styles.tab, t.id === active && styles.tabActive)}
             onClick={() => setActive(t.id)}
           >

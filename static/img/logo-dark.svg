@@ -1,8 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AlonaBot">
-  <!-- 占位 logo：墨线对话气泡，头顶一圈浅蓝光环。原创图形，正式 logo 确定后替换。 -->
-  <ellipse cx="32" cy="10" rx="13" ry="3.6" fill="none" stroke="#7cc6f2" stroke-width="3"/>
-  <path d="M12 26c0-4.4 3.6-8 8-8h24c4.4 0 8 3.6 8 8v14c0 4.4-3.6 8-8 8H30l-9 8v-8h-1c-4.4 0-8-3.6-8-8z"
-        fill="none" stroke="#ececee" stroke-width="3.2" stroke-linejoin="round"/>
-  <circle cx="25" cy="33" r="2.6" fill="#ececee"/>
-  <circle cx="39" cy="33" r="2.6" fill="#ececee"/>
+<svg role="img" aria-label="AlonaBot" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.73328 58C16.3999 38.9333 24.1999 22.4667 31.1333 8.6C32.8666 5.13333 34.5999 5.13333 36.3333 8.6C43.2666 22.4667 49.3333 35.4667 54.5333 47.6C57.9999 54.5333 56.2666 57.1333 49.3333 55.4C40.6666 51.9333 31.1333 47.6 20.7333 42.4" stroke="url(#paint0_linear_87_4582)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<defs>
+<linearGradient id="paint0_linear_87_4582" x1="5.13328" y1="0.800001" x2="62.3333" y2="63.2" gradientUnits="userSpaceOnUse">
+<stop stop-color="#22B8CF"/>
+<stop offset="1" stop-color="#67D7E8"/>
+</linearGradient>
+</defs>
 </svg>

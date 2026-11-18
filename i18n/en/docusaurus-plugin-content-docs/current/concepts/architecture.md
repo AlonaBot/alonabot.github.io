@@ -23,10 +23,12 @@ AlonaBot is a single Go module (`github.com/AlonaBot/AlonaBot`) split into packa
 ```
 
 - **Core** is the single hub. One `data_dir` runs one Core, enforced by `core.lock`.
-- **Plugins, adapters and Agents** are separate processes. Each talks to Core through the SDK, never to each other.
-- **WebUI** is static files served read-only by Core; it manages Core through the versioned Admin API.
+- **Installed plugins, adapters and Agents** run as separate processes. Each talks to Core through the SDK, never to each other.
+- **WebUI** supplies static pages served read-only by Core and uses the versioned Admin API. A WebUI package may also include a Go entry for backend services; the current official `web/admin` package is static.
 
-Process isolation contains crashes but is **not a sandbox**: plugins are trusted local code running as the same OS user.
+Install components from trusted sources: plugin processes run with the same OS user’s permissions.
+
+Library mode can register in-process components. `plugintest` uses this path to assemble a real Core, SDK sessions and a test adapter inside `go test`. See [Plugin Testing](../plugins/testing.md).
 
 ## Main modules
 
@@ -35,6 +37,7 @@ Process isolation contains crashes but is **not a sandbox**: plugins are trusted
 | `contracts/` | `.proto` sources and generated types, manifest/release/message validation, schedule calculation, config schema parsing. No runtime I/O |
 | `internal/wire/` | Frame codec, TCP/stdio transport, session call table, admission budgets, priority lane and cancellation |
 | `internal/core/` | State store, processes, lifecycle, routing, permissions, media, service broker, Event Bus, HTTP entry, config and secrets, admin auth |
+| `plugintest/` | Library-mode test harness, event injection, permission/capability/model setup and accepted-send/handler-result collection |
 | `sdk/` | Component-side API: root plugin, Context and sending, chained registration, lifecycle hooks, managed SQLite (`sdk/sqlitedb`, `sdk/gormdb`), adapter role (`sdk/adapter`) |
 | `adapters/telegram/`, `adapters/onebot11/` | Official adapters: platform API, receiving and normalization, send plans, platform permissions, local mock servers |
 | `agent/` | Official Agent: conversation loop, providers, tools and MCP, memory |
@@ -54,6 +57,7 @@ A few hard rules: `sdk` never imports `internal/core`, `internal/core` never imp
 
 ## Further reading
 
+- [Plugin Basics](../plugins/first-plugin.md) and [Storage](../plugins/storage.md)
 - [Component Lifecycle](lifecycle.md)
 - [Wire Protocol](wire-protocol.md)
 - Specs: [DESIGN.md](https://github.com/AlonaBot/AlonaBot/blob/main/spec/DESIGN.md), [CONTRACTS-v0.1.md](https://github.com/AlonaBot/AlonaBot/blob/main/spec/CONTRACTS-v0.1.md)

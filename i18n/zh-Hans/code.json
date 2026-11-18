@@ -1,69 +1,15 @@
 {
-  "home.feature.isolation.title": {
-    "message": "依赖隔离"
-  },
-  "home.feature.isolation.body": {
-    "message": "独立进程 · 独立 go.mod · ~7.5 MiB PSS"
-  },
-  "home.feature.hotdeploy.title": {
-    "message": "热部署"
-  },
-  "home.feature.hotdeploy.body": {
-    "message": "run --reload · 仅重启变更组件 · 编译失败保留旧版"
-  },
-  "home.feature.rollback.title": {
-    "message": "事务化更新"
-  },
-  "home.feature.rollback.body": {
-    "message": "代次原子提交 · SQLite 候选副本 · 失败回滚"
-  },
-  "home.feature.agent.title": {
-    "message": "内置 Agent"
-  },
-  "home.feature.agent.body": {
-    "message": "工具调用确认 · MCP · 记忆 · llm.generate"
-  },
-  "home.feature.collab.title": {
-    "message": "插件协作"
-  },
-  "home.feature.collab.body": {
-    "message": "Service Broker · Event Bus · JSON Schema 校验"
-  },
-  "home.feature.permission.title": {
-    "message": "可信权限"
-  },
-  "home.feature.permission.body": {
-    "message": "Core 计算 Actor 权限 · 实例发信许可 · Secret 引用"
-  },
-  "home.feature.distribution.title": {
-    "message": "签名分发"
-  },
-  "home.feature.distribution.body": {
-    "message": "Ed25519 · 来源锁定更新 · 组件 --replace"
-  },
-  "home.feature.sdk.title": {
-    "message": "类型化 SDK"
-  },
-  "home.feature.sdk.body": {
-    "message": "编译期 Hook 校验 · 构建期代码生成 · Service Schema"
-  },
-  "home.feature.testing.title": {
-    "message": "真实 Core 测试"
-  },
-  "home.feature.testing.body": {
-    "message": "plugintest · go test · 库模式"
-  },
   "home.pageTitle": {
     "message": "首页"
   },
   "home.subtitle": {
-    "message": "跨平台 · 多进程 · Go 聊天机器人框架"
+    "message": "用 Go 写业务，接入你选择的聊天平台。"
   },
   "home.cta.quickStart": {
     "message": "快速开始"
   },
   "home.cta.plugin": {
-    "message": "插件 SDK"
+    "message": "编写第一个插件"
   },
   "home.status": {
     "message": "实施中"
@@ -459,5 +405,44 @@
   "theme.tags.tagsPageTitle": {
     "message": "标签",
     "description": "The title of the tag list page"
+  },
+  "home.feature.platform.title": {
+    "message": "一次编写，多平台复用"
+  },
+  "home.feature.platform.body": {
+    "message": "命令与消息使用同一套 SDK，平台差异交给 Adapter，并按实例能力选择功能。"
+  },
+  "home.feature.testing.title": {
+    "message": "本机验证真实回复"
+  },
+  "home.feature.testing.body": {
+    "message": "用 plugintest 在 go test 中运行真实 Core，检查回复、权限、数据库和多轮交互。"
+  },
+  "home.feature.hotdeploy.title": {
+    "message": "改插件，其他组件继续运行"
+  },
+  "home.feature.hotdeploy.body": {
+    "message": "run --reload 只重启变化的组件；编译失败时，继续使用旧版本。"
+  },
+  "home.feature.isolation.title": {
+    "message": "各插件自主选择依赖"
+  },
+  "home.feature.isolation.body": {
+    "message": "Native 插件分别构建、独立运行，依赖版本随各自构建确定，故障按组件定位。"
+  },
+  "home.feature.rollback.title": {
+    "message": "更新失败保留受管数据"
+  },
+  "home.feature.rollback.body": {
+    "message": "安装组件更新时使用 SQLite 候选副本，准备失败恢复旧代次与旧数据库。"
+  },
+  "home.feature.collab.title": {
+    "message": "复用服务与模型"
+  },
+  "home.feature.collab.body": {
+    "message": "通过 Service 调用、Bus 广播和 Agent 模型接口，让多个插件共享已有能力。"
+  },
+  "home.support": {
+    "message": "从 /ping 开始，逐步加入数据库、按钮和模型调用。"
   }
 }

@@ -1,60 +1,69 @@
 ---
 sidebar_position: 1
 title: Quick Start
-description: Build AlonaBot from source and run an example plugin.
+description: Start a plugin and a local loopback Adapter from source and observe a real reply.
 ---
 
-There is no release yet. Build from source and use the development entry `alonabot run`, which starts **one plugin**. This page runs the bundled `lifecycle` example.
+Send `/hello` locally and receive `Hello from devbot!`. The repository's `devbot` example runs real Core, a plugin and a loopback Adapter, then writes replies to a file. No platform account is required.
 
 ## Requirements
 
-- Go **1.27.1**, matching `go.mod`.
-- Git.
+Install Git and Go **1.27.1**, matching the main repository's `go.mod`. Commands below use fish. Normal builds use checked-in generated Protobuf files; prepare the extra tools in the [development guide](https://github.com/AlonaBot/AlonaBot/blob/main/docs/development.md) when changing `.proto` files.
 
-protoc is only needed when you change `.proto` files; see the [development guide](https://github.com/AlonaBot/AlonaBot/blob/main/docs/development.md).
+## Start Core, the plugin and the Adapter
 
-## Build
-
-From the repository root:
-
-```sh
+```fish
+git clone https://github.com/AlonaBot/AlonaBot.git
+cd AlonaBot
 go build -o bin/alonabot ./cmd/alonabot
-go build -o bin/lifecycle ./examples/plugins/lifecycle
+set -gx DEVBOT_DATA (mktemp -d)
+set -gx DEVBOT_OUTPUT (mktemp)
+cp examples/devbot/core_config.example.json $DEVBOT_DATA/core_config.json
+printf 'DEVBOT_DATA=%s\nDEVBOT_OUTPUT=%s\n' $DEVBOT_DATA $DEVBOT_OUTPUT
+bin/alonabot run examples/devbot/plugin examples/devbot/adapter --data-dir $DEVBOT_DATA --reload
 ```
 
-## Run a plugin
+Save the two printed temporary paths. `run` stays in the foreground, checks and builds both components, then accepts events after preparation and activation. `core_config.json` binds the `devloop` instance `one` to the loopback Adapter and expands the output path from the environment.
 
-```sh
-bin/alonabot run --data-dir ./data --plugin-id demo --entry bin/lifecycle
+This example listens on `127.0.0.1:7650`; check that the port is free first. If another Core is running, use dedicated settings and data. The [devbot README](https://github.com/AlonaBot/AlonaBot/blob/main/examples/devbot/README.md) provides the full configuration.
+
+## Send a command
+
+In another terminal, enter the same repository and replace these paths with the actual paths printed by the first terminal:
+
+```fish
+set -gx DEVBOT_DATA '/actual/data/directory'
+set -gx DEVBOT_OUTPUT '/actual/output/file'
 ```
 
-The plugin talks to Core over TCP loopback by default. Add `--stdio` to use stdio:
+The first terminal launch prints a management token to stderr once. Store it in the second terminal using `set token 'the displayed token'`. For a non-terminal launch, use the official CLI to read the initial delivery file:
 
-```sh
-bin/alonabot run --data-dir ./data --plugin-id demo --entry bin/lifecycle --stdio
+```fish
+set token (bin/alonabot admin-token show --data-dir $DEVBOT_DATA)
 ```
 
-The log shows `OnStart` and `OnReady`. On Ctrl-C (or SIGTERM), Core drains in-flight requests, the plugin enters STOPPING, runs `OnStop` and exits.
+Inject `/hello` using the token:
 
-:::note
-
-- Only one Core may run per `data_dir`.
-- The first run records a development install and commits a new generation; later runs reuse it.
-- `run` reads `<data_dir>/alonabot.yaml` and writes defaults with mode 0600 if it is missing. Restart after editing.
-
-:::
-
-## Reach plugin HTTP routes
-
-Core serves a single public HTTP entry on `listen` (default `127.0.0.1:7650`) and dispatches by Host: admin and plugin entries use different hostnames, and other hosts get 421. With default settings, plugin `demo` is at:
-
-```text
-http://localhost:7650/plugins/demo/...
+```fish
+curl --fail-with-body -X POST \
+  -H "Authorization: Bearer $token" \
+  'http://127.0.0.1:7650/plugins/alonabot-adapter-devbot/inject?instance=one&text=%2Fhello'
+cat $DEVBOT_OUTPUT
 ```
 
-`--listen`, `--log-level` and `--log-format` override settings only for this run and never rewrite the file.
+The request returns **HTTP 204** and dispatches asynchronously. After sending completes, the file contains **`Hello from devbot!`**. If the file is still empty immediately after the request, run `cat $DEVBOT_OUTPUT` again. Change `text` to `hello` to see ordinary text echoed back.
+
+`/inject` is a private plugin route authenticated with Core's management Bearer token. Admin and plugin routes share the `base_url` hostname, `http://127.0.0.1:7650` here. Cookie-authenticated POST requests also require Origin and CSRF checks.
+
+## Observe changes
+
+Keep `--reload` running and edit `messages.hello` in `examples/devbot/plugin/i18n/en-US.json`. Inject `/hello` again to see the new translation. Source or resource changes rebuild and restart only changed components. Compilation failures retain the complete diagnostics while the old component keeps replying.
+
+Development components use TCP loopback by default; add `--stdio` to switch transport. Ctrl-C drains in-flight work and runs stop callbacks. `core.lock` ensures one Core per data directory; this example uses temporary data and preserves your existing bot data.
 
 ## Next
 
-- What the example does: [Component Lifecycle](../concepts/lifecycle.md)
-- Write your own: [Plugin Basics](../plugins/first-plugin.md)
+- [Plugin Basics](../plugins/first-plugin.md): create your own `/ping` project.
+- [Commands and Events](../plugins/commands.md): arguments, permissions and event handlers.
+- [Messages and Media](../plugins/messages.md): send results and media.
+- [Implementation Status](status.md): connected capabilities and remaining work.
