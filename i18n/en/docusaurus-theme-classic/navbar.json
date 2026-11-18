@@ -11,20 +11,8 @@
     "message": "GitHub",
     "description": "Navbar item with label GitHub"
   },
-  "item.label.入门": {
-    "message": "Getting Started",
-    "description": "Navbar item with label 入门"
-  },
-  "item.label.核心概念": {
-    "message": "Core Concepts",
-    "description": "Navbar item with label 核心概念"
-  },
-  "item.label.插件 SDK": {
-    "message": "Plugin SDK",
-    "description": "Navbar item with label 插件 SDK"
-  },
-  "item.label.Adapter": {
-    "message": "Adapter",
-    "description": "Navbar item with label Adapter"
+  "item.label.文档": {
+    "message": "Docs",
+    "description": "Navbar item with label 文档"
   }
 }

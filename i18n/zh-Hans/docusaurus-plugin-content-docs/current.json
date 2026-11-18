@@ -3,8 +3,20 @@
     "message": "0.1-beta",
     "description": "The label for version current"
   },
-  "sidebar.guide.category.入门": {
-    "message": "入门",
-    "description": "The label for category '入门' in sidebar 'guide'"
+  "sidebar.docs.category.教程": {
+    "message": "教程",
+    "description": "The label for category '教程' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.进阶": {
+    "message": "进阶",
+    "description": "The label for category '进阶' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.接入平台": {
+    "message": "接入平台",
+    "description": "The label for category '接入平台' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.原理": {
+    "message": "原理",
+    "description": "The label for category '原理' in sidebar 'docs'"
   }
 }

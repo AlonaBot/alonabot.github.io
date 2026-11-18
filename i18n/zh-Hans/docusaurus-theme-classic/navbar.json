@@ -7,24 +7,12 @@
     "message": "AlonaBot",
     "description": "The alt text of navbar logo"
   },
-  "item.label.入门": {
-    "message": "入门",
-    "description": "Navbar item with label 入门"
-  },
-  "item.label.核心概念": {
-    "message": "核心概念",
-    "description": "Navbar item with label 核心概念"
-  },
-  "item.label.插件 SDK": {
-    "message": "插件 SDK",
-    "description": "Navbar item with label 插件 SDK"
-  },
-  "item.label.Adapter": {
-    "message": "Adapter",
-    "description": "Navbar item with label Adapter"
-  },
   "item.label.GitHub": {
     "message": "GitHub",
     "description": "Navbar item with label GitHub"
+  },
+  "item.label.文档": {
+    "message": "文档",
+    "description": "Navbar item with label 文档"
   }
 }
