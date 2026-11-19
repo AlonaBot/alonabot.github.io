@@ -29,7 +29,7 @@ env DOCUSAURUS_NO_PERSISTENT_CACHE=1 DOCUSAURUS_GENERATED_FILES_DIR_NAME=.docusa
 
 | 路径 | 内容 |
 | --- | --- |
-| `docs/` | 文档正文，按 `guide`、`concepts`、`plugins`、`adapters` 分组，侧边栏见 `sidebars.ts` |
+| `docs/` | 文档正文，按 `tutorial`、`advanced`、`usage`、`develop`、`reference`、`internals` 分组；全站一个侧边栏，顺序在 `sidebars.ts` 中登记 |
 | `src/pages/` | 首页：标题与入口，旁边是一段插件代码和它在聊天中的效果 |
 | `src/css/custom.css` | 主题：与官方 WebUI 共用蓝灰底色与青蓝强调色，提供亮暗阅读主题 |
 | `static/img/` | 复用官方 WebUI A 形标识的亮暗 Logo、自适应 favicon 与分享卡（SVG 源 / PNG 发布资源） |
@@ -38,7 +38,7 @@ env DOCUSAURUS_NO_PERSISTENT_CACHE=1 DOCUSAURUS_GENERATED_FILES_DIR_NAME=.docusa
 
 缺省语言是简体中文（`zh-Hans`），英文（`en`）发布在 `/en/` 下，导航栏右侧切换。
 
-- 文档正文：中文在 `docs/`，英文在 `i18n/en/docusaurus-plugin-content-docs/current/`，两边目录与文件名一一对应。改一边时同步另一边。
+- 文档正文：中文在 `docs/`。英文正文在中文定稿后翻译，放在 `i18n/en/docusaurus-plugin-content-docs/current/` 的同名路径下；没有翻译的页面在英文站显示中文。
 - 首页、导航、页脚与组件文案：源码里用 `<Translate>` 或 `translate()` 写中文；中文与英文的翻译文件分别在 `i18n/zh-Hans/` 和 `i18n/en/` 下，两边的 JSON 结构一致。新增文案后运行 `npm run write-translations -- --locale zh-Hans` 和 `npm run write-translations -- --locale en`，再补英文。
 - `i18n/zh-Hans/` 只放界面文案，不放文档正文：缺省语言的正文以 `docs/` 为准，在 `i18n/zh-Hans/docusaurus-plugin-content-docs/current/` 下另放一份会覆盖 `docs/`。
 - 标语与公告栏不在翻译文件中，在 `docusaurus.config.ts` 里按语言取值。
@@ -66,4 +66,11 @@ npm run docusaurus docs:version 0.1
 
 ## 写作约定
 
-中文与英文都写得简短直接，标识符、命令与协议名保留原文。引用主仓库文件时使用 `https://github.com/AlonaBot/AlonaBot/blob/main/...` 的完整链接。不使用第三方游戏或作品的角色立绘、官方 logo、字体与截图。
+读者是插件作者和机器人主人，不是框架的维护者。
+
+- 每页开头说明读完能做什么，一页只讲一件事。
+- 代码块是能直接粘贴的完整文件，或者写明所在文件的完整函数，带导入；后面跟「发什么、回什么」的终端对话。
+- 术语在第一次出现时用一句话解释，并收进 `docs/reference/glossary.md`。
+- 正文不出现工单号、PR 号、规格章节号，不链接主仓库的规格、实施计划与验收记录。
+- 没有实现的能力不写成已实现，统一用提示框标出，并登记在 `docs/internals/status.md` 与 `docs/usage/platforms.md`。
+- 标识符、命令与协议名保留原文。不使用第三方游戏或作品的角色立绘、官方 logo、字体与截图。

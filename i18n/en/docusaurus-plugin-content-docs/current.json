@@ -3,8 +3,28 @@
     "message": "0.1-beta",
     "description": "The label for version current"
   },
-  "sidebar.guide.category.入门": {
-    "message": "Getting Started",
-    "description": "The label for category '入门' in sidebar 'guide'"
+  "sidebar.docs.category.教程": {
+    "message": "Tutorial",
+    "description": "The label for category '教程' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.进阶": {
+    "message": "Going Further",
+    "description": "The label for category '进阶' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.使用与部署": {
+    "message": "Running a Bot",
+    "description": "The label for category '使用与部署' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.开发组件": {
+    "message": "Building Components",
+    "description": "The label for category '开发组件' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.参考": {
+    "message": "Reference",
+    "description": "The label for category '参考' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.原理": {
+    "message": "Internals",
+    "description": "The label for category '原理' in sidebar 'docs'"
   }
 }

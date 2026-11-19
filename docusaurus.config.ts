@@ -107,10 +107,7 @@ const config: Config = {
         height: 32,
       },
       items: [
-        { type: "docSidebar", sidebarId: "guide", position: "left", label: "入门" },
-        { type: "docSidebar", sidebarId: "concepts", position: "left", label: "核心概念" },
-        { type: "docSidebar", sidebarId: "plugins", position: "left", label: "插件 SDK" },
-        { type: "docSidebar", sidebarId: "adapters", position: "left", label: "Adapter" },
+        { type: "docSidebar", sidebarId: "docs", position: "left", label: "文档" },
         { type: "docsVersionDropdown", position: "right" },
         { type: "localeDropdown", position: "right" },
         { href: repoUrl, label: "GitHub", position: "right" },
@@ -123,23 +120,14 @@ const config: Config = {
           title: "文档",
           items: [
             { label: "概述", to: "/docs/" },
-            { label: "快速开始", to: "/docs/guide/quick-start" },
-            { label: "插件 SDK", to: "/docs/plugins/first-plugin" },
-          ],
-        },
-        {
-          title: "规格",
-          items: [
-            { label: "CONTRACTS", href: `${repoUrl}/blob/main/spec/CONTRACTS-v0.1.md` },
-            { label: "ARCHITECTURE", href: `${repoUrl}/blob/main/ARCHITECTURE.md` },
-            { label: "ADR", href: `${repoUrl}/blob/main/spec/adr/README.md` },
+            { label: "快速开始", to: "/docs/quick-start" },
+            { label: "教程", to: "/docs/tutorial/project" },
           ],
         },
         {
           title: "社区",
           items: [
             { label: "GitHub", href: repoUrl },
-            { label: "CONTRIBUTING", href: `${repoUrl}/blob/main/CONTRIBUTING.md` },
             { label: "文档仓库", href: docsRepoUrl },
           ],
         },
