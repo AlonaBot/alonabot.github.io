@@ -29,7 +29,7 @@ env DOCUSAURUS_NO_PERSISTENT_CACHE=1 DOCUSAURUS_GENERATED_FILES_DIR_NAME=.docusa
 
 发布地址为 `https://alonabot.github.io/docs/`，英文入口为 `https://alonabot.github.io/docs/en/`。工作流构建时设置 `SITE_URL=https://alonabot.github.io`、`BASE_URL=/docs/`；本地开发仍缺省使用根路径。
 
-`.github/workflows/build.yml` 在 GitHub 托管 runner 上执行类型检查和完整中英构建。PR 运行构建检查；推送到 `main` 后自动部署。仓库 Pages 的 Source 选择 **GitHub Actions**。
+`.github/workflows/build.yml` 在 GitHub 托管 runner 上执行完整中英构建。PR 运行构建检查；推送到 `main` 后自动部署。仓库 Pages 的 Source 选择 **GitHub Actions**。
 
 首次发布可在审查通过的分支上手动运行现有 Build 工作流，并启用 `deploy`。这会发布该分支的构建，同时保持 PR 开放：
 
