@@ -90,3 +90,7 @@ npm run docusaurus docs:version 0.1.0
 - 正文不出现工单号、PR 号、规格章节号，不链接主仓库的规格、实施计划与验收记录。
 - 没有实现的能力不写成已实现，统一用提示框标出，并登记在 `docs/internals/status.md` 与 `docs/usage/platforms.md`。
 - 标识符、命令与协议名保留原文。不使用第三方游戏或作品的角色立绘、官方 logo、字体与截图。
+
+## 许可证
+
+采用 [MIT 许可证](LICENSE)。
