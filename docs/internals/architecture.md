@@ -3,29 +3,17 @@ title: 架构
 description: Core 和各组件怎么配合，数据放在哪里。
 ---
 
-写插件不需要了解这一页。想知道框架为什么这样设计、出问题时该看哪里，可以读一读。
+这一页说明 Core 与各组件如何配合，以及排查问题时该看哪些数据。
 
-## 一个 Core，多个进程
+import ArchitectureDiagram from "@site/static/img/diagrams/architecture.svg";
+import MessageFlow from "@site/static/img/diagrams/message-flow.svg";
 
-```text
-     Telegram、QQ 等平台
-              │
-          Adapter 进程
-              │
-   ┌───────── Core ─────────┐
-   │ 找到该处理的插件          │
-   │ 检查权限                 │
-   │ 发送消息、管理媒体         │
-   │ 定时任务                 │
-   │ HTTP 入口                │
-   │ 配置、安装与更新           │
-   └──┬────────┬────────┬───┘
-      │        │        │
-   插件进程  插件进程  Agent 进程
-```
+## 一个 Core，多个组件
+
+<div className="doc-diagram-scroll"><ArchitectureDiagram className="doc-diagram" /></div>
 
 - **Core 是唯一的中心。** 所有消息都经过它。
-- **每个组件是一个独立的进程**，由 Core 启动。组件只和 Core 通信，组件之间不直接来往。
+- **Native 组件缺省以独立进程运行**，由 Core 启动；组件之间的调用经过 Core。同进程用法见下文。
 - **WebUI 是一组静态网页**，由 Core 提供，通过 Core 的管理接口工作。
 
 ## 为什么每个插件一个进程
@@ -41,13 +29,7 @@ description: Core 和各组件怎么配合，数据放在哪里。
 
 用户在 Telegram 里发了 `/todo add buy milk`：
 
-1. Telegram Adapter 收到，转成统一的格式，交给 Core。
-2. Core 让登记了 Hook 的插件先看一遍。
-3. Core 发现这是命令 `todo add`，找到登记它的插件。
-4. Core 检查这个用户有没有权限。
-5. Core 把调用发给插件进程，插件的 Handler 执行。
-6. Handler 调用 `c.Reply`，这个请求回到 Core。
-7. Core 检查后交给 Telegram Adapter，Adapter 调用 Telegram 的接口发出去。
+<div className="doc-diagram-scroll"><MessageFlow className="doc-diagram" /></div>
 
 权限检查在 Core 里完成。插件告诉 Core「我是替这个用户发的」，Core 不会直接相信，它用的是自己记录的信息。
 
@@ -67,7 +49,7 @@ description: Core 和各组件怎么配合，数据放在哪里。
 
 ## 安全边界
 
-- **插件是受信任的代码。** 它是普通的程序，和 Core 用同一个系统用户运行，能做这个用户能做的任何事。进程隔离防的是 bug，不是恶意。所以只安装信任的插件。
+- **插件是受信任的代码。** 它是普通的程序，和 Core 用同一个系统用户运行，能做这个用户能做的任何事。进程隔离用于减少故障影响。请只安装信任的插件。
 - **插件的网页是不受信任的。** 插件页面在浏览器的沙箱里显示，拿不到管理界面的登录信息。
 - **平台用户是不受信任的。** 谁是管理员由 Core 根据平台确认的身份判断。
 

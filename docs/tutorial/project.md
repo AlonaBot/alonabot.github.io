@@ -12,16 +12,16 @@ alonabot init alonabot-plugin-todo
 cd alonabot-plugin-todo
 ```
 
-```text
-alonabot-plugin-todo/
-├── plugin.go            # 插件代码
-├── plugin.yaml          # 插件的名字、版本等信息
-├── config_schema.json   # 插件有哪些配置项
-├── i18n/
-│   └── en-US.json       # 给用户看的文字
-├── go.mod
-└── .gitignore           # 忽略 data/ 和 bin/
-```
+工程 `alonabot-plugin-todo/` 包含：
+
+| 路径 | 用途 |
+| --- | --- |
+| `plugin.go` | 插件代码 |
+| `plugin.yaml` | 插件的名字、版本等信息 |
+| `config_schema.json` | 配置项声明 |
+| `i18n/en-US.json` | 给用户看的文字 |
+| `go.mod` | Go module 与依赖 |
+| `.gitignore` | 忽略 `data/` 和 `bin/` |
 
 运行时产生的数据放在 `data/`，构建产物放在 `bin/`，两者都不用提交。
 

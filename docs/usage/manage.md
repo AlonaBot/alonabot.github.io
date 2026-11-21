@@ -7,10 +7,12 @@ description: 安装、更新、停用插件，看日志，导出诊断信息。
 
 ## 准备
 
+以下 `alonabot` 命令假定你在启动 Core 的工作目录操作，Core 使用默认的 `./data`。使用安装脚本、手动指定其他目录或 Docker 时，先按[安装页](install.md#安装官方组件)定义 `ab`，并将本页管理命令开头的 `alonabot` 换成 `ab`；它会传入对应的程序路径、运行用户和 `--data-dir`。
+
 管理命令要连接正在运行的 Core，需要管理 token：
 
-```sh
-export ALONABOT_ADMIN_TOKEN='你的管理 token'
+```fish
+set -gx ALONABOT_ADMIN_TOKEN '你的管理 token'
 ```
 
 或者把 token 存在文件里，每次加 `--token-file <文件>`。
@@ -34,8 +36,8 @@ alonabot enable alonabot-plugin-todo
 # 更新到最新版本
 alonabot update alonabot-plugin-todo
 
-# 更新后有问题，退回上一个版本（数据也一起退回）
-alonabot rollback alonabot-plugin-todo
+# 更新后有问题，指定要恢复的代次（数据也一起恢复）
+alonabot rollback alonabot-plugin-todo <代次ID>
 
 # 卸载，保留数据
 alonabot uninstall alonabot-plugin-todo --yes
@@ -44,11 +46,36 @@ alonabot uninstall alonabot-plugin-todo --yes
 alonabot uninstall alonabot-plugin-todo --purge --yes
 ```
 
-需要确认的操作不加 `--yes` 时，命令只列出会受影响的内容然后退出，不会执行。
+回退前在 WebUI 的组件详情中查看保留的代次 ID。先运行不带 `--yes` 的命令查看受影响内容，确认后再加 `--yes` 执行；回退会舍弃目标代次之后的数据。
 
 :::caution 只安装信任的插件
 插件是普通程序，拥有和 Core 相同的系统权限，能读写这台机器上 Core 能访问的一切。
 :::
+
+## 用第三方 Adapter 联调插件
+
+第三方开发的 QQ 官方机器人接口 Adapter 可以通过仓库地址安装。首次安装时，Core 会列出待确认的来源、发布者公钥标识；未签名包还会列出未签名提示。检查后加 `--yes` 确认，Core 会保存来源和发布者绑定。
+
+假设你要热开发的插件在 `./my-plugin`，先在终端一启动开发用 Core：
+
+```sh
+alonabot run ./my-plugin --data-dir ./qq-dev-data --log-level debug
+```
+
+在同一工作目录打开终端二，设置这次启动生成的管理 token，然后安装 Adapter、添加账号。下面的仓库地址和组件 ID 是示例，请替换成实际项目的值；`qq-account.json` 按该 Adapter 的账号配置说明填写。
+
+```fish
+set -gx ALONABOT_ADMIN_TOKEN '这次启动的管理 token'
+
+# 先查看首次信任提示，再确认安装
+alonabot install --source author/alonabot-adapter-qq --data-dir ./qq-dev-data
+alonabot install --source author/alonabot-adapter-qq --data-dir ./qq-dev-data --yes
+
+# 创建账号时会绑定组件，并启用 Adapter、启动账号
+alonabot adapter instance create alonabot-adapter-qq qq-main --config ./qq-account.json --data-dir ./qq-dev-data
+```
+
+随后通过 QQ 给机器人发消息即可联调。保存 `./my-plugin` 中的代码会触发自动编译和重启；已安装的 Adapter 沿用安装版本。要热开发 Adapter 本身，见[从第三方源码调试](../develop/adapter.md#从第三方源码调试)。
 
 ## 机器人管理员
 

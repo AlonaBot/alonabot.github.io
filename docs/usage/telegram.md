@@ -5,6 +5,15 @@ description: 接入 Telegram 机器人。
 
 ## 接入
 
+按下面的步骤配置账号后，Core 会在启动时自动安装并启用官方 Telegram Adapter，首次接入需要联网。曾手动卸载过的 Adapter 需要[手动重装](install.md#安装官方组件)。
+
+下面用 `/help` 检查接入结果。先在运行中的 Core 上[配置管理 token](manage.md#准备)，安装并启用 help 插件：
+
+```sh
+alonabot install --source AlonaBot/alonabot-plugin-help --yes
+alonabot enable alonabot-plugin-help-official
+```
+
 1. 在 Telegram 里找 [@BotFather](https://t.me/BotFather)，发送 `/newbot` 创建机器人，得到 token。
 
 2. 在 WebUI 的「机器人账号」里添加，或者写进 `core_config.json`：

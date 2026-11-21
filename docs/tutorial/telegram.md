@@ -5,6 +5,12 @@ description: 把开发中的插件接到真实的 Telegram 机器人上。
 
 终端对话方便开发，但最终插件要在真实平台上运行。这一页把待办清单接到 Telegram。
 
+## CLI 准备
+
+本页使用 [0.1.0 官方发行归档](../usage/install.md#手动)中的 CLI，并保留 Go 1.27.1 或更高版本用于编译插件。若此前按快速上手运行了 `go install`，先将官方归档中的可执行文件加入 `PATH` 并放在原 `GOPATH/bin` 之前；运行 `command -v alonabot` 确认指向发行文件。发行构建内置官方发布者公钥，自动下载和验签 Adapter 时需要它。
+
+继续在待办插件工程目录运行，沿用该工程的 `./data`。
+
 ## 1. 申请机器人
 
 在 Telegram 里找 [@BotFather](https://t.me/BotFather)，发送 `/newbot`，按提示起名。完成后它会给你一串 token，形如 `123456:ABC-DEF...`。
@@ -29,12 +35,12 @@ Core 的设置在 `data/core_config.json`，运行过一次 `alonabot run` 就�
 
 ## 3. 运行
 
-```sh
-export TELEGRAM_BOT_TOKEN='123456:ABC-DEF...'
+```fish
+set -gx TELEGRAM_BOT_TOKEN '123456:ABC-DEF...'
 alonabot run
 ```
 
-Core 发现设置里有 Telegram 账号，会自动装上官方的 Telegram Adapter 并连接。设置了平台账号后，终端对话不再自动打开。
+Core 启动时发现设置里有 Telegram 账号，会自动启用对应的 Adapter；尚未安装时，会先从官方组件仓库下载、验签并安装，因此首次接入需要联网。曾手动卸载过的 Adapter 需要[手动重装](../usage/install.md#安装官方组件)。设置了平台账号后，终端对话不再自动打开。
 
 在 Telegram 里给你的机器人发 `/todo add buy milk`，会收到 `Added: buy milk`。修改代码后同样自动重新加载。
 
@@ -57,7 +63,7 @@ Core 发现设置里有 Telegram 账号，会自动装上官方的 Telegram Adap
 
 ## 4. 把自己设为管理员
 
-用了 `sdk.Admin` 的命令只有机器人管理员能用。先在 Telegram 里发 `/whoami`，机器人会回复你的用户标识：
+用了 `sdk.Admin` 的命令只有机器人管理员能用。先按[Telegram 接入说明](../usage/telegram.md#接入)安装并启用 help 插件，再在 Telegram 里发 `/whoami`，机器人会回复你的用户标识：
 
 ```text
 telegram:123456789

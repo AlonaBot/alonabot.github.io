@@ -5,6 +5,8 @@ description: Core 和组件进程之间怎么通信。
 
 用 Go SDK 写组件不需要了解这一页。想用其他语言实现组件，或者调试通信问题时可以参考。
 
+import WireFrame from "@site/static/img/diagrams/wire-frame.svg";
+
 ## 连接
 
 Core 启动组件进程后，两者之间建立一条连接，有两种方式：
@@ -22,11 +24,7 @@ Core 启动组件进程后，两者之间建立一条连接，有两种方式：
 
 连接上传输的是一个个「帧」：
 
-```text
-┌──────────────┬─────────────────────┐
-│ 长度（4 字节） │ 内容（Protobuf 编码）  │
-└──────────────┴─────────────────────┘
-```
+<div className="doc-diagram-scroll"><WireFrame className="doc-diagram" /></div>
 
 长度是大端的无符号整数，不包括自己这 4 个字节。一帧最大 4 MiB。收到长度为 0、超过上限或无法解码的帧时，连接直接断开。
 

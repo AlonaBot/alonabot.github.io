@@ -102,13 +102,13 @@ alonabot pack [目录]
 | 命令 | 作用 |
 | --- | --- |
 | `alonabot list` | 列出已安装的组件 |
-| `alonabot install <文件或组件ID>` | 安装。参数是安装包文件，或者官方组件的 ID |
+| `alonabot install <文件或组件ID>` | 安装本地归档，或可执行文件旁 `packages/` 中的组件 |
 | `alonabot install --source <owner/repo>` | 从 GitHub Release 安装 |
 | `alonabot enable <ID>`、`disable <ID>` | 启用、停用 |
 | `alonabot restart <ID>` | 重启 |
 | `alonabot reload <ID>` | 让修改过的配置生效 |
 | `alonabot update <ID>` | 更新到最新版本 |
-| `alonabot rollback <ID>` | 退回上一个版本 |
+| `alonabot rollback <ID> <代次ID>` | 恢复指定代次的程序、配置和数据库 |
 | `alonabot pin <ID>` | 固定版本，之后 `update` 只接受这个版本 |
 | `alonabot uninstall <ID>` | 卸载 |
 

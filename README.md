@@ -25,6 +25,20 @@ env DOCUSAURUS_NO_PERSISTENT_CACHE=1 DOCUSAURUS_GENERATED_FILES_DIR_NAME=.docusa
 env DOCUSAURUS_NO_PERSISTENT_CACHE=1 DOCUSAURUS_GENERATED_FILES_DIR_NAME=.docusaurus-build npm run build
 ```
 
+## GitHub Pages
+
+发布地址为 `https://alonabot.github.io/docs/`，英文入口为 `https://alonabot.github.io/docs/en/`。工作流构建时设置 `SITE_URL=https://alonabot.github.io`、`BASE_URL=/docs/`；本地开发仍缺省使用根路径。
+
+`.github/workflows/build.yml` 在 GitHub 托管 runner 上执行完整中英构建。PR 运行构建检查；推送到 `main` 后自动部署。仓库 Pages 的 Source 选择 **GitHub Actions**。
+
+首次发布可在审查通过的分支上手动运行现有 Build 工作流，并启用 `deploy`。这会发布该分支的构建，同时保持 PR 开放：
+
+```sh
+gh workflow run build.yml --repo AlonaBot/docs --ref codex/docs-v010-pages -f deploy=true
+```
+
+Pages 的 `github-pages` 环境需允许该首次发布分支；后续合并由维护者决定，合并后继续由 `main` 自动发布。
+
 ## 目录
 
 | 路径 | 内容 |
@@ -45,10 +59,12 @@ env DOCUSAURUS_NO_PERSISTENT_CACHE=1 DOCUSAURUS_GENERATED_FILES_DIR_NAME=.docusa
 
 ## 版本
 
-当前文档对照主仓库 main 的 `e0a38d7c1de9061abc51ba1c82423bfdbbd4805c`（2026-11-18），对应框架 **0.1-beta**（`docusaurus.config.ts` 的 `currentVersion`）。框架发布版本时，用下面的命令把当前文档存成快照，再把 `currentVersion` 改成下一个开发版本：
+当前文档对应 **0.1.0**，于 2026-11-21 发布，Core tag `v0.1.0` 对应提交 `95155cc81c961810d74c724b3892d0d8148c1550`。发行归档的内容以该版本的 Release 说明为准；2026-11-21 更新后的公开归档仅含 Core。版本标签统一在 `docusaurus.config.ts` 的 `currentVersion` 中设置。
+
+开始维护下一版前，先把当前文档存成快照，再更新 `currentVersion`：
 
 ```sh
-npm run docusaurus docs:version 0.1
+npm run docusaurus docs:version 0.1.0
 ```
 
 ## 依赖
