@@ -7,14 +7,13 @@ description: 用子插件把代码按功能分到多个包里。
 
 ## 写法
 
-```text
-alonabot-plugin-todo/
-├── plugin.go
-├── items/
-│   └── items.go      # 待办的增删查
-└── remind/
-    └── remind.go     # 提醒
-```
+在 `alonabot-plugin-todo/` 中按功能分包：
+
+| 路径 | 用途 |
+| --- | --- |
+| `plugin.go` | 创建插件，登记子插件 |
+| `items/items.go` | 待办的增删查 |
+| `remind/remind.go` | 提醒 |
 
 每个子包导出一个 `Register` 函数：
 

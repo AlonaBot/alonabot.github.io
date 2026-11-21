@@ -14,13 +14,14 @@ alonabot init alonabot-adapter-demo --role adapter --adapter-id demo
 cd alonabot-adapter-demo
 ```
 
-```text
-alonabot-adapter-demo/
-├── adapter.go                    # Adapter 代码
-├── plugin.yaml
-├── adapter_config_schema.json    # 每个账号有哪些设置
-└── go.mod
-```
+工程 `alonabot-adapter-demo/` 包含：
+
+| 路径 | 用途 |
+| --- | --- |
+| `adapter.go` | Adapter 代码 |
+| `plugin.yaml` | 组件信息 |
+| `adapter_config_schema.json` | 每个账号的设置项 |
+| `go.mod` | Go module 与依赖 |
 
 `--adapter-id demo` 是平台的标识。用户和会话的标识都以它开头，如 `demo:alice`。
 
@@ -209,6 +210,25 @@ send to=demo:alice text=Hello!
 ```
 
 这说明整条路走通了：你的 Adapter 交付了 `/hello`，Core 找到插件，插件回复，Core 调用了你的 `Send`。
+
+## 从第三方源码调试
+
+要修改第三方 Adapter 本身，先取得源码，使用带有 `plugin.yaml` 的工程目录。开发目录由 CLI 在本地编译、加载，支持第三方 Adapter，无需加入 Core 的官方仓库映射。账号字段按该项目的 `adapter_config_schema.json` 和说明填写。
+
+例如，QQ Adapter 源码在 `./qq-adapter`，业务插件源码在 `./my-plugin`，两者一起热开发：
+
+```sh
+alonabot run ./qq-adapter ./my-plugin --data-dir ./qq-source-data --log-level debug
+```
+
+Core 启动后，在同一工作目录的另一终端添加账号。下面假定 `plugin.yaml` 中的 `id` 是 `alonabot-adapter-qq`，请替换成实际值：
+
+```fish
+set -gx ALONABOT_ADMIN_TOKEN '这次启动的管理 token'
+alonabot adapter instance create alonabot-adapter-qq qq-main --config ./qq-account.json --data-dir ./qq-source-data
+```
+
+保存任一工程的代码后，CLI 自动重新编译并重启对应组件。这里使用独立数据目录：同一数据目录中，开发组件与已安装组件的 ID 或 Adapter 平台标识冲突时，Core 会拒绝启动。
 
 ## 逐个说明
 

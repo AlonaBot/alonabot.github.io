@@ -16,7 +16,7 @@ source: github.com/yourname/alonabot-plugin-todo
 role: plugin
 ```
 
-`source` 改成插件的 GitHub 仓库。用户用仓库地址安装和更新时靠它定位。
+`source` 填写组件来源，上例使用 GitHub 仓库。使用其他托管平台时，见[不放在 GitHub 上](#不放在-github-上)。
 
 2. 运行检查和测试：
 
@@ -36,14 +36,13 @@ alonabot pack --target linux/amd64 --target linux/arm64 --target darwin/arm64 --
 
 `bin/` 下会生成：
 
-```text
-bin/
-├── alonabot-plugin-todo-0.1.0-linux-amd64.tar.gz
-├── alonabot-plugin-todo-0.1.0-linux-arm64.tar.gz
-├── alonabot-plugin-todo-0.1.0-darwin-arm64.tar.gz
-├── alonabot-plugin-todo-0.1.0-windows-amd64.tar.gz
-└── release.json
-```
+| 文件 | 目标平台或用途 |
+| --- | --- |
+| `alonabot-plugin-todo-0.1.0-linux-amd64.tar.gz` | Linux amd64 |
+| `alonabot-plugin-todo-0.1.0-linux-arm64.tar.gz` | Linux arm64 |
+| `alonabot-plugin-todo-0.1.0-darwin-arm64.tar.gz` | macOS arm64 |
+| `alonabot-plugin-todo-0.1.0-windows-amd64.tar.gz` | Windows amd64 |
+| `release.json` | 资产清单 |
 
 每个平台一个安装包，`release.json` 是它们的清单。不写 `--target` 时只打当前系统的包。
 
@@ -100,17 +99,21 @@ alonabot pack --target linux/amd64 --key ./release.key
 
 ## 不放在 GitHub 上
 
+`plugin.yaml` 的 `source` 可以填写 `gitee.com/owner/repo`、`gitcode.com/owner/repo` 等来源。0.1.0 的 CLI `install --source` 只接受 GitHub 的 `owner/repo`，并从 GitHub Release 下载；其他平台发布的组件使用下面的本地安装方式。
+
 安装包放在别处时，用 `--asset-base` 指明下载地址的前缀：
 
 ```sh
 alonabot pack --target linux/amd64 --asset-base https://example.com/releases/v0.1.0
 ```
 
-用户也可以直接用下载下来的文件安装：
+用户下载对应平台的 AlonaBot 安装包与 `release.json`，放在同一目录；签名发布还需一并下载 `release.json.sig` 和 `release.pub`。然后从本地安装：
 
 ```sh
 alonabot install ./alonabot-plugin-todo-0.1.0-linux-amd64.tar.gz --yes
 ```
+
+热开发可以直接克隆任意平台上的源码仓库，再用 `alonabot run <工程目录> --log-level debug` 加载，见[从第三方源码调试](../develop/adapter.md#从第三方源码调试)。
 
 ## 更新日志
 

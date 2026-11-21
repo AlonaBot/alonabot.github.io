@@ -152,3 +152,19 @@ html[data-theme="dark"] {
   --ifm-button-border-color: var(--alona-line);
   color: var(--alona-ink);
 }
+
+/* 内联 SVG 沿用站点配色，缩放后保持文字清晰。 */
+.doc-diagram {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.doc-diagram-scroll {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.doc-diagram-scroll .doc-diagram {
+  min-width: 600px;
+}

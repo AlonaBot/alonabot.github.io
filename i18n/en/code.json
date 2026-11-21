@@ -9,10 +9,10 @@
     "message": "Write your first plugin"
   },
   "home.status": {
-    "message": "In development"
+    "message": "Released"
   },
   "home.status.link": {
-    "message": "Implementation status"
+    "message": "Features and platform support"
   },
   "chat.bot": {
     "message": "bot"

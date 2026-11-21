@@ -1,4 +1,4 @@
-# 构建文档站：链接或锚点失效时 Docusaurus 构建失败。只构建，不部署。
+# 构建文档站：链接或锚点失效时 Docusaurus 构建失败。PR 只检查；main 推送或手动选择部署时发布 Pages。
 name: Build
 
 on:
@@ -7,6 +7,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: 发布本次构建到 GitHub Pages
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -18,7 +23,10 @@ concurrency:
 jobs:
   build:
     name: Build site
-    runs-on: [self-hosted, linux, x64, alonabot]
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://alonabot.github.io
+      BASE_URL: /docs/
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -31,5 +39,32 @@ jobs:
           cache: npm
       - name: 安装依赖
         run: npm ci
+      - name: 类型检查
+        run: npm run typecheck
       - name: 构建
         run: npm run build
+
+      - name: 上传 Pages 构建
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy)
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: build
+
+  deploy:
+    name: Deploy Pages
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy)
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - name: 部署 Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

@@ -1,4 +1,4 @@
-// AlonaBot 文档站配置。站点地址由环境变量覆盖，部署方式确定前缺省按根路径构建。
+// AlonaBot 文档站配置。站点地址由环境变量覆盖，本地缺省按根路径构建，Pages 工作流使用 /docs/。
 import { themes as prismThemes } from "prism-react-renderer";
 
 import type { Config } from "@docusaurus/types";
@@ -8,13 +8,14 @@ const repoUrl = "https://github.com/AlonaBot/AlonaBot";
 const docsRepoUrl = "https://github.com/AlonaBot/docs";
 
 // 当前文档对应的框架版本；发布正式版时用 `npm run docusaurus docs:version <版本>` 存档。
-const currentVersion = "0.1-beta";
+const currentVersion = "0.1.0";
 
 // 构建时 Docusaurus 按语言分别加载配置；标语与公告不在翻译文件中，在这里按语言取值。
 const isEnglish = process.env.DOCUSAURUS_CURRENT_LOCALE === "en";
 
 const config: Config = {
   title: "AlonaBot",
+  customFields: { currentVersion },
   tagline: isEnglish
     ? "Build your bot in Go. Bring it to the chat platforms you choose."
     : "用 Go 写业务，接入你选择的聊天平台。",
@@ -91,10 +92,10 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     announcementBar: {
-      id: "early-development",
+      id: "release-0-1-0",
       content: isEnglish
-        ? "0.1-beta · API unstable"
-        : "0.1-beta · API 不稳定",
+        ? `${currentVersion} is now available`
+        : `${currentVersion} 已发布`,
       isCloseable: true,
     },
     navbar: {
@@ -119,9 +120,9 @@ const config: Config = {
         {
           title: "文档",
           items: [
-            { label: "概述", to: "/docs/" },
-            { label: "快速开始", to: "/docs/quick-start" },
-            { label: "教程", to: "/docs/tutorial/project" },
+            { label: "概述", href: "/docs/", prependBaseUrlToHref: true },
+            { label: "快速开始", href: "/docs/quick-start", prependBaseUrlToHref: true },
+            { label: "教程", href: "/docs/tutorial/project", prependBaseUrlToHref: true },
           ],
         },
         {

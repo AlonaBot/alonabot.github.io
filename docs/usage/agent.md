@@ -3,7 +3,7 @@ title: AI 对话（Agent）
 description: 让机器人用大模型聊天，并让其他插件共用模型。
 ---
 
-Agent 是官方的 AI 对话组件，官方安装包自带。它做两件事：
+Agent 是官方的 AI 对话组件。Docker Compose 已预装；使用归档或安装脚本时，先按[安装官方组件](install.md#安装官方组件)安装。它做两件事：
 
 - 让用户和大模型聊天，对话中可以调用插件提供的工具。
 - 让其他插件[调用大模型](../advanced/llm.md)，不用各自配置密钥。
@@ -18,7 +18,7 @@ Agent 是官方的 AI 对话组件，官方安装包自带。它做两件事：
 
 支持的接口类型：OpenAI 兼容接口、OpenAI Responses、Anthropic Messages、Gemini、Ollama。市面上大部分模型服务都提供 OpenAI 兼容接口。
 
-保存并重新加载后，发 `/ask 你好` 测试。
+保存配置后启用 Agent；已经运行的 Agent 需要重新加载。发 `/ask 你好` 测试。
 
 ## 怎么触发
 

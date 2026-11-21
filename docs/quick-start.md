@@ -3,14 +3,14 @@ title: 快速上手
 description: 安装 CLI，创建插件，在终端里和它对话。
 ---
 
-读完这一页，你会有一个能回复 `/hello` 的插件，并且在终端里直接和它对话。不需要注册任何平台账号。
+这一页用 0.1.0 创建一个能回复 `/hello` 的插件，在终端里直接和它对话，无需注册平台账号。
 
 ## 1. 安装
 
 需要先装好 [Go](https://go.dev/dl/) 1.27.1 或更高版本，然后安装 `alonabot` 命令：
 
 ```sh
-go install github.com/AlonaBot/AlonaBot/cmd/alonabot@latest
+go install github.com/AlonaBot/AlonaBot/cmd/alonabot@v0.1.0
 ```
 
 确认装好了：
@@ -20,6 +20,8 @@ alonabot --help
 ```
 
 提示找不到命令时，把 `go env GOPATH` 输出的目录下的 `bin` 加进 `PATH`。
+
+`go install` 构建适合本页的本地插件开发。接入 Telegram 等官方 Adapter 时，请使用[0.1.0 官方发行归档](usage/install.md#手动)中的 CLI：发行构建内置官方发布者公钥，Core 自动安装 Adapter 时需要它。
 
 ## 2. 创建插件
 

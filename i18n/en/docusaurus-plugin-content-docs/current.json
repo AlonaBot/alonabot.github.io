@@ -1,6 +1,6 @@
 {
   "version.label": {
-    "message": "0.1-beta",
+    "message": "0.1.0",
     "description": "The label for version current"
   },
   "sidebar.docs.category.教程": {

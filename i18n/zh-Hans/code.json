@@ -12,10 +12,10 @@
     "message": "编写第一个插件"
   },
   "home.status": {
-    "message": "实施中"
+    "message": "已发布"
   },
   "home.status.link": {
-    "message": "实现状态"
+    "message": "功能与平台支持"
   },
   "chat.bot": {
     "message": "机器人"

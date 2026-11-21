@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import clsx from "clsx";
 import Link from "@docusaurus/Link";
 import Translate, { translate } from "@docusaurus/Translate";
+import { useBaseUrlUtils } from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 
@@ -69,11 +70,12 @@ function CodeWindow(): ReactNode {
 
 export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
+  const { withBaseUrl } = useBaseUrlUtils();
   return (
     <Layout title={translate({ id: "home.pageTitle", message: "首页" })} description={siteConfig.tagline}>
       <header className={clsx("container", styles.hero)}>
         <div className={styles.intro}>
-          <p className={styles.eyebrow}>0.1-beta</p>
+          <p className={styles.eyebrow}>{siteConfig.customFields?.currentVersion as string}</p>
           <h1 className={styles.title}>AlonaBot</h1>
           <p className={styles.lead}>
             <Translate id="home.subtitle">用 Go 写业务，接入你选择的聊天平台。</Translate>
@@ -82,17 +84,17 @@ export default function Home(): ReactNode {
             <Translate id="home.support">从 /ping 开始，逐步加入数据库、按钮和模型调用。</Translate>
           </p>
           <div className={styles.actions}>
-            <Link className="button button--primary button--lg" to="/docs/quick-start">
+            <Link className="button button--primary button--lg" to={withBaseUrl("/docs/quick-start", { forcePrependBaseUrl: true })}>
               <Translate id="home.cta.quickStart">快速开始</Translate>
             </Link>
-            <Link className="button button--secondary button--lg" to="/docs/tutorial/project">
+            <Link className="button button--secondary button--lg" to={withBaseUrl("/docs/tutorial/project", { forcePrependBaseUrl: true })}>
               <Translate id="home.cta.plugin">编写第一个插件</Translate>
             </Link>
           </div>
           <p className={styles.status}>
-            <Translate id="home.status">实施中</Translate> ·{" "}
-            <Link to="/docs/internals/status">
-              <Translate id="home.status.link">实现状态</Translate>
+            <Translate id="home.status">已发布</Translate> ·{" "}
+            <Link to={withBaseUrl("/docs/internals/status", { forcePrependBaseUrl: true })}>
+              <Translate id="home.status.link">功能与平台支持</Translate>
             </Link>
           </p>
         </div>
@@ -105,7 +107,7 @@ export default function Home(): ReactNode {
         <section className={styles.features}>
           {features.map((f) => (
             <article key={f.title} className={styles.feature}>
-              <h2><Link to={f.to}>{f.title}</Link></h2>
+              <h2><Link to={withBaseUrl(f.to, { forcePrependBaseUrl: true })}>{f.title}</Link></h2>
               <p>{f.body}</p>
             </article>
           ))}

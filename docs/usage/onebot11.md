@@ -3,12 +3,10 @@ title: OneBot 11
 description: 通过 OneBot 11 协议接入 QQ 等平台。
 ---
 
-OneBot 11 是一个通用的机器人协议。AlonaBot 不直接连接 QQ，而是连接一个实现了 OneBot 11 的程序（比如 NapCat、Lagrange），由它和 QQ 通信。
+OneBot 11 是一个通用的机器人协议。AlonaBot 通过实现该协议的程序（比如 NapCat、Lagrange）与 QQ 通信。
 
 :::caution 当前只能接收
-OneBot 11 Adapter 目前只实现了接收消息，**还不能发送**。机器人能看到消息，但回复发不出去。发送功能正在开发。
-
-另外官方安装包暂时不包含这个 Adapter。
+0.1.0 的 OneBot 11 Adapter 支持接收消息，发送返回 `UNSUPPORTED`。适合接收事件、记录消息等用途。
 :::
 
 :::warning 账号风险
@@ -16,6 +14,8 @@ OneBot 11 Adapter 目前只实现了接收消息，**还不能发送**。机器�
 :::
 
 ## 接入
+
+按下面的步骤配置账号后，Core 会在启动时自动安装并启用官方 OneBot 11 Adapter，首次接入需要联网。曾手动卸载过的 Adapter 需要[手动重装](install.md#安装官方组件)。
 
 1. 安装并登录一个 OneBot 11 实现，在它的设置里开启**正向 WebSocket**，记下地址（如 `ws://127.0.0.1:3001`）和访问令牌。
 
