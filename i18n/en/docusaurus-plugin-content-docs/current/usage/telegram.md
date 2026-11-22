@@ -7,7 +7,7 @@ description: Configure long polling, media, typed actions and scoped menus.
 
 1. Send /newbot to [@BotFather](https://t.me/BotFather) and keep the token private.
 2. Set TELEGRAM_BOT_TOKEN in Core's environment, then merge this account configuration.
-3. Restart Core; the official adapter downloads on first use. Development mode can reload the changed instance.
+3. Restart Core; the official adapter downloads on first use. An adapter loaded from source can reload the changed instance when automatic reloading is enabled in development mode. For an installed adapter, restart Core after changing its configuration.
 
 ```json title="core_config.json"
 {

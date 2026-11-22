@@ -7,7 +7,7 @@ description: 配置 long polling、代理、媒体、类型化动作和分域命
 
 1. 向 [@BotFather](https://t.me/BotFather) 发送 `/newbot`，取得 token。
 2. 在 Core 进程的环境中设置 `TELEGRAM_BOT_TOKEN`，在 `core_config.json` 合并下面的账号配置。
-3. 重启 Core；首次会按需下载安装官方 Adapter。开发模式可直接保存并等待实例重载。
+3. 重启 Core；首次会按需下载安装官方 Adapter。源码加载的 Adapter 在开发模式开启自动重载时，可保存配置并等待实例重载；已安装的 Adapter 修改配置后仍需重启 Core。
 
 ```json title="core_config.json"
 {

@@ -12,7 +12,7 @@ npm start
 npm run start:en
 npm run typecheck
 env SITE_URL=https://alonabot.github.io BASE_URL=/docs/ npm run build
-npm run serve
+env SITE_URL=https://alonabot.github.io BASE_URL=/docs/ npm run serve
 ```
 
 开发服务器一次加载一种语言，生产构建生成全部语言，并检查内部链接和锚点。生产预览入口为 `/docs/` 与 `/docs/en/`；文档内容沿现有 `/docs/docs/...`、`/docs/en/docs/...` 路由。

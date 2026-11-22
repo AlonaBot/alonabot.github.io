@@ -25,7 +25,7 @@ Management includes archive installation and discovery, updates and rollback, pe
 | Telegram | Long polling; text/media, buttons, quotes, edits, deletion, scoped menus, typed actions/events |
 | OneBot11 | Forward/reverse WebSocket; message/media send and receive, quotes, merged forwards, recursive nodes, deletion, typed actions/events |
 | Agent | Multiple provider protocols, tools and confirmation, MCP, skills, memory; recursive quoted/forwarded content and image sources |
-| WebUI | Go backend and frontend; components, store, accounts, Profiles, permissions, logs, read-only data inspection and single-archive upload |
+| WebUI | Go backend and frontend; components, store, accounts, Profiles, permissions, logs, data management and single-archive upload |
 | help | Commands available in the current chat, /whoami and explicit menu entries |
 
 ## Known issues

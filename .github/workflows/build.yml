@@ -33,6 +33,34 @@ jobs:
           persist-credentials: false
           # 页面的「最后更新」时间来自 git 历史。
           fetch-depth: 0
+      - name: 检查 main 文件范围
+        if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git ls-files -z > "$RUNNER_TEMP/main-paths"
+          rejected=0
+          while IFS= read -r -d '' path; do
+            case "$path" in
+              .agents/*|.claude/*|.codex/*|.serena/*|.playwright-cli/*|docs/goals/*|docs/execution-order.md|docs/benchmarks.md|spec/*|goal-[0-9]*/*|delegation-skills-workspace/*|experiments/*)
+                printf 'main 包含个人维护资料：%q\n' "$path"
+                rejected=1
+                ;;
+            esac
+          done < "$RUNNER_TEMP/main-paths"
+          exit "$rejected"
+      - name: 检查提交范围的空白错误
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = workflow_dispatch ]; then
+            git show --format= --check HEAD
+          else
+            git diff --check "$BASE_SHA" HEAD
+          fi
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
