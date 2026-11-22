@@ -15,12 +15,12 @@ import "time"
 		if err != nil {
 			return err
 		}
-		_, err = db.ExecContext(c, "DELETE FROM todos WHERE done = 1")
+		_, err = db.ExecContext(c, "DELETE FROM todos WHERE body = ''")
 		return err
 	})
 ```
 
-每小时执行一次。第一个参数是任务的名字，在插件里不能重复。
+每小时清理空白待办，不需要向教程中的表新增字段。第一个参数是任务的名字，在插件里不能重复。
 
 按时刻执行用 cron 表达式（分 时 日 月 周）：
 
@@ -48,7 +48,7 @@ func morning(c *sdk.Context) error {
 
 - 一次任务最多运行 15 分钟。
 - 上一次还没跑完时，下一次会被跳过，不会同时跑两个。
-- 机器人没在运行时错过的任务不会补跑。
+- Core 停止期间错过的周期 tick 按调度规则跳过。支持休眠的已安装插件可由静态或动态任务自然到期唤醒，期限包含冷启动时间；一次性任务过期会删除并记录 WARN。
 
 ## 用户创建的任务
 

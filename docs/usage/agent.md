@@ -47,7 +47,7 @@ Agent 是官方的 AI 对话组件。Docker Compose 已预装；使用归档或�
 | --- | --- |
 | Chat model | 聊天用的模型 |
 | Fallback chat models | 主模型出错时依次尝试的备用模型 |
-| Personas、Default persona | 人格，即给模型的角色设定 |
+| Default persona | 默认人格，具体内容在 Agent 人格页面维护 |
 | History entries | 每次带上多少条历史消息 |
 | Separate group conversations by member | 群里每个人各自一段对话，还是全群共用一段 |
 | Image caption model | 用户发图片时用哪个模型看图 |
@@ -55,13 +55,19 @@ Agent 是官方的 AI 对话组件。Docker Compose 已预装；使用归档或�
 | Skills directory | 技能文件所在的目录 |
 | Plugins allowed to generate text | 哪些插件可以调用模型，缺省全部允许 |
 
+`triggers` 缺省为空；MCP 支持 stdio 与 streamable-http，技能目录为空时停用技能，编辑后使用 Reload skills。
+
 模型、人格、触发方式可以按[配置文件](../advanced/profiles.md)设置，让不同的群用不同的模型和人格。
 
 ## 工具调用与确认
 
-模型在对话中可以调用插件提供的工具（比如查天气、加待办）。会修改数据的工具，执行前机器人会发一条带按钮的消息，**由用户点确认后才执行**。
+模型在对话中可以调用插件提供的工具（比如查天气、加待办）。工具按当前 Profile、全局策略和声明依次取生效策略：allow 直接执行，confirm 发按钮等待用户确认，deny 拒绝。写入或删除类别用于展示，确认要求由策略决定。确认需要可信用户和支持按钮的实例；OneBot11 上需要确认的调用返回 `UNSUPPORTED`。
 
 哪些工具可以直接执行、哪些要确认、哪些禁用，在 WebUI 的权限页面里调整。
+
+## 引用、转发和图片
+
+普通触发与 `/ask` 保留完整消息链，递归读取引用与转发节点，保留作者、时间、正文及图片来源路径。图片输入模型接收实际图片，文本模型可使用 Image caption model；历史保留图片归属。节点或媒体读取失败会回复具体错误并停止本次模型请求。SnowLuma 的空资源问题见 [OneBot11](onebot11.md#forward-nodes)。
 
 ## 记忆
 

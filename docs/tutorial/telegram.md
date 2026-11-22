@@ -7,7 +7,7 @@ description: 把开发中的插件接到真实的 Telegram 机器人上。
 
 ## CLI 准备
 
-本页使用 [0.1.0 官方发行归档](../usage/install.md#手动)中的 CLI，并保留 Go 1.27.1 或更高版本用于编译插件。若此前按快速上手运行了 `go install`，先将官方归档中的可执行文件加入 `PATH` 并放在原 `GOPATH/bin` 之前；运行 `command -v alonabot` 确认指向发行文件。发行构建内置官方发布者公钥，自动下载和验签 Adapter 时需要它。
+使用 [v0.2.0 CLI](../quick-start.md)，并保留 Go 1.27.1 或更高版本用于编译插件。运行 `command -v alonabot` 确认使用的可执行文件。
 
 继续在待办插件工程目录运行，沿用该工程的 `./data`。
 
@@ -40,7 +40,7 @@ set -gx TELEGRAM_BOT_TOKEN '123456:ABC-DEF...'
 alonabot run
 ```
 
-Core 启动时发现设置里有 Telegram 账号，会自动启用对应的 Adapter；尚未安装时，会先从官方组件仓库下载、验签并安装，因此首次接入需要联网。曾手动卸载过的 Adapter 需要[手动重装](../usage/install.md#安装官方组件)。设置了平台账号后，终端对话不再自动打开。
+Core 启动时发现设置里有 Telegram 账号，会自动启用对应的 Adapter；尚未安装时，会先从官方组件仓库下载平台归档并安装，因此首次接入需要联网。曾手动卸载过的 Adapter 需要[手动重装](../usage/install.md#安装官方组件)。设置了平台账号后，终端对话不再自动打开。
 
 在 Telegram 里给你的机器人发 `/todo add buy milk`，会收到 `Added: buy milk`。修改代码后同样自动重新加载。
 
@@ -77,7 +77,7 @@ telegram:123456789
 }
 ```
 
-保存后立即生效，不用重启。
+本页的开发运行启用了自动重载，保存后立即生效；部署运行手改文件后重启 Core，也可用 `alonabot admin add telegram:123456789` 在线保存。
 
 ## 同时保留终端对话
 

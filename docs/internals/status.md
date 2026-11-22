@@ -1,80 +1,51 @@
 ---
 title: 实现状态
-description: 0.1.0 的可用功能、平台支持与已知限制。
+description: v0.2.0 可用能力、官方组件和已知问题。
 ---
 
-**AlonaBot 0.1.0 已于 2026-11-21 发布。** Core、WebUI、Agent、Telegram Adapter、OneBot 11 Adapter 与 help 插件均已发布 0.1.0，组件可独立安装和更新。
+**Core v0.2.0 于 2026-11-22 发布。** 五个官方组件也分别发布 v0.2.0，可独立安装与更新。
 
 ## 发行内容
 
-| 安装方式 | 包含内容 | 首次使用 |
-| --- | --- | --- |
-| 平台归档、安装脚本 | Core | 按需安装 WebUI、Agent、Adapter 和插件 |
-| Docker Compose | Core、WebUI、Agent | WebUI 自动启用；配置 Provider 和模型后启用 Agent |
+| 方式 | 包含内容 |
+| --- | --- |
+| 五平台归档、安装脚本 | Core；组件按需安装 |
+| Docker Compose | Core、WebUI、Agent；配置模型后启用 Agent |
 
-官方 Telegram 和 OneBot 11 Adapter 会在配置账号并启动 Core 后按需自动安装。安装步骤见[安装](../usage/install.md)。各组件使用各自的版本号，后续可独立更新。
+配置账号并启动 Core 可自动安装 Telegram、OneBot11 官方 Adapter。升级顺序为 Core、WebUI、其他组件。历史旁车清理后，旧 Core 在线安装和更新需要先升级。
 
 ## 已经可用
 
-**写插件**
+插件具备命令参数/分组/别名、文本匹配、权限、规则、类型化标准和扩展事件、消息与媒体、按钮、编辑/撤回接口、流式输出、多轮等待、SQLite/KV、Profile、静态和动态任务、Service/Bus、LLM、HTTP/页面与多语言。`plugintest` 使用真实 Core 验证插件主路径。
 
-- 命令：参数、别名、分组、权限
-- 文本匹配、事件、规则
-- 回复文字、图片、文件、按钮；编辑消息；流式输出
-- 配置项、密钥、按会话设置
-- 键值存储、SQLite 数据库、更新失败自动恢复受管数据库
-- 多轮对话
-- 定时任务、用户创建的任务
-- 插件之间的服务调用和广播
-- 调用大模型
-- HTTP 接口和插件页面
-- 多语言
-- 用 `plugintest` 测试
+管理支持归档安装、自动发现本机包、更新、回退、持久本机凭据、开发热重载、诊断、日志、休眠与按需唤醒。新增菜单按 `.Menu()`、账号、聊天、语言和权限分域，支持手动 owner 生命周期。
 
-**运行和管理**
-
-- 安装、更新、回退、卸载组件
-- 开发时修改代码后自动重新加载
-- 终端对话
-- 日志、诊断包
-- 安装脚本、Docker 镜像
-
-**官方组件**
-
-| 组件 | 提供什么 |
+| 官方组件 | 当前能力 |
 | --- | --- |
-| Telegram Adapter | 接收消息、发送文字和媒体、按钮、编辑与流式输出 |
-| OneBot 11 Adapter | 接收消息和事件；发送返回 `UNSUPPORTED` |
-| Agent | 对话、工具调用与确认、MCP、记忆、技能 |
-| WebUI | 在浏览器中管理组件、配置、权限、日志和数据 |
-| help 插件 | 查看可用命令，用 `/whoami` 查询用户标识 |
+| Telegram | long polling；文字/媒体、按钮、引用、编辑、撤回、分域菜单、类型化动作与事件 |
+| OneBot11 | 正反向 WS；收发消息/媒体、引用、合并转发、递归节点、动作与事件 |
+| Agent | 多协议 Provider、工具与确认、MCP、技能、记忆；递归读取引用/转发与图片来源 |
+| WebUI | Go 后台与前端；组件/商店/账号/Profile/权限/日志/数据管理，单归档上传 |
+| help | 按会话列出可用命令，`/whoami` 显示身份；显式菜单项 |
 
-## 已知限制
+## 已知问题与限制
 
-- **OneBot 11**：当前仅支持接收消息和事件。
-- **Telegram**：语音、贴纸、动图、撤回消息和命令菜单留待后续版本。
-- **撤回消息**：SDK 已提供接口，当前两个官方 Adapter 均未实现。
-- **同进程组件**：未捕获的 panic 会结束 Core 进程；停止超时后，仍在运行的 goroutine 需要由组件自行结束。
-- **外部数据**：组件自行管理的文件和外部数据库，需要按组件说明另外备份和恢复。
+- SnowLuma v2.4.2 实测部分嵌套转发 XML 的 `m_resid` 为空，影响部分群聊反向发送及混合正文/子节点读取。Adapter 返回已解析节点和带路径的错误，见 [OneBot11](../usage/onebot11.md#forward-nodes)。
+- OneBot11 暂无通用按钮、编辑、相册和命令菜单；Telegram 暂无通用转发节点读取、普通消息删除事件。见[功能表](../usage/platforms.md)。
+- Telegram getFile 最大 20 MiB；静态贴纸转图片，入站相册逐条交付，编辑接受文字与可选按钮。
+- 插件自行管理的文件和外部数据库需独立备份；代次回退覆盖受管 SQLite、程序与配置。
+- 同进程组件共享进程，未捕获 panic 会影响宿主。停止超时后的后台 goroutine 由组件负责终止。
 
-各平台的逐项对照见[平台功能对照](../usage/platforms.md)。
+## 平台验证记录
 
-## 平台验证情况
+五个目标为 Linux/macOS amd64/arm64、Windows amd64。现行发行延续已有平台证据：
 
-0.1.0 提供以下五个平台的归档。发布记录中的运行验证情况如下：
-
-| 目标 | 已记录的验证环境 |
+| 目标 | 已记录环境 |
 | --- | --- |
-| macOS arm64 | Apple Silicon 原生运行，安装更新与 launchd 服务验证通过 |
-| macOS amd64 | Rosetta 下运行通过；Intel Mac 原生运行未验证 |
-| Linux amd64 | x86_64 Linux VM 中运行通过，systemd 服务验证通过 |
-| Linux arm64 | ARM 宿主上的 Docker 容器中运行通过；ARM Linux VM 或物理机未验证 |
-| Windows amd64 | 交叉构建与发行资产静态检查通过；Windows 实际运行和 CGO 验证延期 |
+| macOS arm64 | Apple Silicon 原生运行及 launchd |
+| macOS amd64 | Rosetta；Intel Mac 原生运行尚未记录 |
+| Linux amd64 | x86_64 Linux VM 及 systemd |
+| Linux arm64 | ARM 宿主容器；VM/物理机尚未记录 |
+| Windows amd64 | 交叉构建与静态检查；实际运行、CGO 和资源测量延期 |
 
-业务验证使用本地 Telegram Bot API 与合成 Provider。最终候选的真实 Telegram 和付费 LLM Provider 凭据未验证。完整发行说明见 [v0.1.0 Release](https://github.com/AlonaBot/AlonaBot/releases/tag/v0.1.0)。
-
-## 从开发版本升级
-
-升级前停止 Core 和全部组件，备份完整数据目录、程序及外部组件数据。开发期间组件 ID、状态结构和初始迁移曾有调整；请保留原版本的程序与数据，以便恢复。
-
-新建插件使用 SDK `v0.1.0`。升级与恢复步骤见[安装](../usage/install.md#升级与恢复)。
+已有整合验收使用本地 Telegram Bot API 与合成 Provider；最终候选的真实 Telegram 和付费 LLM 凭据验证仍未记录。v0.2.0 延续交叉构建与模拟外部服务各自原有的验证范围，OneBot11 的 SnowLuma 实测问题按上文单独保留。完整发行依据见 [v0.2.0 发布说明](https://github.com/AlonaBot/AlonaBot/blob/main/changelog/v0.2.0/zh-CN.md)。升级和恢复见[安装](../usage/install.md#升级与恢复)。

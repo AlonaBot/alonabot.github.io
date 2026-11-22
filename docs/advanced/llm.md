@@ -26,8 +26,10 @@ The capital of France is Paris.
 
 ## 更多控制
 
+完整请求另导入 `github.com/AlonaBot/AlonaBot/sdk/agent`，请求与响应类型仍来自 `sdk/llm`。
+
 ```go
-	resp, err := llm.Generate(c, llm.Request{
+	resp, err := agent.Generate(c, llm.Request{
 		System: "You are a concise assistant. Answer in one sentence.",
 		Messages: []llm.Message{
 			{Role: "user", Text: "What is Go?"},
@@ -75,6 +77,7 @@ The capital of France is Paris.
 import (
 	"encoding/json"
 
+	"github.com/AlonaBot/AlonaBot/sdk/agent"
 	"github.com/AlonaBot/AlonaBot/sdk/conversation"
 	"github.com/AlonaBot/AlonaBot/sdk/llm"
 )
@@ -98,15 +101,21 @@ func chat(c *sdk.Context, text string) error {
 
 	// 提问
 	question := llm.Message{Role: "user", Text: text}
-	resp, err := llm.Generate(c, llm.Request{Messages: append(history, question)})
+	resp, err := agent.Generate(c, llm.Request{Messages: append(history, question)})
 	if err != nil {
 		return err
 	}
 
 	// 保存这一轮
 	answer := llm.Message{Role: "assistant", Text: resp.Text}
-	q, _ := json.Marshal(question)
-	a, _ := json.Marshal(answer)
+	q, err := json.Marshal(question)
+	if err != nil {
+		return err
+	}
+	a, err := json.Marshal(answer)
+	if err != nil {
+		return err
+	}
 	if _, err := conversation.Append(c, key, q, a); err != nil {
 		return err
 	}

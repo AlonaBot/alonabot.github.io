@@ -83,7 +83,7 @@ func Register(s *sdk.SubPlugin) {
 }
 ```
 
-`s.Config()` 只能看到 `items` 下面的配置，看不到 `remind` 的。
+`s.Config()` 是 `items` 下的基础配置视图。需要会话 Profile 覆盖时，在 Handler 中使用 `c.Config().Object("items").Int("limit")`。
 
 ## 给整个子插件设权限
 

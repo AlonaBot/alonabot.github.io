@@ -22,7 +22,7 @@ return c.Reply("Here you go", message.ImageURL("https://example.com/cat.png"))
 | `message.Text("...")` | 文字 |
 | `message.ImageURL(url)` | 图片 |
 | `message.VideoURL(url)`、`message.VoiceURL(url)` | 视频、语音 |
-| `message.FileURL(url)` | 文件 |
+| `message.FileURL(url, "report.pdf")` | 文件 |
 | `message.Mention(userID)` | @某人 |
 | `message.Quote(ref)` | 引用一条消息 |
 

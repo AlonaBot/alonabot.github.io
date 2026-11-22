@@ -7,9 +7,9 @@ description: 在 go test 里给插件发消息，断言它的回复。
 
 ## 第一个测试
 
-在 `plugin.go` 旁边新建 `plugin_test.go`：
+在 `plugin.go` 旁边新建 `plugin_local_test.go`，用于本地验证；官方仓库的测试提交范围按 [Core 贡献规范](https://github.com/AlonaBot/AlonaBot/blob/main/CONTRIBUTING.zh-CN.md#测试提交规则)执行：
 
-```go title="plugin_test.go"
+```go title="plugin_local_test.go"
 package plugin
 
 import (
@@ -102,17 +102,21 @@ func TestClear(t *testing.T) {
 
 ## 测试权限
 
-测试用户缺省是普通用户。用 `plugintest.Admin` 指定机器人管理员：
+测试用户缺省是普通用户。下面的独立例子需另导入 `github.com/AlonaBot/AlonaBot/sdk`，用 `plugintest.Admin` 指定机器人管理员：
 
 ```go
 func TestAdminOnly(t *testing.T) {
-	h := plugintest.Start(t, plugintest.Plugin(New()), plugintest.Admin("root"))
+	p := sdk.NewPlugin()
+	p.Command("purge").Permission(sdk.Admin).Handle(func(c *sdk.Context) error {
+		return c.Reply("Purged.")
+	})
+	h := plugintest.Start(t, plugintest.Plugin(p), plugintest.Admin("root"))
 	root := plugintest.User{ID: "root"}
 	bob := plugintest.User{ID: "bob"}
 
-	h.Text(plugintest.Private(root.ID), root, "/todo purge").RequireReply(t, "Purged.")
+	h.Text(plugintest.Private(root.ID), root, "/purge").RequireReply(t, "Purged.")
 
-	denied := h.Text(plugintest.Private(bob.ID), bob, "/todo purge")
+	denied := h.Text(plugintest.Private(bob.ID), bob, "/purge")
 	if len(denied.Sends) != 0 {
 		t.Fatalf("bob got a reply: %+v", denied.Sends)
 	}

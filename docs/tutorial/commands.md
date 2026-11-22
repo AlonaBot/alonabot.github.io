@@ -136,4 +136,8 @@ Page 3
 }
 ```
 
+## 显示在平台菜单
+
+根命令使用 `.Menu()` 显式加入自动菜单，例如 `p.Command("todo").Menu().Description("Manage to-do items").Handle(help)`；子命令继续通过文本或 help 调用。Telegram 按账号、聊天和语言筛选，见[分域菜单](../usage/telegram.md#command-menus)。
+
 下一页：[回复消息](messages.md)。

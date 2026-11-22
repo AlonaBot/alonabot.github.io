@@ -1,137 +1,103 @@
 ---
 title: 安装插件与日常管理
-description: 安装、更新、停用插件，看日志，导出诊断信息。
+description: 使用持久本机凭据安装、更新、管理账号和导出诊断。
 ---
 
-这些操作都可以在 WebUI 里点按钮完成。这一页介绍命令行的做法，适合没有浏览器的服务器或写脚本。
+管理命令在 Core 所在机器执行，从同一个 `--data-dir` 读取 `core_config.json` 与持久的 `admin_token`。保持 Core 运行，在另一个终端操作。
 
 ## 准备
 
-以下 `alonabot` 命令假定你在启动 Core 的工作目录操作，Core 使用默认的 `./data`。使用安装脚本、手动指定其他目录或 Docker 时，先按[安装页](install.md#安装官方组件)定义 `ab`，并将本页管理命令开头的 `alonabot` 换成 `ab`；它会传入对应的程序路径、运行用户和 `--data-dir`。
-
-管理命令要连接正在运行的 Core，需要管理 token：
+以下示例使用 `./data`。安装脚本、Docker 用户按[安装页](install.md#安装官方组件)选择实际数据目录、程序和运行用户。本机 CLI 自动读取凭据并直连本机 listen，请求 Host 沿用 `base_url`：
 
 ```fish
-set -gx ALONABOT_ADMIN_TOKEN '你的管理 token'
+alonabot list --data-dir ./data
 ```
 
-或者把 token 存在文件里，每次加 `--token-file <文件>`。
+修改本机连接地址可传 `--admin-url http://127.0.0.1:7650`。远程机器使用 SSH 登录后运行；容器内使用 `docker compose exec`。
 
 ## 插件
 
-```sh
-# 从 GitHub 安装
-alonabot install --source yourname/alonabot-plugin-todo --yes
-
-# 从下载好的文件安装
-alonabot install ./alonabot-plugin-todo-0.1.0-linux-amd64.tar.gz --yes
-
-# 看装了什么
-alonabot list
-
-# 停用、启用
-alonabot disable alonabot-plugin-todo
-alonabot enable alonabot-plugin-todo
-
-# 更新到最新版本
-alonabot update alonabot-plugin-todo
-
-# 更新后有问题，指定要恢复的代次（数据也一起恢复）
-alonabot rollback alonabot-plugin-todo <代次ID>
-
-# 卸载，保留数据
-alonabot uninstall alonabot-plugin-todo --yes
-
-# 卸载并删除数据
-alonabot uninstall alonabot-plugin-todo --purge --yes
+```fish
+alonabot install --source yourname/alonabot-plugin-todo --data-dir ./data
+alonabot install --source yourname/alonabot-plugin-todo --data-dir ./data --yes
+alonabot install ./alonabot-plugin-todo-0.2.0-linux-amd64.tar.gz --data-dir ./data --yes
+alonabot list --data-dir ./data
+alonabot enable alonabot-plugin-todo --data-dir ./data --yes
+alonabot disable alonabot-plugin-todo --data-dir ./data --yes
+alonabot update alonabot-plugin-todo --data-dir ./data --yes
 ```
 
-回退前在 WebUI 的组件详情中查看保留的代次 ID。先运行不带 `--yes` 的命令查看受影响内容，确认后再加 `--yes` 执行；回退会舍弃目标代次之后的数据。
+不带 `--yes` 查看确认预览，确认来源和受影响对象后执行。无位置参数的 `install --yes` 在当前目录（组件工程为 `bin/`）发现唯一的本机归档，也检查直接包子目录；多个候选时列出候选并报错。
+
+```fish
+alonabot rollback alonabot-plugin-todo GENERATION_ID --data-dir ./data --yes
+alonabot uninstall alonabot-plugin-todo --data-dir ./data --yes
+```
+
+在 WebUI 组件详情查看保留的代次。回退从目标代次建立新的程序、配置和数据库副本，会舍弃目标之后的数据。卸载缺省保留数据；`--purge-data` 删除受管数据，`--purge` 同时清理配置和安装绑定。操作前查看预览。
+
+声明 `prepare_effects: external` 的已有组件，更新前先停用、备份外部数据，再按确认预览显式使用 `--manual-migration-approved`。
 
 :::caution 只安装信任的插件
-插件是普通程序，拥有和 Core 相同的系统权限，能读写这台机器上 Core 能访问的一切。
+组件程序以 Core 的系统用户运行。安装前审阅仓库来源及其需要访问的数据。
 :::
 
 ## 用第三方 Adapter 联调插件
 
-第三方开发的 QQ 官方机器人接口 Adapter 可以通过仓库地址安装。首次安装时，Core 会列出待确认的来源、发布者公钥标识；未签名包还会列出未签名提示。检查后加 `--yes` 确认，Core 会保存来源和发布者绑定。
+终端一运行插件：
 
-假设你要热开发的插件在 `./my-plugin`，先在终端一启动开发用 Core：
-
-```sh
+```fish
 alonabot run ./my-plugin --data-dir ./qq-dev-data --log-level debug
 ```
 
-在同一工作目录打开终端二，设置这次启动生成的管理 token，然后安装 Adapter、添加账号。下面的仓库地址和组件 ID 是示例，请替换成实际项目的值；`qq-account.json` 按该 Adapter 的账号配置说明填写。
+终端二使用同一个数据目录，仓库和 ID 替换成实际项目：
 
 ```fish
-set -gx ALONABOT_ADMIN_TOKEN '这次启动的管理 token'
-
-# 先查看首次信任提示，再确认安装
-alonabot install --source author/alonabot-adapter-qq --data-dir ./qq-dev-data
 alonabot install --source author/alonabot-adapter-qq --data-dir ./qq-dev-data --yes
-
-# 创建账号时会绑定组件，并启用 Adapter、启动账号
 alonabot adapter instance create alonabot-adapter-qq qq-main --config ./qq-account.json --data-dir ./qq-dev-data
 ```
 
-随后通过 QQ 给机器人发消息即可联调。保存 `./my-plugin` 中的代码会触发自动编译和重启；已安装的 Adapter 沿用安装版本。要热开发 Adapter 本身，见[从第三方源码调试](../develop/adapter.md#从第三方源码调试)。
+账号 JSON 遵循该 Adapter 的 schema。已安装 Adapter 保持其发布版本，插件保存后自动重载。修改 Adapter 源码见[第三方源码调试](../develop/adapter.md#从第三方源码调试)。
 
 ## 机器人管理员
 
-```sh
+```fish
 alonabot admin list
 alonabot admin add telegram:123456789
 alonabot admin remove telegram:123456789
 ```
 
+上述简写使用默认 `./data`。`/whoami` 来自官方 help 插件，可用来查询用户标识。
+
 ## 平台账号
 
-```sh
-# 添加：平台的组件 ID、账号名、配置文件
+```fish
 alonabot adapter instance create alonabot-adapter-telegram main --config tg.json
-
 alonabot adapter instance stop main
 alonabot adapter instance start main
 alonabot adapter instance delete main
 ```
 
-`tg.json` 的内容就是这个账号的设置，例如 `{"token": "..."}`。
+`tg.json` 只放实例配置，如 `{"token":"${TELEGRAM_BOT_TOKEN}"}`；环境变量需在 Core 进程中可用。创建账号会绑定组件并启动实例。
 
-## 看日志
+## 日志与休眠
 
-```sh
-# 最近的日志
-alonabot logs
-
-# 持续显示新日志
+```fish
 alonabot logs --follow
-
-# 只看某个插件的错误
 alonabot logs --source alonabot-plugin-todo --level error
-
-# 某一天的
-alonabot logs --date 2026-11-18
-```
-
-日志文件在数据目录的 `logs/` 下，按天一个文件。
-
-临时调高某个插件的日志详细程度：
-
-```sh
+alonabot logs --date 2026-11-22
 alonabot log-level alonabot-plugin-todo debug
+alonabot sleep-policy
+alonabot sleep-policy alonabot-plugin-todo never
+alonabot sleep-policy alonabot-plugin-todo auto
 ```
+
+`log-level` 保存来源阈值；日志文件位于 `data/logs/`。休眠覆盖接受 `never`、正时长和恢复自动策略的 `auto`，设置后立即生效。
 
 ## 遇到问题时
 
-导出诊断包，里面有最近的日志、设置和组件信息：
-
-```sh
-alonabot diagnose --data-dir <数据目录> -o diagnose.zip
+```fish
+alonabot diagnose --data-dir ./data -o diagnose.zip
 ```
 
-密钥和 token 会被自动遮盖。但日志里可能有聊天内容，发给别人之前请自己检查一遍。
-
-Core 没在运行时这个命令也能用。
-
-完整的命令和参数见 [CLI 参考](../reference/cli.md)。
+缺省收集近 24 小时日志、设置和组件信息，并按规则遮盖凭据。日志仍可能含聊天内容，分享前检查。连接被拒绝时尝试停机只读导出，要求原数据目录未被其他 Core 占用。完整参数见 [CLI 参考](../reference/cli.md)。

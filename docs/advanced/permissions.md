@@ -41,7 +41,7 @@ todo.Command("purge").Permission(sdk.Admin).Handle(purge)
 各平台有自己的身份，比如 QQ 群的群主。用 `sdk.PermissionName` 加上平台提供的常量：
 
 ```go
-import tgperm "github.com/AlonaBot/AlonaBot/adapters/telegram/perm"
+import tgperm "github.com/AlonaBot/alonabot-adapter-telegram/perm"
 
 .Permission(sdk.PermissionName(tgperm.ChatOwner))
 ```

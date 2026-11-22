@@ -1,128 +1,70 @@
 ---
 title: 打包与发布
-description: 把插件打成安装包，签名，让别人安装。
+description: 检查组件，生成平台归档并发布到 GitHub。
 ---
+
+先使用 v0.2.0 CLI 检查工程，再将平台归档上传到组件仓库的同版本 Release。
 
 ## 发布前检查
 
-1. 改好 `plugin.yaml`：
+更新你自己工程的 `plugin.yaml`，使 ID、版本、来源与实际仓库一致：
 
 ```yaml title="plugin.yaml"
 id: alonabot-plugin-todo
 name: To-do List
-version: 0.1.0
+version: 0.2.0
 author: Your Name
 source: github.com/yourname/alonabot-plugin-todo
 role: plugin
 ```
 
-`source` 填写组件来源，上例使用 GitHub 仓库。使用其他托管平台时，见[不放在 GitHub 上](#不放在-github-上)。
-
-2. 运行检查和测试：
-
-```sh
-alonabot check
+```fish
+alonabot check .
 go test ./...
-alonabot test
+alonabot test .
 ```
 
-`alonabot test` 把插件编译出来，在一个临时环境里完整地启动再停止一遍，确认它能正常装载。
+`test` 在临时离线 Session 中构建、登记、激活和停止组件；Adapter 保持零平台实例。它检查装载与停止，业务验证使用 `plugintest`，真实平台另行联调。
 
 ## 打包
 
-```sh
-alonabot pack --target linux/amd64 --target linux/arm64 --target darwin/arm64 --target windows/amd64
+```fish
+alonabot pack . --target linux/amd64 --target linux/arm64 --target darwin/arm64 --target windows/amd64 --out bin
 ```
 
-`bin/` 下会生成：
+每个目标生成一个 `alonabot-plugin-todo-0.2.0-<系统>-<架构>.tar.gz`，省略 `--target` 时使用本机平台。支持 Linux、macOS 的 amd64/arm64 与 Windows amd64。纯静态 WebUI 生成单个 `any` 包；带 Go 后台的 WebUI 按平台构建。`--tags` 选择构建标签。
 
-| 文件 | 目标平台或用途 |
-| --- | --- |
-| `alonabot-plugin-todo-0.1.0-linux-amd64.tar.gz` | Linux amd64 |
-| `alonabot-plugin-todo-0.1.0-linux-arm64.tar.gz` | Linux arm64 |
-| `alonabot-plugin-todo-0.1.0-darwin-arm64.tar.gz` | macOS arm64 |
-| `alonabot-plugin-todo-0.1.0-windows-amd64.tar.gz` | Windows amd64 |
-| `release.json` | 资产清单 |
-
-每个平台一个安装包，`release.json` 是它们的清单。不写 `--target` 时只打当前系统的包。
-
-支持的平台：`linux/amd64`、`linux/arm64`、`darwin/amd64`、`darwin/arm64`、`windows/amd64`。
+归档包含 manifest、程序或静态资源、配置 schema、翻译和可选更新日志。进程包带可解析的 `build-info`。资源由 CLI 的 overlay 嵌入，工程无需维护生成入口文件。
 
 ## 发布到 GitHub
 
-在仓库里建一个 Release，标签是 `v` 加版本号（如 `v0.1.0`），把 `bin/` 下的全部文件传上去。
+创建 `v0.2.0` Release，只上传对应的平台归档；GitHub 自动提供源码压缩包。发布版本应与包内 manifest 一致。
 
-用户这样安装：
+用户在运行中的 Core 上执行：
 
-```sh
+```fish
 alonabot install --source yourname/alonabot-plugin-todo --yes
+alonabot enable alonabot-plugin-todo --yes
 ```
 
-以后发新版本：改 `plugin.yaml` 的 `version`，重新打包，建新的 Release。用户用 `alonabot update alonabot-plugin-todo` 更新。
-
-## 签名
-
-签名让用户确认安装包确实是你发布的、没有被改过。
-
-生成私钥（只做一次）。把下面的程序存成 `keygen.go`，运行 `go run keygen.go > release.key`：
-
-```go title="keygen.go"
-package main
-
-import (
-	"crypto/ed25519"
-	"crypto/rand"
-	"encoding/base64"
-	"fmt"
-)
-
-func main() {
-	_, private, err := ed25519.GenerateKey(rand.Reader)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(base64.StdEncoding.EncodeToString(private))
-}
-```
-
-打包时带上：
-
-```sh
-alonabot pack --target linux/amd64 --key ./release.key
-```
-
-会多生成 `release.json.sig`（签名）和 `release.pub`（公钥），和其他文件一起上传。
-
-**私钥不要提交到仓库，也不要出现在 CI 日志里。** 用 CI 发布时把它存成加密的 secret。
-
-没有签名的包也能安装，安装时用户会看到「未签名」的提示。
+安装器从 GitHub Release API 选择本机平台资产并检查包内来源、身份、版本、平台、构建信息、资源与依赖。后续 `alonabot update alonabot-plugin-todo --yes` 从已绑定的来源更新。安装前审阅来源和确认预览。
 
 ## 不放在 GitHub 上
 
-`plugin.yaml` 的 `source` 可以填写 `gitee.com/owner/repo`、`gitcode.com/owner/repo` 等来源。0.1.0 的 CLI `install --source` 只接受 GitHub 的 `owner/repo`，并从 GitHub Release 下载；其他平台发布的组件使用下面的本地安装方式。
+`source` 可记录其他托管平台的仓库。CLI 在线安装使用 GitHub `owner/repo`；其他来源将平台归档直接提供给用户下载：
 
-安装包放在别处时，用 `--asset-base` 指明下载地址的前缀：
-
-```sh
-alonabot pack --target linux/amd64 --asset-base https://example.com/releases/v0.1.0
+```fish
+alonabot install ./alonabot-plugin-todo-0.2.0-linux-amd64.tar.gz --yes
 ```
 
-用户下载对应平台的 AlonaBot 安装包与 `release.json`，放在同一目录；签名发布还需一并下载 `release.json.sig` 和 `release.pub`。然后从本地安装：
-
-```sh
-alonabot install ./alonabot-plugin-todo-0.1.0-linux-amd64.tar.gz --yes
-```
-
-热开发可以直接克隆任意平台上的源码仓库，再用 `alonabot run <工程目录> --log-level debug` 加载，见[从第三方源码调试](../develop/adapter.md#从第三方源码调试)。
+浏览器上传同样只选择这一份归档。开发源码可来自任意托管平台，见[第三方源码调试](../develop/adapter.md#从第三方源码调试)。
 
 ## 更新日志
 
-在工程根目录放一个 `CHANGELOG.md`，用户更新后能在 WebUI 里看到这个版本改了什么。
+插件作者可以选择根目录 `CHANGELOG.md`，或 `changelog/0.2.0/en-US.md` 与 `zh-CN.md`。多语言目录每个版本须有 `en-US.md`；版本不带 `v`，且不高于 manifest 版本。CLI 检查格式并原样打包，WebUI 更新后读取包内日志。
 
-## 版本号怎么升
+## 升级到归档发布
 
-- 修了问题：`0.1.0` → `0.1.1`。
-- 加了功能：`0.1.0` → `0.2.0`。
-- 改了数据库结构：加一个新的建表步骤（见[存储数据](../tutorial/storage.md)），不要改旧的。用户更新时框架会自动执行新步骤，失败则保留旧版本。
+先升级 Core 至 v0.2.0，再更新 WebUI 与其他组件。历史旁车清理后，旧 Core 的在线安装和更新需要先升级。已有组件数据及来源绑定继续保留。组件 v0.2.0 使用平台归档发布；维护者可参考 [Core 发行维护](https://github.com/AlonaBot/AlonaBot/blob/main/docs/releasing.md)协调整合版本。
 
-发布前对照一遍[插件规范](../develop/rules.md)。
+数据库改动追加新的迁移 ID，保留已发布迁移。更新失败时恢复范围见[存储](../tutorial/storage.md)。发布前再对照[插件规范](../develop/rules.md)。

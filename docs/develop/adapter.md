@@ -206,7 +206,7 @@ alonabot run . ../alonabot-plugin-hello
 每 10 秒日志里出现一次：
 
 ```text
-send to=demo:alice text=Hello!
+send to=demo:alice text="Hello AlonaBot"
 ```
 
 这说明整条路走通了：你的 Adapter 交付了 `/hello`，Core 找到插件，插件回复，Core 调用了你的 `Send`。
@@ -224,7 +224,6 @@ alonabot run ./qq-adapter ./my-plugin --data-dir ./qq-source-data --log-level de
 Core 启动后，在同一工作目录的另一终端添加账号。下面假定 `plugin.yaml` 中的 `id` 是 `alonabot-adapter-qq`，请替换成实际值：
 
 ```fish
-set -gx ALONABOT_ADMIN_TOKEN '这次启动的管理 token'
 alonabot adapter instance create alonabot-adapter-qq qq-main --config ./qq-account.json --data-dir ./qq-source-data
 ```
 
@@ -281,16 +280,23 @@ alonabot adapter instance create alonabot-adapter-qq qq-main --config ./qq-accou
 
 ## 断线续传
 
-很多平台按顺序给消息编号，Adapter 重启后可以从上次的位置继续收。这个位置就是游标：
+很多平台按顺序给消息编号，Adapter 重启后可以从上次的位置继续收。这个位置就是游标。另导入 `strconv`；交付时传入 update ID，`Start` 里调用 `readOffset(req.Cursor)` 并处理错误，再从该位置之后继续接收：
 
 ```go
-// 交付消息时带上「处理到哪了」
-core.Deliver(ctx, event, []byte(strconv.FormatInt(update.ID, 10)))
+func deliverUpdate(ctx context.Context, core adapter.Core, event *message.Event, updateID int64) error {
+	_, err := core.Deliver(ctx, event, []byte(strconv.FormatInt(updateID, 10)))
+	return err
+}
 
-// 下次启动时从 req.Cursor 取回
-func (demo) Start(ctx context.Context, req adapter.StartRequest, core adapter.Core) (adapter.Instance, error) {
-	offset, _ := strconv.ParseInt(string(req.Cursor), 10, 64)
-	// 从 offset 之后开始接收
+func readOffset(cursor []byte) (int64, error) {
+	if len(cursor) == 0 {
+		return 0, nil
+	}
+	offset, err := strconv.ParseInt(string(cursor), 10, 64)
+	if err != nil {
+		return 0, fmt.Errorf("parse cursor: %w", err)
+	}
+	return offset, nil
 }
 ```
 

@@ -8,7 +8,7 @@ const repoUrl = "https://github.com/AlonaBot/AlonaBot";
 const docsRepoUrl = "https://github.com/AlonaBot/docs";
 
 // 当前文档对应的框架版本；发布正式版时用 `npm run docusaurus docs:version <版本>` 存档。
-const currentVersion = "0.1.0";
+const currentVersion = "0.2.0";
 
 // 构建时 Docusaurus 按语言分别加载配置；标语与公告不在翻译文件中，在这里按语言取值。
 const isEnglish = process.env.DOCUSAURUS_CURRENT_LOCALE === "en";
@@ -92,7 +92,7 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     announcementBar: {
-      id: "release-0-1-0",
+      id: "release-0-2-0",
       content: isEnglish
         ? `${currentVersion} is now available`
         : `${currentVersion} 已发布`,

@@ -16,6 +16,7 @@ description: 标准事件、权限名，以及用户、会话、消息标识的�
 | `sdk.ReactionAdded` | `reaction.added` | 有人给消息加了表情回应 | `*message.ReactionAddedPayload` |
 | `sdk.BotOnline` | `bot.online` | 机器人账号上线 | `*message.BotOnlinePayload` |
 | `sdk.BotOffline` | `bot.offline` | 机器人账号下线 | `*message.BotOfflinePayload` |
+| `sdk.CommandMenuReady` | `bot.command_menu_ready` | 手动命令菜单 owner 已就绪 | `*message.CommandMenuReadyPayload` |
 | `sdk.CommandInvoked` | `command.invoked` | 有命令被执行。只有命令的名字和结果，没有参数和聊天内容，适合做统计 | `*message.CommandInvokedPayload` |
 
 用法见[文本匹配与事件](../advanced/matching.md)。各平台实际会发出哪些事件见[平台功能对照](../usage/platforms.md)。
@@ -70,9 +71,9 @@ type CreatedPayload struct {
 
 | 平台 | 包 | 常量 | 名称 |
 | --- | --- | --- | --- |
-| Telegram | `adapters/telegram/perm` | `ChatOwner` | `telegram.chat_owner` |
+| Telegram | `github.com/AlonaBot/alonabot-adapter-telegram/perm` | `ChatOwner` | `telegram.chat_owner` |
 | | | `ChatAdmin` | `telegram.chat_admin` |
-| OneBot 11 | `adapters/onebot11/perm` | `GroupOwner` | `onebot11.group_owner` |
+| OneBot 11 | `github.com/AlonaBot/alonabot-adapter-onebot11/perm` | `GroupOwner` | `onebot11.group_owner` |
 | | | `GroupAdmin` | `onebot11.group_admin` |
 | | | `PrivateFriend` | `onebot11.private_friend` |
 
@@ -101,7 +102,7 @@ type CreatedPayload struct {
 | `message.ImageURL(url)`、`message.Image(来源)` | 图片 |
 | `message.VideoURL(url)` | 视频 |
 | `message.VoiceURL(url)` | 语音 |
-| `message.FileURL(url)`、`message.File(来源, 文件名)` | 文件 |
+| `message.FileURL(url, 文件名)`、`message.File(来源, 文件名)` | 文件 |
 | `message.Mention(用户ID)` | @某人。参数是平台上的用户 ID，不带平台前缀 |
 | `message.Quote(消息标识)` | 引用一条消息 |
 | `message.Buttons(行...)` | 按钮 |

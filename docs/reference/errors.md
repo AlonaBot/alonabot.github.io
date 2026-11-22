@@ -40,7 +40,7 @@ return out, errcode.InvalidArgument.Errorf("invalid city %q", in.City)
 | `ResourceExhausted` | 超过了上限 | 短时间内调用太多；内容太大 |
 | `DeadlineExceeded` | 超时 | `Wait` 没等到回答；Handler 超过 30 秒；被调用的服务太慢 |
 | `Cancelled` | 被取消 | 插件正在停止 |
-| `Unavailable` | 暂时不可用 | 被调用的插件没在运行；没有配置大模型；平台连接断开 |
+| `Unavailable` | 暂时不可用 | 组件未安装、停用或唤醒失败；没有配置大模型；平台连接断开 |
 | `Internal` | 内部错误 | Handler 里发生了 panic |
 | `CallCycle` | 调用成环 | 插件 A 的服务调用 B，B 又调用 A；Handler 里调用了自己插件的服务 |
 | `NoDefaultTarget` | 不知道发到哪里 | 在定时任务或广播的 Handler 里用了 `c.Reply`，这里没有「当前会话」，改用 `c.SendTo` |

@@ -19,8 +19,8 @@ cd alonabot-plugin-todo
 | `plugin.go` | 插件代码 |
 | `plugin.yaml` | 插件的名字、版本等信息 |
 | `config_schema.json` | 配置项声明 |
-| `i18n/en-US.json` | 给用户看的文字 |
-| `go.mod` | Go module 与依赖 |
+| `i18n/`（按需添加） | 给用户看的多语言文字 |
+| `go.mod` | Go module 与依赖；在已有 module 内创建时沿用现有文件 |
 | `.gitignore` | 忽略 `data/` 和 `bin/` |
 
 运行时产生的数据放在 `data/`，构建产物放在 `bin/`，两者都不用提交。

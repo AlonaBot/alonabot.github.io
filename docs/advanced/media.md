@@ -69,17 +69,29 @@ func export(c *sdk.Context) error {
 
 `media.Open` 返回一个 `io.ReadCloser`，图片内容在读的时候才从平台下载。用完要关闭。
 
-处理任意消息里的图片时，遍历消息内容：
+处理任意消息里的图片时，遍历消息内容并累计大小；另导入 `errors`，通过 `errors.Join` 保留读取和关闭错误：
 
 ```go
 	p.On(sdk.MessageCreated).Handle(func(c *sdk.Context, e *message.CreatedPayload) error {
+		var total int64
 		for _, seg := range e.Chain {
 			if img, ok := seg.(message.ImageSegment); ok {
-				// 用 media.Open(c, img.Source) 读取
-				_ = img
+				r, err := media.Open(c, img.Source)
+				if err != nil {
+					return err
+				}
+				n, readErr := io.Copy(io.Discard, r)
+				closeErr := r.Close()
+				if err := errors.Join(readErr, closeErr); err != nil {
+					return err
+				}
+				total += n
 			}
 		}
-		return nil
+		if total == 0 {
+			return nil
+		}
+		return c.Reply(fmt.Sprintf("Images: %d bytes", total))
 	})
 ```
 
@@ -137,7 +149,7 @@ func story(c *sdk.Context) error {
 
 你提供一个函数，每次被调用时返回下一段文字，全部给完后返回 `io.EOF`。
 
-- 平台支持编辑时，先发出第一段，之后不断编辑同一条消息把内容接上。
+- 平台支持编辑时，先发送，再节流编辑；超过实例文本上限时换条。已有发送回执在失败时仍会返回。
 - 平台不支持编辑时，等全部给完后一次发出。
 
 两种情况下你的代码相同。
@@ -158,4 +170,10 @@ _, err := c.SendTo(session, message.Text("Hello"), sdk.Via("main"))
 
 会话标识的格式是「平台:会话 ID」。通常不用自己拼，用 `c.Session()` 取到后保存即可；需要拼时用 `message.SID("telegram", "-100123456", "")`。
 
-机器人主人可以限制插件能往哪些账号主动发消息。回复当前消息不受这个限制。
+机器人主人可以限制插件主动发送的账号。可信入站事件的原实例、原会话回复沿用回复许可。
+
+## 引用与递归节点
+
+OneBot11 的 `message.ForwardSegment` 可交给 `c.ReadNodes(segment)`，返回递归 `[]message.ForwardItem`，保留作者、时间与已授权媒体。节点 Chain 中仍可包含子转发，继续遍历其 Items。后台使用 `sdk.ReadNodes(ctx, session, segment, sdk.Via(instance))`。读取失败可同时带部分节点，保留并处理错误后再使用结果。引用查询与 SnowLuma 已知问题见 [OneBot11](../usage/onebot11.md#forward-nodes)。
+
+`media.Open` 读取受管引用或平台文件；HTTPS URL 出站时交给平台，Open 对 URL 来源返回 `INVALID_ARGUMENT`。上传 MIME 由媒体系统保存，Adapter 获得可信 MIME；发送时使用 `ref.Source()`，保持来源元数据由 Core 提供。

@@ -53,7 +53,7 @@ alonabot run [目录...]
 alonabot check [目录]
 ```
 
-检查工程：`plugin.yaml`、配置项声明、语言文件、Handler 的写法。不产生任何文件。
+检查工程：`plugin.yaml`、配置项声明、语言文件、Handler 的写法。只读扫描工程与资源。支持 `--goos`、`--goarch` 与 `--tags`，选择扫描目标；使用工程 go.mod 声明的 Go 工具链。
 
 ### alonabot build
 
@@ -75,7 +75,7 @@ alonabot build [目录]
 alonabot test [目录]
 ```
 
-编译组件，在临时环境里完整地启动再停止一次，报告登记了哪些命令。用来确认组件能正常装载。业务逻辑的测试用 `go test`，见[测试](../tutorial/testing.md)。
+编译组件，在临时环境里完整地启动再停止一次，报告登记的命令及清理结果；Adapter 保持零平台实例，WebUI 检查静态资源。用来确认组件能正常装载。业务逻辑的测试用 `go test`，见[测试](../tutorial/testing.md)。
 
 ### alonabot pack
 
@@ -83,41 +83,43 @@ alonabot test [目录]
 alonabot pack [目录]
 ```
 
-打出安装包和 `release.json`，见[打包与发布](../advanced/publish.md)。
+为各目标生成平台归档，见[打包与发布](../advanced/publish.md)。
 
 | 参数 | 含义 |
 | --- | --- |
 | `--target` | 目标平台，如 `linux/amd64`，可以写多次。缺省是当前机器 |
-| `--key` | 签名用的私钥文件 |
-| `--asset-base` | 安装包下载地址的前缀。`source` 是 GitHub 仓库时可以省略 |
 | `--out` | 输出目录 |
 | `--tags` | Go build tags |
 
 ## 管理
 
-下面的命令连接正在运行的 Core，需要管理 token：设置环境变量 `ALONABOT_ADMIN_TOKEN`，或者加 `--token-file <文件>`。Core 不在缺省地址时加 `--admin-url <地址>`。
+管理命令在 Core 所在机器运行，使用同一个 `--data-dir` 自动读取持久的 `admin_token`。缺省直连设置中的本机 listen，请求 Host 沿用 `base_url`；`--admin-url` 可覆盖本机连接 URL。远程部署先 SSH 登录服务器，容器使用 `docker compose exec`。
 
 ### 组件
 
 | 命令 | 作用 |
 | --- | --- |
 | `alonabot list` | 列出已安装的组件 |
-| `alonabot install <文件或组件ID>` | 安装本地归档，或可执行文件旁 `packages/` 中的组件 |
+| `alonabot install [文件或组件ID]` | 安装本地归档，或可执行文件旁 `packages/` 中的组件 |
 | `alonabot install --source <owner/repo>` | 从 GitHub Release 安装 |
 | `alonabot enable <ID>`、`disable <ID>` | 启用、停用 |
 | `alonabot restart <ID>` | 重启 |
 | `alonabot reload <ID>` | 让修改过的配置生效 |
 | `alonabot update <ID>` | 更新到最新版本 |
 | `alonabot rollback <ID> <代次ID>` | 恢复指定代次的程序、配置和数据库 |
-| `alonabot pin <ID>` | 固定版本，之后 `update` 只接受这个版本 |
+| `alonabot pin <ID> [version]` | 设置版本约束；省略 version 清除约束 |
 | `alonabot uninstall <ID>` | 卸载 |
 
 | 参数 | 用于 | 含义 |
 | --- | --- | --- |
-| `--yes` | 全部 | 确认执行。不加时只列出会受影响的内容 |
-| `--replace` | `install` | 替换已安装的同类组件（Agent、WebUI 各只能有一个） |
+| `--yes` | 组件安装与生命周期命令 | 确认执行。不加时只列出会受影响的内容 |
+| `--replace` | `install` | 替换同类 Adapter、唯一 Agent 或 WebUI |
+| `--archive` | `install`、`update` | 显式选择本地归档，与 `--source` 互斥 |
+| `--manual-migration-approved` | `reload`、`update`、`rollback` | 停用并备份外部数据后确认外部迁移 |
 | `--purge-data` | `uninstall` | 同时删除数据 |
 | `--purge` | `uninstall` | 同时删除数据和配置 |
+
+无位置参数的 `install` 按当前目录发现唯一的本机归档，组件工程搜索 `bin/`，并检查直接包子目录；多个候选会列出并报错。位置参数、`--archive`、`--source` 互斥。
 
 ### 机器人管理员
 
@@ -168,17 +170,29 @@ alonabot pack [目录]
 | `--date` | 看某一天的，格式 `2026-11-18` |
 | `--trace` | 只看某一次调用的 |
 
+### 休眠策略
+
+```fish
+alonabot sleep-policy
+alonabot sleep-policy alonabot-plugin-todo
+alonabot sleep-policy alonabot-plugin-todo never
+alonabot sleep-policy alonabot-plugin-todo 15m
+alonabot sleep-policy alonabot-plugin-todo auto
+```
+
+读取保持当前休眠状态；写入立即保存并生效，`auto` 删除插件覆盖。全局模式在 WebUI 设置中调整。
+
 ## 维护
 
 ### alonabot admin-token
 
 | 命令 | 作用 |
 | --- | --- |
-| `alonabot admin-token show` | 显示首次启动时生成、还没用过的管理 token |
-| `alonabot admin-token init` | 在启动 Core 之前生成管理 token |
+| `alonabot admin-token show` | 显式读取持久管理 token，运行中也可执行 |
+| `alonabot admin-token init [--if-missing]` | 停机初始化凭据，只输出文件位置 |
 | `alonabot admin-token reset` | 重新生成，旧的失效。需要先停止 Core |
 
-都需要 `--data-dir`。
+都使用 `--data-dir` 指定实际目录。首次启动、init/reset 以受限权限保存凭据；登录及确认保留文件。本机 CLI 直接读取，文件遗失时先停机 reset。
 
 ### alonabot diagnose
 

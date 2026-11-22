@@ -39,7 +39,13 @@ Core 的设置都在数据目录下的 `core_config.json` 里。第一次启动�
 | `reply` | 见下 | 回复的方式 |
 | `log.level` | `info` | 日志详细程度：`debug`、`info`、`warn`、`error`、`critical` |
 | `log.file.enabled` | `true` | 是否写日志文件 |
+| `log.file.max_size` | `104857600`（100 MiB） | 单个日志文件字节上限 |
+| `log.file.max_total` | `1073741824`（1 GiB） | 日志文件总字节上限 |
+| `log.sources` | 空 | 按组件设置日志级别 |
 | `log.file.max_age_days` | `30` | 日志文件保留天数 |
+| `log.format` | `text` | 屏幕日志格式：`text` 或 `json` |
+| `sleep.idle_timeout` | `15m` | 全局空闲时长 |
+| `sleep.plugins` | 空 | 插件的 `never` 或正时长覆盖 |
 | `sleep.mode` | `always_on` | 是否让空闲的插件暂时退出以节省内存，见下 |
 
 ## 机器人管理员
@@ -90,7 +96,7 @@ Core 的设置都在数据目录下的 `core_config.json` 里。第一次启动�
 { "token": "${TELEGRAM_BOT_TOKEN}" }
 ```
 
-环境变量不存在时，这一项按没填处理。
+只有整个字符串为 `${NAME}` 时展开，缺失变量记为校正并按 schema 处理；required 凭据仍为空时该实例启动失败。配置写回保留 `${...}` 原文。
 
 ## 回复方式
 
@@ -107,10 +113,12 @@ Core 的设置都在数据目录下的 `core_config.json` 里。第一次启动�
 
 | 键 | 含义 |
 | --- | --- |
-| `mention_sender` | 回复时 @ 发消息的人 |
+| `mention_sender` | 入站消息首条原目标群回复 @ 发消息的人 |
 | `quote` | 回复时引用原消息 |
-| `prefix` | 每条回复前面加的文字 |
+| `prefix` | 入站消息首条原目标回复前加的普通文字 |
 | `forward_threshold` | 回复超过多少字时改用合并转发，0 表示不用 |
+
+首条回复的提及和前缀由 Core 统一处理，编辑保留已发送修饰；`forward_threshold` 在实例声明 `message.forward` 时启用。按会话改变前缀或回复方式，通过 Profile 的平台设置覆盖，`command_prefixes_by_instance` 作为未知键保留并忽略。
 
 ## 代理
 
@@ -118,7 +126,7 @@ Core 的设置都在数据目录下的 `core_config.json` 里。第一次启动�
 { "proxy": "http://127.0.0.1:7890" }
 ```
 
-支持 `http`、`https`、`socks5`。设置后 Core 和所有插件访问外网都走这个代理。
+支持 `http`、`https`、`socks5`。设置后 Core 和子进程收到 `HTTP_PROXY`/`HTTPS_PROXY`；为空时保留进程原有代理环境。Telegram 实例通过 `proxy_mode` 决定是否使用它。
 
 ## 通过域名访问
 
@@ -142,7 +150,7 @@ Core 的设置都在数据目录下的 `core_config.json` 里。第一次启动�
 { "sleep": { "mode": "component_idle", "idle_timeout": "15m" } }
 ```
 
-设为 `component_idle` 后，一段时间没有被用到的插件会退出，下次有消息需要它时自动启动。第一条消息会慢一点。缺省是 `always_on`，所有插件一直运行。
+设为 `component_idle` 后，一段时间没有被用到的插件会退出，下次有消息、Service、HTTP 请求或任务自然到期时自动启动。第一条消息会慢一点。缺省是 `always_on`，所有插件一直运行。
 
 不是所有插件都支持，有后台任务的插件会一直运行。想让某个插件永远不退出：
 
@@ -152,5 +160,5 @@ Core 的设置都在数据目录下的 `core_config.json` 里。第一次启动�
 
 ## 文件写错了
 
-- 不是合法的 JSON：Core 拒绝启动，并指出出错的行列。
+- JSON 语法、重复键或根节点错误：Core 拒绝启动，指出键路径与行列。
 - 某一项的值不对（比如该填数字的地方填了文字）：那一项用缺省值，日志里有一条说明，其他设置不受影响。

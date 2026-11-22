@@ -9,10 +9,7 @@ WebUI 是浏览器里的管理界面。Docker Compose 首次启动时自动启�
 
 浏览器打开 `http://127.0.0.1:7650`（或你设置的 `base_url`），输入管理 token。
 
-管理 token 在第一次启动时显示一次。没记下来的话：
-
-- 首次启动后还没登录过：`alonabot admin-token show --data-dir <数据目录>`。
-- 已经登录过：停止 Core，运行 `alonabot admin-token reset --data-dir <数据目录>` 重新生成。
+首次启动把 token 保存到 `<data_dir>/admin_token` 并输出位置。本机页面展示待确认凭据，保存后点击确认；登录及确认保留文件。远程可执行 `alonabot admin-token show --data-dir <数据目录>` 读取。文件遗失时先停机执行 `admin-token reset`，旧凭据和会话失效。
 
 ## 能做什么
 
@@ -20,7 +17,7 @@ WebUI 是浏览器里的管理界面。Docker Compose 首次启动时自动启�
 | --- | --- |
 | 总览 | 运行状态、消息量统计 |
 | 插件 | 安装、启用、停用、更新，修改插件的配置，打开插件自己的页面 |
-| 商店 | 浏览和安装插件 |
+| 商店 | 从配置的源浏览组件，按平台归档安装；也可上传单个归档 |
 | 机器人账号 | 添加、启停各平台的账号 |
 | 配置文件 | 让不同的群使用不同的设置，见[不同会话用不同配置](../advanced/profiles.md) |
 | 权限 | 调整每个命令谁能用，修改命令的名字 |
@@ -40,7 +37,7 @@ WebUI 是浏览器里的管理界面。Docker Compose 首次启动时自动启�
 
 ## 换一个界面
 
-WebUI 本身也是一个组件，可以换成社区制作的其他界面：
+官方 WebUI 包含 Go 后台与静态前端，使用单个对应平台归档安装。WebUI 本身也是一个组件，可以换成社区制作的其他界面：
 
 ```sh
 alonabot install <别的 WebUI 组件> --replace --yes

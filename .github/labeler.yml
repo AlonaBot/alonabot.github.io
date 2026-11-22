@@ -1,0 +1,21 @@
+# 按本站实际文件路径标记区域，标签清单由维护者统一管理。
+'area: docs':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '*.md'
+          - 'docs/**'
+          - 'i18n/**'
+          - 'maintenance/**'
+'area: frontend':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/**'
+          - 'static/**'
+          - 'docusaurus.config.ts'
+          - 'sidebars.ts'
+          - 'tsconfig.json'
+          - 'package.json'
+          - 'package-lock.json'
+'area: github-actions':
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'

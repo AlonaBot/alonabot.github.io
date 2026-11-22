@@ -66,7 +66,7 @@ alonabot profile assign <ID> main 'telegram:-100123456'
 | `c.Config()` | Handler 里 | 当前会话的配置文件覆盖之后的值 |
 | `p.Config()` | 启动回调、后台协程 | 基础值，不受配置文件影响 |
 
-一次调用里 `c.Config()` 的值不会变。机器人主人中途改了设置，从下一条消息开始生效。
+`default` 的字段修改先保存为 Pending，执行 `alonabot reload <插件ID> --yes` 后生效；其他 Profile 覆盖从下一次调用生效。一次调用里 `c.Config()` 的值不会变。机器人主人中途改了设置，从下一条消息开始生效。
 
 ## 在某个会话里停用插件
 

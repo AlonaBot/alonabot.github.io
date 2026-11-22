@@ -7,7 +7,7 @@ description: 一个插件调用另一个插件的功能，或者广播通知。
 
 | 方式 | 适合 | 特点 |
 | --- | --- | --- |
-| 服务 | 需要对方返回结果 | 一问一答，对方没在运行时调用失败 |
+| 服务 | 需要对方返回结果 | 一问一答；支持休眠的已安装插件可按需唤醒 |
 | 广播 | 只是通知「发生了某事」 | 发出去就不管了，没人收到也不报错 |
 
 ## 服务
@@ -89,13 +89,17 @@ Sunny in Tokyo
 
 ### 对方不在时
 
-天气插件没安装或没启用时，`Call` 返回错误。待办插件应该能在没有它的情况下工作：
+天气插件没安装或没启用时，`Call` 返回错误。调用方可以对这两类实际不可用错误给出提示，其他错误继续返回：
 
 ```go
 	out, err := api.Query.Call(c, api.QueryIn{City: city})
 	if errcode.Of(err) == errcode.Unavailable || errcode.Of(err) == errcode.NotFound {
 		return c.Reply("Weather is not available.")
 	}
+	if err != nil {
+		return err
+	}
+	return c.Reply(out.Summary)
 ```
 
 ## 广播

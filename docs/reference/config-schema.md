@@ -280,7 +280,7 @@ import "github.com/AlonaBot/AlonaBot/sdk/options"
 
 ## 值不合法时
 
-机器人主人填的值和声明对不上时，框架尽量修正而不是报错：
+机器人主人填的值和声明对不上时，框架先运行 `OnConfigLoad`，再按 schema 补值和校正：
 
 - 类型不对但能转换（比如数字写成了字符串 `"20"`）：自动转换。
 - 转换不了，或者不在 `options` 里、超出 `slider` 范围：用默认值。

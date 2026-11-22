@@ -51,7 +51,7 @@ func New() *sdk.Plugin {
 
 	p.OnReady(func(ctx context.Context) error {
 		var bg context.Context
-		bg, stop = context.WithCancel(context.Background())
+		bg, stop = context.WithCancel(context.WithoutCancel(ctx))
 		done = make(chan struct{})
 		go func() {
 			defer close(done)
@@ -67,7 +67,7 @@ func New() *sdk.Plugin {
 	})
 ```
 
-后台协程必须在 `OnStop` 里结束。停止有时间限制，超时后插件进程会被强制结束。
+后台 context 从 `OnReady` 的 ctx 派生，保留所属 Session；`WithoutCancel` 解除回调结束时的取消，由 `OnStop` 主动取消并等待。后台协程必须在 `OnStop` 里结束。停止有时间限制，超时后插件进程会被强制结束。
 
 后台协程里没有 `c`，发消息用包级函数：
 

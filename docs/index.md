@@ -37,5 +37,5 @@ pong
 - 遇到不认识的词：查[术语表](reference/glossary.md)。
 
 :::note 版本
-当前版本 **0.1.0**，于 2026-11-21 发布。安装方式见[安装](usage/install.md)，功能和平台支持情况见[实现状态](internals/status.md)。
+当前版本 **0.2.0**，于 2026-11-22 发布。安装方式见[安装](usage/install.md)，功能和平台支持情况见[实现状态](internals/status.md)。
 :::

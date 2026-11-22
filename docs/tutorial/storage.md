@@ -3,7 +3,7 @@ title: 存储数据
 description: 用键值存储保存简单状态，用 SQLite 保存业务数据。
 ---
 
-每个插件有一个自己的 SQLite 数据库，由框架创建和管理，不用配置。这一页把待办真正存起来。
+使用 `sdk/kv`、`sdk/sqlitedb` 或 `sdk/gormdb` 的插件可使用框架管理的 SQLite，无需管理员配置连接。只导入需要的包，避免增加无关链接成本。这一页把待办真正存起来。
 
 存数据有两种方式：
 
@@ -153,6 +153,6 @@ dir := sdk.PluginDataDir(c)
 err := os.WriteFile(filepath.Join(dir, "export.txt"), data, 0o600)
 ```
 
-这个目录在插件重启和更新后保留。
+这个目录是 `<data_dir>/plugin_data/<插件ID>/`，在插件重启和更新后保留；文件随代次回退保持原值。只在 Session 就绪后的 Handler 或其派生 context 中调用 `PluginDataDir`。
 
 下一页：[多轮对话](conversation.md)。

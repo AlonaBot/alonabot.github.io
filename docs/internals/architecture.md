@@ -14,7 +14,7 @@ import MessageFlow from "@site/static/img/diagrams/message-flow.svg";
 
 - **Core 是唯一的中心。** 所有消息都经过它。
 - **Native 组件缺省以独立进程运行**，由 Core 启动；组件之间的调用经过 Core。同进程用法见下文。
-- **WebUI 是一组静态网页**，由 Core 提供，通过 Core 的管理接口工作。
+- **官方 WebUI 包含 Go 后台与静态网页**。Core 托管管理入口，后台提供商店、页面等扩展功能；第三方 WebUI 也可只提供静态资源。
 
 ## 为什么每个插件一个进程
 
@@ -42,7 +42,9 @@ import MessageFlow from "@site/static/img/diagrams/message-flow.svg";
 | `core_config.json` | Core 的设置 | 你和 Core |
 | `state.sqlite` | 装了哪些组件、各自的版本、权限设置等 | Core |
 | `core.lock` | 保证同一个数据目录只运行一个 Core | Core |
-| `plugins/<ID>/` | 这个插件的配置、数据库、文件 | 插件（数据库由框架代管） |
+| `plugins/<ID>/` | 开发配置及受管数据库；安装代次由 Core 记录 | Core 与插件 |
+| `plugin_data/<ID>/` | 插件自行管理的文件，跨重启保留 | 插件 |
+| `admin_token` | 本机 CLI 与浏览器登录使用的持久管理凭据 | Core |
 | `logs/` | 日志文件 | Core |
 
 插件的数据库虽然由框架创建和备份，但里面的内容只有这个插件自己读写。Core 和其他插件不碰。
@@ -61,6 +63,8 @@ import MessageFlow from "@site/static/img/diagrams/message-flow.svg";
 
 ```go
 import (
+	"log"
+
 	"github.com/AlonaBot/AlonaBot"
 	todo "example.com/alonabot-plugin-todo"
 )

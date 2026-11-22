@@ -3,7 +3,7 @@ title: 通信协议
 description: Core 和组件进程之间怎么通信。
 ---
 
-用 Go SDK 写组件不需要了解这一页。想用其他语言实现组件，或者调试通信问题时可以参考。
+用 Go SDK 写组件不需要了解这一页。想用其他语言实现组件，或者调试通信问题时可以参考。字段定义见 [Core Protobuf 源码](https://github.com/AlonaBot/AlonaBot/tree/v0.2.0/contracts/proto/alonabot/v1)，会话语义见 [Core 开发指南](https://github.com/AlonaBot/AlonaBot/blob/main/docs/development.zh-CN.md#协议与会话行为)。
 
 import WireFrame from "@site/static/img/diagrams/wire-frame.svg";
 
@@ -61,4 +61,4 @@ Core 调用插件的 Handler、插件调用 Core 发消息，用的都是 REQUES
 
 协议有自己的版本号，和框架的版本号分开。目前是 1.0。
 
-握手时双方交换版本号。主版本不同则拒绝连接；次版本不同时用较低的那个。所以用旧 SDK 编译的插件可以在新的 Core 上运行，只要主版本相同。
+握手时双方交换版本号。主版本不同则拒绝连接；次版本不同时用较低的那个。传输版本兼容后，仍需同时满足组件 manifest、Admin API、能力与各 payload 的 schema_version 要求；新增菜单等能力需更新对应 Core 和 Adapter。

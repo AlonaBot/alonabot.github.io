@@ -130,6 +130,8 @@ button.On(p, confirm).Permission(sdk.Admin).Handle(onConfirm)
 	return err
 ```
 
+回调 token 与组件代次及权限关联；组件替换、token 过期或权限变化后，旧按钮可能失效。OneBot11 当前缺少按钮能力，Telegram 支持。
+
 ## 测试
 
 ```go
