@@ -46,11 +46,13 @@ func New() *sdk.Plugin {
 }
 ```
 
-## 3. 运行
+## 3. 热开发运行
 
 ```sh
-alonabot run
+alonabot run --reload
 ```
+
+开发时推荐使用 `--reload`：保存代码后，CLI 会自动重新编译并重启插件。
 
 Core 启动后出现 `> ` 提示符，直接输入消息：
 
@@ -59,11 +61,11 @@ Core 启动后出现 `> ` 提示符，直接输入消息：
 Hello AlonaBot
 ```
 
-这就是你的插件在回复。按 Ctrl-C 退出。
+这就是你的插件在回复。保持进程运行，继续修改代码；结束开发时按 Ctrl-C 退出。
 
 ## 4. 改一改
 
-保持 `alonabot run` 运行，把 `plugin.go` 里的 Handler 改成：
+保持 `alonabot run --reload` 运行，把 `plugin.go` 里的 Handler 改成：
 
 ```go
 	p.Command("hello").Description("Show a greeting").Handle(func(c *sdk.Context) error {
