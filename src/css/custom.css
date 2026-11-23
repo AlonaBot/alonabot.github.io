@@ -13,9 +13,10 @@
   --alona-muted: #5e6b82;
   --alona-line: #dfe5ec;
   --alona-surface: #ffffff;
-  --alona-accent: #22b8cf;
+  --alona-accent: #0e7c92;
+  --alona-soft: #e2f5f8;
 
-  --ifm-background-color: #f3f6f9;
+  --ifm-background-color: #ffffff;
   --ifm-background-surface-color: #ffffff;
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.96);
   --ifm-footer-background-color: #ffffff;
@@ -51,6 +52,7 @@ html[data-theme="dark"] {
   --alona-muted: #94a1b8;
   --alona-line: #28334a;
   --alona-surface: #151c2b;
+  --alona-soft: #103440;
   --alona-accent: #22b8cf;
 
   --ifm-background-color: #0d121e;
@@ -71,28 +73,11 @@ html[data-theme="dark"] {
   border-top: 1px solid var(--alona-line);
 }
 
-/* 公告栏的背景色以内联样式给出，这里需要 !important 才能随主题切换。 */
-.theme-announcement-bar {
-  background: var(--ifm-background-color) !important;
-  color: var(--alona-muted) !important;
-  border-bottom: 1px solid var(--alona-line);
-  font-size: 0.85rem;
-}
-
-.theme-announcement-bar .close {
-  color: var(--alona-muted);
-  opacity: 1;
-}
-
-.theme-announcement-bar .close:hover {
-  color: var(--alona-ink);
-}
-
-/* 侧边栏当前项：左侧一条细线，不铺底色。 */
+/* 侧边栏当前项以强调色浅底突出。 */
 .menu__link--active:not(.menu__link--sublist) {
   font-weight: 600;
-  box-shadow: inset 2px 0 0 var(--ifm-color-primary);
-  border-radius: 0;
+  background: var(--alona-soft);
+  border-radius: 6px;
 }
 
 .theme-doc-sidebar-container {
@@ -129,14 +114,14 @@ html[data-theme="dark"] {
 }
 
 .button.button--primary {
-  --ifm-button-background-color: var(--alona-ink);
-  --ifm-button-border-color: var(--alona-ink);
+  --ifm-button-background-color: var(--ifm-color-primary);
+  --ifm-button-border-color: var(--ifm-color-primary);
   color: var(--alona-surface);
 }
 
 .button.button--primary:hover {
-  --ifm-button-background-color: var(--alona-ink);
-  --ifm-button-border-color: var(--alona-ink);
+  --ifm-button-background-color: var(--ifm-color-primary-dark);
+  --ifm-button-border-color: var(--ifm-color-primary-dark);
   color: var(--alona-surface);
   opacity: 0.86;
 }
@@ -168,3 +153,19 @@ html[data-theme="dark"] {
 .doc-diagram-scroll .doc-diagram {
   min-width: 600px;
 }
+
+/* 阅读区与导航沿用 WebUI 的主题色，正文保留白色表面。 */
+:root { --ifm-line-height-base: 1.8; --doc-sidebar-width: 260px; --ifm-heading-font-weight: 650; }
+[data-theme="light"] .theme-doc-sidebar-container { background: #f3f6f9; }
+[data-theme="dark"] .theme-doc-sidebar-container { background: #151c2b; }
+.menu { padding: 24px 16px !important; font-size: .9rem; }
+.menu__link { padding: 8px 12px; border-radius: 6px; }
+.markdown > h1 { font-size: 2.4rem; letter-spacing: -.035em; }
+.markdown h2 { font-size: 1.5rem; letter-spacing: -.02em; }
+.markdown { max-width: 76ch; }
+.markdown > p:first-of-type { color: var(--alona-muted); font-size: 1.08rem; }
+.pagination-nav__link { box-shadow: none; border-radius: 10px; }
+.footer { background: var(--ifm-background-color); padding-top: 32px; padding-bottom: 24px; }
+.footer__title { font-size: .9rem; }
+.footer__item { font-size: .9rem; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--ifm-color-primary); outline-offset: 4px; }

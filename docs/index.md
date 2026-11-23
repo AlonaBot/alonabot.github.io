@@ -1,41 +1,26 @@
 ---
 slug: /
 title: 概述
-description: AlonaBot 是什么，由哪几部分组成，从哪里开始读。
+description: 部署机器人、开发 Go 插件、接入平台与 AI。
 ---
 
-AlonaBot 是用 Go 写聊天机器人的框架。你写一个插件处理命令和消息，同一份代码可以接到 Telegram、QQ（OneBot 11）等不同平台。
+AlonaBot 是轻量级、跨平台的 Go 聊天机器人框架。通过独立组件接入聊天平台、扩展业务和 AI 能力。
 
-```go
-p.Command("ping").Handle(func(c *sdk.Context) error {
-    return c.Reply("pong")
-})
-```
+## 选择入口
 
-```text
-> /ping
-pong
-```
-
-## 组成
-
-| 名字 | 是什么 |
+| 你想做什么 | 从这里开始 |
 | --- | --- |
-| **Core** | 机器人的主程序，就是 `alonabot` 这个命令。它收消息、找到该处理的插件、检查权限、把回复发出去 |
-| **插件** | 你写的业务代码：命令、定时任务、网页。每个插件是一个独立的小程序，由 Core 启动 |
-| **Adapter** | 平台接入。Telegram 的 Adapter 负责和 Telegram 通信，把消息转成统一格式交给 Core |
-| **Agent** | 可选的 AI 对话组件，插件也可以通过它调用大模型 |
-| **WebUI** | 浏览器里的管理界面 |
+| 部署机器人 | [安装](usage/install.md) → [接入 Telegram](platforms/telegram.md) |
+| 编写 Go 插件 | [快速上手](quick-start.md) → [命令与参数](tutorial/commands.md) |
+| 配置 AI 对话 | [Agent](usage/agent.md) |
+| 接入其他平台 | [编写 Adapter](develop/adapter.md) |
 
-插件、Adapter、Agent、WebUI 统称**组件**，都可以单独安装和替换。
+## 核心能力
 
-## 从哪里开始
+- **独立进程**：组件分别运行，Core 管理启动、停止与重启。
+- **按需组合**：插件、Adapter、Agent 和 WebUI 独立安装与替换。
+- **低资源占用**：停用组件释放进程，支持休眠的插件空闲时退出、按需唤醒。
+- **Go SDK**：命令、事件、SQLite、配置表单、热重载与真实 Core 测试。
+- **集中管理**：WebUI 与 CLI 管理账号、模型、权限和日志。
 
-- 想写插件：先看[快速上手](quick-start.md)，五分钟内在终端里和自己的插件对话，再顺着[教程](tutorial/project.md)往下读。
-- 想部署一个机器人：看[安装](usage/install.md)和[接入 Telegram](usage/telegram.md)。
-- 想接入新的聊天平台：看[编写 Adapter](develop/adapter.md)。
-- 遇到不认识的词：查[术语表](reference/glossary.md)。
-
-:::note 版本
-当前版本 **0.1.0**，于 2026-11-21 发布。安装方式见[安装](usage/install.md)，功能和平台支持情况见[实现状态](internals/status.md)。
-:::
+组件组成见[架构](internals/architecture.md)，接口查[CLI](reference/cli.md)、[事件](reference/events.md)与[配置 Schema](reference/config-schema.md)。

@@ -36,21 +36,7 @@ todo.Command("purge").Permission(sdk.Admin).Handle(purge)
 	admin.Command("stats").Permission(sdk.User).Handle(stats)     // 所有用户
 ```
 
-### 平台特有的权限
-
-各平台有自己的身份，比如 QQ 群的群主。用 `sdk.PermissionName` 加上平台提供的常量：
-
-```go
-import tgperm "github.com/AlonaBot/AlonaBot/adapters/telegram/perm"
-
-.Permission(sdk.PermissionName(tgperm.ChatOwner))
-```
-
-| 平台 | 常量 | 含义 |
-| --- | --- | --- |
-| Telegram | `perm.ChatOwner`、`perm.ChatAdmin` | 群主、群管理员 |
-| OneBot 11 | `perm.GroupOwner`、`perm.GroupAdmin` | 群主、群管理员 |
-| OneBot 11 | `perm.PrivateFriend` | 私聊好友 |
+平台专属权限见 [Telegram SDK](../platforms/telegram-sdk.md) 与 [OneBot 11 SDK](../platforms/onebot11-sdk.md)。
 
 ### 在 Handler 里判断
 

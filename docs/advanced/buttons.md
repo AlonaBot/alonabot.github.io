@@ -5,7 +5,7 @@ description: 在消息下面放按钮，处理用户的点击。
 
 按钮让用户点一下就能操作，不用打字。
 
-## 完整例子
+## 注册按钮与点击处理函数
 
 ```go
 package plugin
@@ -60,7 +60,7 @@ You chose coffee.
 2. **`vote.Button("Tea", Vote{...})`** 创建一个按钮，第一个参数是按钮上的字。
 3. **`button.On(p, vote).Handle(...)`** 处理点击，第二个参数就是创建按钮时放进去的数据。
 
-## 排列
+## 按钮布局
 
 `message.Buttons` 的每个参数是一行：
 
@@ -79,7 +79,7 @@ message.URLButton("Open website", "https://example.com")
 
 点击后打开网页，插件不会收到通知。
 
-## 谁点的
+## 点击者身份与权限
 
 处理点击的 Handler 里，`c.User()` 是**点按钮的人**，不一定是当初发命令的人。群里任何人都能点。只想让发起人操作时，把发起人放进数据里比较：
 
@@ -115,9 +115,9 @@ button.On(p, confirm).Permission(sdk.Admin).Handle(onConfirm)
 	})
 ```
 
-编辑需要平台支持，见[平台功能对照](../usage/platforms.md)。
+编辑原消息需要账号支持消息编辑，账号操作可在[平台接入](../platforms/index.md#查询账号能力)中查询。
 
-## 注意
+## 按钮数据与平台支持
 
 - 带回来的数据转成 JSON 后不能超过 1024 字节。放标识就够了，大的内容存数据库。
 - 平台不支持按钮时，发送会返回 `UNSUPPORTED` 错误。要兼容这类平台，出错时改发文字说明：

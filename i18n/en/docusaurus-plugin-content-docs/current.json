@@ -1,19 +1,11 @@
 {
   "version.label": {
-    "message": "0.1.0",
+    "message": "0.3.0",
     "description": "The label for version current"
-  },
-  "sidebar.docs.category.教程": {
-    "message": "Tutorial",
-    "description": "The label for category '教程' in sidebar 'docs'"
   },
   "sidebar.docs.category.进阶": {
     "message": "Going Further",
     "description": "The label for category '进阶' in sidebar 'docs'"
-  },
-  "sidebar.docs.category.使用与部署": {
-    "message": "Running a Bot",
-    "description": "The label for category '使用与部署' in sidebar 'docs'"
   },
   "sidebar.docs.category.开发组件": {
     "message": "Building Components",
@@ -26,5 +18,14 @@
   "sidebar.docs.category.原理": {
     "message": "Internals",
     "description": "The label for category '原理' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.插件开发": {
+    "message": "Plugin development"
+  },
+  "sidebar.docs.category.部署与管理": {
+    "message": "Deployment & management"
+  },
+  "sidebar.docs.category.平台接入": {
+    "message": "Platforms"
   }
 }

@@ -1,4 +1,4 @@
 # Docusaurus 构建输出
 /build/
 /.docusaurus/
-/node_modules/
+/node_modules

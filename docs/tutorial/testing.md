@@ -3,9 +3,9 @@ title: 测试
 description: 在 go test 里给插件发消息，断言它的回复。
 ---
 
-`plugintest` 包让你在 `go test` 里启动一个真的 Core，把插件装进去，然后像用户一样给它发消息。命令解析、权限、配置、数据库都和正式运行时走同一套代码。
+`plugintest` 在 `go test` 中启动 Core 并加载插件，支持发送消息、断言回复。命令解析、权限、配置和数据库使用与正式运行相同的实现。
 
-## 第一个测试
+## 测试命令回复
 
 在 `plugin.go` 旁边新建 `plugin_test.go`：
 
@@ -32,14 +32,14 @@ func TestAddAndList(t *testing.T) {
 go test ./...
 ```
 
-逐行看：
+测试接口：
 
 - `plugintest.Start` 启动 Core 并装入插件。每个测试有自己的临时目录和空数据库，测试结束时自动清理。
 - `plugintest.User{ID: "alice"}` 是一个测试用户，`plugintest.Private(...)` 是和她的私聊。群聊用 `plugintest.Group("room")`。
 - `h.Text(chat, user, text)` 以这个用户的身份发一条消息，等插件处理完，返回结果。不需要 `sleep`。
 - `RequireReply(t, want)` 断言插件正好回复了一条内容为 `want` 的消息，并且 Handler 没有出错。
 
-## 检查更多细节
+## 检查消息与执行结果
 
 `h.Text` 返回的结果里有这次处理产生的全部内容：
 
@@ -121,7 +121,7 @@ func TestAdminOnly(t *testing.T) {
 
 没有权限时 Handler 不会被调用，所以没有回复。
 
-## 其他能测的
+## 其他测试场景
 
 | 场景 | 方法 |
 | --- | --- |
@@ -134,6 +134,6 @@ func TestAdminOnly(t *testing.T) {
 
 同一个测试里的 `h.Text` 等调用要按顺序执行，不要并发调用。
 
-## 测不到的
+## 真实平台联调
 
-`plugintest` 用的是一个测试用的假平台。真实平台上的表现（比如 Telegram 把长消息拆成几条）要接上真实平台看。下一页：[接入 Telegram](telegram.md)。
+`plugintest` 使用模拟 Adapter。消息拆分、平台排版等行为通过[真实平台联调](../platforms/development.md)验证。

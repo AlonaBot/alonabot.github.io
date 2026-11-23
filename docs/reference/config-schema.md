@@ -1,9 +1,9 @@
 ---
 title: 配置项参考
-description: config_schema.json 里可以写的全部类型和属性。
+description: plugin_config_schema.json 里可以写的全部类型和属性。
 ---
 
-`config_schema.json` 是一个 JSON 对象，每个键是一个配置项。键的顺序就是表单里显示的顺序。Adapter 的 `adapter_config_schema.json` 格式相同。
+`plugin_config_schema.json` 是一个 JSON 对象，每个键是一个配置项。键的顺序就是表单里显示的顺序。Adapter 的 `adapter_config_schema.json` 格式相同。
 
 ```json
 {
@@ -25,8 +25,8 @@ description: config_schema.json 里可以写的全部类型和属性。
 | `string` | 文字 | 单行输入；有 `options` 时是下拉框 | `String(key)` |
 | `text` | 文字 | 多行输入 | `String(key)` |
 | `int` | 整数 | 数字输入 | `Int(key)`，返回 `int64` |
-| `float` | 小数 | 数字输入 | `Float(key)`，返回 `float64` |
-| `bool` | 真假 | 开关 | `Bool(key)` |
+| `float` | 浮点数 | 数字输入 | `Float(key)`，返回 `float64` |
+| `bool` | 布尔值 | 开关 | `Bool(key)` |
 | `list` | 一组文字 | 可增删的行；有 `options` 时是多选 | `Strings(key)` |
 | `list` 带 `items` | 一组对象 | 可增删的行，每行是一组子项 | `Objects(key)` |
 | `object` | 一组子配置项 | 分组 | `Object(key)` |
@@ -58,7 +58,7 @@ description: config_schema.json 里可以写的全部类型和属性。
 | `profile` | 非密钥项 | 为 `true` 时可以[按会话设置不同的值](../advanced/profiles.md) |
 | `example` | 全部 | 在表单里预览「这样设置机器人会怎么回复」，见[回复预览](#回复预览) |
 
-## 没设置时的值
+## 默认值
 
 每个配置项都一定有值。没设置时用 `default`；没写 `default` 时：
 
@@ -280,7 +280,7 @@ import "github.com/AlonaBot/AlonaBot/sdk/options"
 
 ## 值不合法时
 
-机器人主人填的值和声明对不上时，框架尽量修正而不是报错：
+配置加载时，框架按 Schema 转换和校验输入值：
 
 - 类型不对但能转换（比如数字写成了字符串 `"20"`）：自动转换。
 - 转换不了，或者不在 `options` 里、超出 `slider` 范围：用默认值。

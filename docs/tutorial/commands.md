@@ -1,6 +1,6 @@
 ---
 title: 命令与参数
-description: 登记命令，接收参数，设置别名、分组和谁能用。
+description: 注册命令，绑定参数，设置别名、分组和权限。
 ---
 
 这一页给待办清单加上 `/todo add` 和 `/todo list` 两个命令。数据先不保存，[存储](storage.md)一页再接上数据库。
@@ -36,25 +36,25 @@ Added: buy milk
 Nothing to do.
 ```
 
-这里用到了三样东西：
+`p.Group("todo")` 创建命令组，组内的 `add` 和 `list` 对应 `/todo add`、`/todo list`。
 
-- **`p.Group("todo")`** 建立一个命令组，组里的 `add` 就是 `/todo add`。
-- **Handler 的参数就是命令的参数。** 第一个参数固定是 `*sdk.Context`，后面写什么类型，用户就要输入什么。`text string` 表示接收一段文字。
-- **`RawTail()`** 表示最后一个参数接收剩下的全部原文。不加的话，`/todo add buy milk` 里的 `buy` 和 `milk` 会被当成两个参数。
+## 参数绑定
 
-用户少写了参数时，Core 会自动回复这个命令的用法，Handler 不会被调用。
+SDK 根据 Handler 的函数签名生成参数声明。Core 按声明解析命令消息，SDK 再将解析结果传入 Handler。参数可以逐个写在函数签名中，也可以集中声明在结构体中。
 
-## 参数类型
+### 按函数参数绑定
 
-| Handler 里写 | 用户输入 |
+第一个参数 `*sdk.Context` 由 SDK 提供，包含当前调用的用户、会话和回复方法。后续参数按顺序绑定命令输入，类型决定解析方式：
+
+| Go 类型 | 绑定内容 |
 | --- | --- |
-| `string` | 一段文字 |
-| `int`、`int64`、`float64`、`bool` | 数字或 true/false，类型不对时回复用法 |
-| `sdk.UserID` | 提及某个用户（@某人） |
-| `*message.ImageSegment` | 一张图片 |
-| `message.Chain` | 任意内容，包括图片和文字混排 |
+| `string` | 一个文本参数 |
+| `int`、`int64`、`float64`、`bool` | 对应类型的数值或布尔值 |
+| `sdk.UserID` | 用户提及（@某人） |
+| `*message.ImageSegment` | 图片消息段 |
+| `message.Chain` | 剩余消息链，可包含图片和文字 |
 
-多个参数按顺序写：
+例如，`number int` 将命令后的数字绑定到 `number`：
 
 ```go
 	todo.Command("done").Description("Mark an item as done").
@@ -68,9 +68,13 @@ Nothing to do.
 Item 2 done.
 ```
 
-## 可选参数和默认值
+前面的 `add` 使用 `.RawTail()`，将命令后的 `buy milk` 作为完整字符串绑定到 `text`。普通文本参数按空白分隔；`.RawTail()` 让最后一个参数接收剩余原文。
 
-参数有默认值，或者有的可以不填时，把参数写成一个结构体：
+缺少必填参数或类型解析失败时，Core 回复命令用法，跳过 Handler。
+
+### 绑定到结构体
+
+结构体将参数声明集中在字段上，适合参数较多或需要通过标签描述名称、默认值和原文绑定的命令。SDK 按字段顺序填入解析结果，Handler 接收整个结构体：
 
 ```go
 type ListArgs struct {
@@ -82,7 +86,7 @@ func list(c *sdk.Context, args ListArgs) error {
 }
 ```
 
-在 `New` 里登记 `todo.Command("list").Handle(list)`：
+在 `New` 里注册 `todo.Command("list").Handle(list)`。`Page` 的类型是 `int`，`arg:"page"` 指定用法中的参数名，`default:"1"` 指定省略时的值：
 
 ```text
 > /todo list
@@ -91,12 +95,14 @@ Page 1
 Page 3
 ```
 
-结构体的规则：
+| 字段声明 | 绑定方式 |
+| --- | --- |
+| `Page int` | 必填整数；参数名默认从字段名推导为 `page` |
+| `Page int` 带 `arg:"page" default:"1"` | 省略时使用 `1` |
+| `Page *int` 带 `arg:"page"` | 可选整数；省略时为 `nil` |
+| `Text string` 带 `arg:"text,raw"` | 末位字段接收剩余原文 |
 
-- 字段按顺序对应参数，`arg` 标签是参数的名字，显示在用法里。
-- `default` 是不填时的值。
-- 指针类型的字段（如 `*int`）表示可选，不填时是 `nil`。
-- 最后一个字段要接收剩余原文时写 `arg:"text,raw"`。
+字段需导出，并按输入顺序声明；指针字段与 `default` 标签分别表达可选值和默认值，选择一种即可。使用结构体时，Handler 在 `*sdk.Context` 之后只接收这一个结构体，名称、默认值和 raw 行为统一由字段声明。
 
 ## 别名
 
@@ -106,7 +112,7 @@ Page 3
 
 别名写完整的命令，上面这样 `/remember buy milk` 和 `/todo add buy milk` 效果相同。
 
-## 谁能用
+## 命令权限
 
 命令缺省所有用户都能用。用 `Permission` 限制：
 
@@ -135,5 +141,17 @@ Page 3
   }
 }
 ```
+
+## 平台命令菜单
+
+给需要出现在聊天平台菜单中的根命令添加 `.Menu()`：
+
+```go
+p.Command("ping").Description("Check the bot").Menu().Handle(func(c *sdk.Context) error {
+    return c.Reply("pong")
+})
+```
+
+Core 根据账号配置同步菜单，菜单说明跟随语言文件翻译。
 
 下一页：[回复消息](messages.md)。

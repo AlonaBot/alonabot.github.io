@@ -1,128 +1,54 @@
 ---
 title: 打包与发布
-description: 把插件打成安装包，签名，让别人安装。
+description: 构建平台归档，通过 GitHub 或本地文件安装组件。
 ---
 
-## 发布前检查
+## 检查工程
 
-1. 改好 `plugin.yaml`：
+在 `plugin.yaml` 中填写组件 ID、版本和源码仓库：
 
 ```yaml title="plugin.yaml"
 id: alonabot-plugin-todo
 name: To-do List
-version: 0.1.0
-author: Your Name
+version: 1.0.0
 source: github.com/yourname/alonabot-plugin-todo
 role: plugin
 ```
 
-`source` 填写组件来源，上例使用 GitHub 仓库。使用其他托管平台时，见[不放在 GitHub 上](#不放在-github-上)。
-
-2. 运行检查和测试：
-
-```sh
+```fish
 alonabot check
 go test ./...
 alonabot test
 ```
 
-`alonabot test` 把插件编译出来，在一个临时环境里完整地启动再停止一遍，确认它能正常装载。
+`check` 检查声明、翻译与 Handler；`test` 执行离线准备检查。业务验证见[插件测试](../tutorial/testing.md)。
 
 ## 打包
 
-```sh
-alonabot pack --target linux/amd64 --target linux/arm64 --target darwin/arm64 --target windows/amd64
+```fish
+alonabot pack . --target linux/amd64 --target linux/arm64 --target darwin/arm64 --target windows/amd64 --out ./bin
 ```
 
-`bin/` 下会生成：
-
-| 文件 | 目标平台或用途 |
-| --- | --- |
-| `alonabot-plugin-todo-0.1.0-linux-amd64.tar.gz` | Linux amd64 |
-| `alonabot-plugin-todo-0.1.0-linux-arm64.tar.gz` | Linux arm64 |
-| `alonabot-plugin-todo-0.1.0-darwin-arm64.tar.gz` | macOS arm64 |
-| `alonabot-plugin-todo-0.1.0-windows-amd64.tar.gz` | Windows amd64 |
-| `release.json` | 资产清单 |
-
-每个平台一个安装包，`release.json` 是它们的清单。不写 `--target` 时只打当前系统的包。
-
-支持的平台：`linux/amd64`、`linux/arm64`、`darwin/amd64`、`darwin/arm64`、`windows/amd64`。
+每个平台生成一个归档，包含程序、`plugin.yaml` 与组件资源。不指定 `--target` 时构建本机平台；另支持 `darwin/amd64`。
 
 ## 发布到 GitHub
 
-在仓库里建一个 Release，标签是 `v` 加版本号（如 `v0.1.0`），把 `bin/` 下的全部文件传上去。
+创建与组件版本对应的 Release（示例为 `v1.0.0`），上传 `bin/` 中的平台归档。
 
-用户这样安装：
-
-```sh
+```fish
 alonabot install --source yourname/alonabot-plugin-todo --yes
 ```
 
-以后发新版本：改 `plugin.yaml` 的 `version`，重新打包，建新的 Release。用户用 `alonabot update alonabot-plugin-todo` 更新。
+Core 选择本机平台的归档，读取包内声明并安装。
 
-## 签名
+## 本地安装
 
-签名让用户确认安装包确实是你发布的、没有被改过。
+将对应平台的归档交给使用者，执行：
 
-生成私钥（只做一次）。把下面的程序存成 `keygen.go`，运行 `go run keygen.go > release.key`：
-
-```go title="keygen.go"
-package main
-
-import (
-	"crypto/ed25519"
-	"crypto/rand"
-	"encoding/base64"
-	"fmt"
-)
-
-func main() {
-	_, private, err := ed25519.GenerateKey(rand.Reader)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(base64.StdEncoding.EncodeToString(private))
-}
+```fish
+alonabot install ./alonabot-plugin-todo-1.0.0-linux-amd64.tar.gz --yes
 ```
 
-打包时带上：
+WebUI 的上传安装同样选择一个归档文件。
 
-```sh
-alonabot pack --target linux/amd64 --key ./release.key
-```
-
-会多生成 `release.json.sig`（签名）和 `release.pub`（公钥），和其他文件一起上传。
-
-**私钥不要提交到仓库，也不要出现在 CI 日志里。** 用 CI 发布时把它存成加密的 secret。
-
-没有签名的包也能安装，安装时用户会看到「未签名」的提示。
-
-## 不放在 GitHub 上
-
-`plugin.yaml` 的 `source` 可以填写 `gitee.com/owner/repo`、`gitcode.com/owner/repo` 等来源。0.1.0 的 CLI `install --source` 只接受 GitHub 的 `owner/repo`，并从 GitHub Release 下载；其他平台发布的组件使用下面的本地安装方式。
-
-安装包放在别处时，用 `--asset-base` 指明下载地址的前缀：
-
-```sh
-alonabot pack --target linux/amd64 --asset-base https://example.com/releases/v0.1.0
-```
-
-用户下载对应平台的 AlonaBot 安装包与 `release.json`，放在同一目录；签名发布还需一并下载 `release.json.sig` 和 `release.pub`。然后从本地安装：
-
-```sh
-alonabot install ./alonabot-plugin-todo-0.1.0-linux-amd64.tar.gz --yes
-```
-
-热开发可以直接克隆任意平台上的源码仓库，再用 `alonabot run <工程目录> --log-level debug` 加载，见[从第三方源码调试](../develop/adapter.md#从第三方源码调试)。
-
-## 更新日志
-
-在工程根目录放一个 `CHANGELOG.md`，用户更新后能在 WebUI 里看到这个版本改了什么。
-
-## 版本号怎么升
-
-- 修了问题：`0.1.0` → `0.1.1`。
-- 加了功能：`0.1.0` → `0.2.0`。
-- 改了数据库结构：加一个新的建表步骤（见[存储数据](../tutorial/storage.md)），不要改旧的。用户更新时框架会自动执行新步骤，失败则保留旧版本。
-
-发布前对照一遍[插件规范](../develop/rules.md)。
+发布规则见[插件规范](../develop/rules.md)。

@@ -5,13 +5,13 @@ description: 用子插件把代码按功能分到多个包里。
 
 命令多了以后，全写在一个 `New` 里不好维护。子插件让你按功能把代码分到不同的包，每个包管自己的命令和配置。
 
-## 写法
+## 注册子插件
 
 在 `alonabot-plugin-todo/` 中按功能分包：
 
 | 路径 | 用途 |
 | --- | --- |
-| `plugin.go` | 创建插件，登记子插件 |
+| `plugin.go` | 创建插件，注册子插件 |
 | `items/items.go` | 待办的增删查 |
 | `remind/remind.go` | 提醒 |
 
@@ -52,13 +52,13 @@ func New() *sdk.Plugin {
 }
 ```
 
-`p.Sub("items")` 返回一个子插件，上面能用的登记方法和 `p` 一样：`Command`、`Group`、`On`、`Every` 等。
+`p.Sub("items")` 返回一个子插件，上面能用的注册方法和 `p` 一样：`Command`、`Group`、`On`、`Every` 等。
 
 ## 子插件的配置
 
-子插件读取 `config_schema.json` 里和它同名的那一组配置：
+子插件读取 `plugin_config_schema.json` 里和它同名的那一组配置：
 
-```json title="config_schema.json"
+```json title="plugin_config_schema.json"
 {
   "items": {
     "type": "object",
@@ -90,14 +90,3 @@ func Register(s *sdk.SubPlugin) {
 ```go
 admin := p.Sub("admin").Permission(sdk.Admin)
 ```
-
-## 限制
-
-子插件只是整理代码的方式，对用户和机器人主人来说仍然是一个插件：
-
-- 子插件不能单独启用、停用或更新。
-- 子插件下面不能再有子插件。
-- 启动、停止的回调和数据库的建表步骤只能登记在 `p` 上。
-- 所有子插件共用一个数据库。
-
-需要能单独安装和停用的功能，应该做成另一个插件，两个插件之间用[服务](services.md)互相调用。
