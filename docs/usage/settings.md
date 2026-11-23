@@ -78,7 +78,7 @@ Core 的设置都在数据目录下的 `core_config.json` 里。第一次启动�
 
 `adapters` 下面按平台分组，每个平台可以有多个账号。`main`、`backup` 是你起的名字，只能用字母、数字、`_`、`-`，所有平台里不能重名。
 
-每个账号里填什么由平台决定，见 [Telegram](telegram.md)、[OneBot 11](onebot11.md)。
+每个账号里填什么由平台决定，见 [Telegram](../platforms/telegram.md)、[OneBot 11](../platforms/onebot11.md)。
 
 `default_instance` 是插件主动发消息又没指定账号时用的那个。只有一个账号时不用写。
 
@@ -154,3 +154,16 @@ Core 的设置都在数据目录下的 `core_config.json` 里。第一次启动�
 
 - 不是合法的 JSON：Core 拒绝启动，并指出出错的行列。
 - 某一项的值不对（比如该填数字的地方填了文字）：那一项用缺省值，日志里有一条说明，其他设置不受影响。
+
+## 下载设置
+
+在 WebUI 的设置中配置组件和源码构建所需的下载地址：
+
+| 键 | 用途 |
+| --- | --- |
+| `github_download_prefix` | GitHub 归档下载镜像前缀 |
+| `github_api_base` | GitHub API 地址 |
+| `go_download_base` | Go 工具链下载地址，默认 `https://go.dev/dl/` |
+| `goproxy` | Go module 代理，默认 `https://proxy.golang.org,direct` |
+
+从 GitHub 源码安装时选择分支、标签或提交，Core 下载工具链、构建并安装组件；在任务中查看步骤和完整构建日志。下载的工具链与缓存保存在数据目录。

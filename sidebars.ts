@@ -7,8 +7,12 @@ const sidebars: SidebarsConfig = {
     "quick-start",
     {
       type: "category",
-      label: "教程",
-      collapsible: false,
+      label: "平台接入",
+      items: ["platforms/index", "platforms/telegram", "platforms/telegram-sdk", "platforms/onebot11", "platforms/onebot11-sdk", "platforms/development"],
+    },
+    {
+      type: "category",
+      label: "插件开发",
       items: [
         "tutorial/project",
         "tutorial/commands",
@@ -17,7 +21,6 @@ const sidebars: SidebarsConfig = {
         "tutorial/storage",
         "tutorial/conversation",
         "tutorial/testing",
-        "tutorial/telegram",
       ],
     },
     {
@@ -41,13 +44,10 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "使用与部署",
+      label: "部署与管理",
       items: [
         "usage/install",
         "usage/settings",
-        "usage/telegram",
-        "usage/onebot11",
-        "usage/platforms",
         "usage/manage",
         "usage/webui",
         "usage/agent",

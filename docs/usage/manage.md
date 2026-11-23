@@ -7,9 +7,9 @@ description: 安装、更新、停用插件，看日志，导出诊断信息。
 
 ## 准备
 
-以下 `alonabot` 命令假定你在启动 Core 的工作目录操作，Core 使用默认的 `./data`。使用安装脚本、手动指定其他目录或 Docker 时，先按[安装页](install.md#安装官方组件)定义 `ab`，并将本页管理命令开头的 `alonabot` 换成 `ab`；它会传入对应的程序路径、运行用户和 `--data-dir`。
+以下命令在启动 Core 的目录执行，使用同一数据目录；使用其他数据目录时加 `--data-dir <数据目录>`。
 
-管理命令要连接正在运行的 Core，需要管理 token：
+管理命令连接正在运行的 Core，自动读取同一数据目录的管理凭据。需要指定其他凭据时：
 
 ```fish
 set -gx ALONABOT_ADMIN_TOKEN '你的管理 token'
@@ -24,7 +24,7 @@ set -gx ALONABOT_ADMIN_TOKEN '你的管理 token'
 alonabot install --source yourname/alonabot-plugin-todo --yes
 
 # 从下载好的文件安装
-alonabot install ./alonabot-plugin-todo-0.1.0-linux-amd64.tar.gz --yes
+alonabot install ./alonabot-plugin-todo-0.3.0-linux-amd64.tar.gz --yes
 
 # 看装了什么
 alonabot list
@@ -54,7 +54,7 @@ alonabot uninstall alonabot-plugin-todo --purge --yes
 
 ## 用第三方 Adapter 联调插件
 
-第三方开发的 QQ 官方机器人接口 Adapter 可以通过仓库地址安装。首次安装时，Core 会列出待确认的来源、发布者公钥标识；未签名包还会列出未签名提示。检查后加 `--yes` 确认，Core 会保存来源和发布者绑定。
+通过源码仓库地址安装第三方 Adapter，确认来源后执行安装。
 
 假设你要热开发的插件在 `./my-plugin`，先在终端一启动开发用 Core：
 

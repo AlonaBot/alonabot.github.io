@@ -12,18 +12,16 @@ import MessageFlow from "@site/static/img/diagrams/message-flow.svg";
 
 <div className="doc-diagram-scroll"><ArchitectureDiagram className="doc-diagram" /></div>
 
-- **Core 是唯一的中心。** 所有消息都经过它。
+- **Core 负责消息路由。** 所有消息都经过它。
 - **Native 组件缺省以独立进程运行**，由 Core 启动；组件之间的调用经过 Core。同进程用法见下文。
-- **WebUI 是一组静态网页**，由 Core 提供，通过 Core 的管理接口工作。
+- **WebUI 提供管理页面与可选的后台进程**，由 Core 提供，通过 Core 的管理接口工作。
 
 ## 为什么每个插件一个进程
 
 - **互不影响。** 一个插件崩溃，其他插件和 Core 照常运行，Core 会自动重启它。
-- **依赖各管各的。** 两个插件可以用同一个库的不同版本。
+- **依赖隔离。** 两个插件可以用同一个库的不同版本。
 - **可以单独更新。** 更新一个插件时，其他插件不用停。
-- **问题好定位。** 哪个进程占了多少内存、哪个在出错，一目了然。
-
-代价是每个进程有固定的内存开销，以及进程之间通信比函数调用慢。对聊天机器人来说，这点延迟远小于网络延迟。
+- **按进程排查故障。** 分别查看各插件的内存占用和错误。
 
 ## 一条消息的经过
 
@@ -31,7 +29,7 @@ import MessageFlow from "@site/static/img/diagrams/message-flow.svg";
 
 <div className="doc-diagram-scroll"><MessageFlow className="doc-diagram" /></div>
 
-权限检查在 Core 里完成。插件告诉 Core「我是替这个用户发的」，Core 不会直接相信，它用的是自己记录的信息。
+Core 根据入站消息确认的用户身份检查权限。
 
 ## 数据放在哪里
 
@@ -42,7 +40,8 @@ import MessageFlow from "@site/static/img/diagrams/message-flow.svg";
 | `core_config.json` | Core 的设置 | 你和 Core |
 | `state.sqlite` | 装了哪些组件、各自的版本、权限设置等 | Core |
 | `core.lock` | 保证同一个数据目录只运行一个 Core | Core |
-| `plugins/<ID>/` | 这个插件的配置、数据库、文件 | 插件（数据库由框架代管） |
+| `plugins/<ID>/` | 插件配置与受管数据库 | 插件（数据库由框架代管） |
+| `plugin_data/<ID>/` | 插件自管文件 | 插件 |
 | `logs/` | 日志文件 | Core |
 
 插件的数据库虽然由框架创建和备份，但里面的内容只有这个插件自己读写。Core 和其他插件不碰。

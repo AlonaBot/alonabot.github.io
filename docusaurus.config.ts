@@ -7,10 +7,10 @@ import type * as Preset from "@docusaurus/preset-classic";
 const repoUrl = "https://github.com/AlonaBot/AlonaBot";
 const docsRepoUrl = "https://github.com/AlonaBot/docs";
 
-// 当前文档对应的框架版本；发布正式版时用 `npm run docusaurus docs:version <版本>` 存档。
-const currentVersion = "0.1.0";
+// 当前文档对应的框架版本。
+const currentVersion = "0.3.0";
 
-// 构建时 Docusaurus 按语言分别加载配置；标语与公告不在翻译文件中，在这里按语言取值。
+// 构建时按语言选择站点标语。
 const isEnglish = process.env.DOCUSAURUS_CURRENT_LOCALE === "en";
 
 const config: Config = {
@@ -58,10 +58,11 @@ const config: Config = {
         docs: {
           sidebarPath: "./sidebars.ts",
           editUrl: `${docsRepoUrl}/edit/main/`,
+          editLocalizedFiles: true,
           versions: {
             current: { label: currentVersion, badge: true },
           },
-          showLastUpdateTime: true,
+          showLastUpdateTime: false,
         },
         blog: false,
         theme: {
@@ -91,13 +92,6 @@ const config: Config = {
       defaultMode: "light",
       respectPrefersColorScheme: true,
     },
-    announcementBar: {
-      id: "release-0-1-0",
-      content: isEnglish
-        ? `${currentVersion} is now available`
-        : `${currentVersion} 已发布`,
-      isCloseable: true,
-    },
     navbar: {
       title: "AlonaBot",
       logo: {
@@ -109,7 +103,6 @@ const config: Config = {
       },
       items: [
         { type: "docSidebar", sidebarId: "docs", position: "left", label: "文档" },
-        { type: "docsVersionDropdown", position: "right" },
         { type: "localeDropdown", position: "right" },
         { href: repoUrl, label: "GitHub", position: "right" },
       ],

@@ -35,15 +35,15 @@ return out, errcode.InvalidArgument.Errorf("invalid city %q", in.City)
 | `PermissionDenied` | 没有权限 | 机器人主人没有允许插件往这个账号主动发消息；插件不在允许调用大模型的名单里；调用了别的插件的私有服务 |
 | `NotFound` | 目标不存在 | 调用的服务不存在；要取消的任务不存在 |
 | `AlreadyExists` | 已经存在 | 同一个用户在同一个会话里已经有一个 `Wait` 在等 |
-| `FailedPrecondition` | 现在不能做这件事 | 在 `OnStart` 里发消息；在 Handler 返回之后继续用 `c`；在后台协程里调用需要当前消息的函数 |
+| `FailedPrecondition` | 前置条件未满足 | 在 `OnStart` 里发消息；在 Handler 返回之后继续用 `c`；在后台协程里调用需要当前消息的函数 |
 | `Unsupported` | 平台不支持 | 在不能编辑消息的平台上编辑；在没有按钮的平台上发按钮 |
-| `ResourceExhausted` | 超过了上限 | 短时间内调用太多；内容太大 |
+| `ResourceExhausted` | 资源耗尽或超出配额 | 短时间内调用太多；内容太大 |
 | `DeadlineExceeded` | 超时 | `Wait` 没等到回答；Handler 超过 30 秒；被调用的服务太慢 |
 | `Cancelled` | 被取消 | 插件正在停止 |
 | `Unavailable` | 暂时不可用 | 被调用的插件没在运行；没有配置大模型；平台连接断开 |
 | `Internal` | 内部错误 | Handler 里发生了 panic |
-| `CallCycle` | 调用成环 | 插件 A 的服务调用 B，B 又调用 A；Handler 里调用了自己插件的服务 |
-| `NoDefaultTarget` | 不知道发到哪里 | 在定时任务或广播的 Handler 里用了 `c.Reply`，这里没有「当前会话」，改用 `c.SendTo` |
+| `CallCycle` | 循环调用 | 插件 A 的服务调用 B，B 又调用 A；Handler 里调用了自己插件的服务 |
+| `NoDefaultTarget` | 缺少默认发送目标 | 在定时任务或广播的 Handler 里用了 `c.Reply`，这里没有「当前会话」，改用 `c.SendTo` |
 | `PluginNotReady` | 插件还没准备好 | |
 | `ProtocolError` | 通信错误 | 通常是框架的问题，请报告 |
 | `NeedsManualMigration` | 需要人工处理数据 | |

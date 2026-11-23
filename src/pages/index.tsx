@@ -1,118 +1,48 @@
-// 首页：左侧是标题与入口，右侧上下排列一段插件代码和它在聊天里的效果。
 import type { ReactNode } from "react";
-import clsx from "clsx";
 import Link from "@docusaurus/Link";
 import Translate, { translate } from "@docusaurus/Translate";
 import { useBaseUrlUtils } from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
-
-import ChatDemo from "../components/ChatDemo";
-
 import styles from "./index.module.css";
 
-// 首页特性：标题与一句说明，文案经 i18n 翻译。
-const features: { title: string; body: string; to: string }[] = [
-  {
-    title: translate({ id: "home.feature.platform.title", message: "一次编写，多平台复用" }),
-    body: translate({ id: "home.feature.platform.body", message: "命令与消息使用同一套 SDK，平台差异交给 Adapter，并按实例能力选择功能。" }),
-    to: "/docs/tutorial/commands",
-  },
-  {
-    title: translate({ id: "home.feature.testing.title", message: "本机验证真实回复" }),
-    body: translate({ id: "home.feature.testing.body", message: "用 plugintest 在 go test 中运行真实 Core，检查回复、权限、数据库和多轮交互。" }),
-    to: "/docs/tutorial/testing",
-  },
-  {
-    title: translate({ id: "home.feature.hotdeploy.title", message: "改插件，其他组件继续运行" }),
-    body: translate({ id: "home.feature.hotdeploy.body", message: "run --reload 只重启变化的组件；编译失败时，继续使用旧版本。" }),
-    to: "/docs/quick-start",
-  },
-  {
-    title: translate({ id: "home.feature.isolation.title", message: "各插件自主选择依赖" }),
-    body: translate({ id: "home.feature.isolation.body", message: "Native 插件分别构建、独立运行，依赖版本随各自构建确定，故障按组件定位。" }),
-    to: "/docs/internals/architecture",
-  },
-  {
-    title: translate({ id: "home.feature.rollback.title", message: "更新失败保留受管数据" }),
-    body: translate({ id: "home.feature.rollback.body", message: "安装组件更新时使用 SQLite 候选副本，准备失败恢复旧代次与旧数据库。" }),
-    to: "/docs/tutorial/storage",
-  },
-  {
-    title: translate({ id: "home.feature.collab.title", message: "复用服务与模型" }),
-    body: translate({ id: "home.feature.collab.body", message: "通过 Service 调用、Bus 广播和 Agent 模型接口，让多个插件共享已有能力。" }),
-    to: "/docs/advanced/services",
-  },
-];
-
-function CodeWindow(): ReactNode {
-  return (
-    <div className={styles.window}>
-      <div className={styles.windowBar}>
-        <span className={styles.fileName}>plugin.go</span>
-      </div>
-      <pre className={styles.code}>
-        <code>
-          <span className={styles.kw}>func</span> <span className={styles.fn}>New</span>
-          {"() *sdk.Plugin {\n  p := sdk."}
-          <span className={styles.fn}>NewPlugin</span>{"()\n  p."}
-          <span className={styles.fn}>Command</span>(<span className={styles.str}>"ping"</span>).
-          <span className={styles.fn}>Handle</span>{"(\n    "}
-          <span className={styles.kw}>func</span>{"(*sdk.Context) (message.Content, error) {\n      "}
-          <span className={styles.kw}>return</span>{" message."}<span className={styles.fn}>Text</span>(
-          <span className={styles.str}>"pong"</span>), <span className={styles.kw}>nil</span>
-          {"\n    })\n  "}<span className={styles.kw}>return</span>{" p\n}"}
-        </code>
-      </pre>
-    </div>
-  );
-}
-
 export default function Home(): ReactNode {
-  const { siteConfig } = useDocusaurusContext();
+  const { siteConfig, i18n } = useDocusaurusContext();
   const { withBaseUrl } = useBaseUrlUtils();
-  return (
-    <Layout title={translate({ id: "home.pageTitle", message: "首页" })} description={siteConfig.tagline}>
-      <header className={clsx("container", styles.hero)}>
+  const url = (p: string) => withBaseUrl(p, { forcePrependBaseUrl: true });
+  const features = [
+    ["isolation", "进程隔离", "插件独立运行，组件崩溃由 Core 接管重启。", "/docs/internals/architecture"],
+    ["modular", "按需组合", "平台、AI 和管理界面各自安装，随时替换。", "/docs/usage/install"],
+    ["sleep", "空闲即休眠", "释放空闲插件的内存，消息到来时自动唤醒。", `/docs/usage/settings#${i18n.currentLocale === "en" ? "save-memory" : "节省内存"}`],
+    ["develop", "专注 Go 开发", "命令、事件、SQLite 与配置表单，SDK 直接提供。", "/docs/tutorial/project"],
+    ["reload", "保存即可运行", "源码自动编译、热重载，在终端验证回复。", "/docs/quick-start"],
+    ["manage", "统一管理", "账号、模型、权限与日志，在 WebUI 集中操作。", "/docs/usage/webui"],
+  ];
+  return <Layout title={translate({id:"home.pageTitle",message:"首页"})} description={siteConfig.tagline}>
+    <main className={styles.home}>
+      <section className={styles.hero}>
         <div className={styles.intro}>
-          <p className={styles.eyebrow}>{siteConfig.customFields?.currentVersion as string}</p>
-          <h1 className={styles.title}>AlonaBot</h1>
-          <p className={styles.lead}>
-            <Translate id="home.subtitle">用 Go 写业务，接入你选择的聊天平台。</Translate>
-          </p>
-          <p className={styles.support}>
-            <Translate id="home.support">从 /ping 开始，逐步加入数据库、按钮和模型调用。</Translate>
-          </p>
+          <span className={styles.version}>{siteConfig.customFields?.currentVersion as string}</span>
+          <h1>AlonaBot</h1>
+          <p className={styles.lead}><Translate id="home.headline">用 Go，构建你的聊天机器人。</Translate></p>
+          <p className={styles.summary}><Translate id="home.summary">接入聊天平台，组合插件与 AI，在一个界面管理。</Translate></p>
           <div className={styles.actions}>
-            <Link className="button button--primary button--lg" to={withBaseUrl("/docs/quick-start", { forcePrependBaseUrl: true })}>
-              <Translate id="home.cta.quickStart">快速开始</Translate>
-            </Link>
-            <Link className="button button--secondary button--lg" to={withBaseUrl("/docs/tutorial/project", { forcePrependBaseUrl: true })}>
-              <Translate id="home.cta.plugin">编写第一个插件</Translate>
-            </Link>
+            <Link className="button button--primary button--lg" to={url("/docs/usage/install")}><Translate id="home.install">部署机器人</Translate></Link>
+            <Link className="button button--secondary button--lg" to={url("/docs/quick-start")}><Translate id="home.develop">开发插件</Translate></Link>
           </div>
-          <p className={styles.status}>
-            <Translate id="home.status">已发布</Translate> ·{" "}
-            <Link to={withBaseUrl("/docs/internals/status", { forcePrependBaseUrl: true })}>
-              <Translate id="home.status.link">功能与平台支持</Translate>
-            </Link>
-          </p>
         </div>
-        <div className={styles.demo}>
-          <CodeWindow />
-          <ChatDemo />
-        </div>
-      </header>
-      <main className="container">
-        <section className={styles.features}>
-          {features.map((f) => (
-            <article key={f.title} className={styles.feature}>
-              <h2><Link to={withBaseUrl(f.to, { forcePrependBaseUrl: true })}>{f.title}</Link></h2>
-              <p>{f.body}</p>
-            </article>
-          ))}
-        </section>
-      </main>
-    </Layout>
-  );
+        <div className={styles.identity} aria-hidden="true"><img src={url("/img/mascot-hero.png")} width="1254" height="1254" alt="" fetchPriority="high" /></div>
+      </section>
+      <section className={styles.features} aria-label={translate({id:"home.features",message:"核心能力"})}>
+        {features.map(([id,title,body,to])=><article className={styles.feature} key={id}>
+          <h2><Link to={url(to)}>{translate({id: "home.capability."+id+".title",message:title})}</Link></h2>
+          <p>{translate({id:"home.capability."+id+".body",message:body})}</p>
+        </article>)}
+      </section>
+      <section className={styles.paths}>
+        <h2><Translate id="home.read">从这里继续</Translate></h2>
+        <div><Link to={url("/docs/platforms/telegram")}>Telegram</Link><Link to={url("/docs/usage/agent")}><Translate id="home.agent">AI 对话</Translate></Link><Link to={url("/docs/tutorial/commands")}><Translate id="home.commands">命令与参数</Translate></Link><Link to={url("/docs/advanced/services")}><Translate id="home.services">插件协作</Translate></Link><Link to={url("/docs/reference/cli")}>CLI</Link></div>
+      </section>
+    </main>
+  </Layout>;
 }

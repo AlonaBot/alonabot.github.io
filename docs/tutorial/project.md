@@ -18,7 +18,7 @@ cd alonabot-plugin-todo
 | --- | --- |
 | `plugin.go` | 插件代码 |
 | `plugin.yaml` | 插件的名字、版本等信息 |
-| `config_schema.json` | 配置项声明 |
+| `plugin_config_schema.json` | 配置项声明 |
 | `i18n/en-US.json` | 给用户看的文字 |
 | `go.mod` | Go module 与依赖 |
 | `.gitignore` | 忽略 `data/` 和 `bin/` |
@@ -30,7 +30,7 @@ cd alonabot-plugin-todo
 ```yaml title="plugin.yaml"
 id: alonabot-plugin-todo
 name: alonabot-plugin-todo
-version: 0.1.0
+version: 0.3.0
 source: github.com/CHANGE-ME/CHANGE-ME
 role: plugin
 ```
@@ -61,11 +61,11 @@ func New() *sdk.Plugin {
 }
 ```
 
-插件只需要导出一个 `New` 函数：创建插件对象 `p`，在上面登记命令，然后返回。你不用写 `main` 函数，`alonabot` 会替你生成。
+插件只需要导出一个 `New` 函数：创建插件对象 `p`，在上面注册命令，然后返回。CLI 生成运行入口。
 
-有两点要记住：
+注册约定：
 
-- **所有登记都写在 `New` 里。** 插件启动之后不能再增加命令。
+- **所有注册都写在 `New` 里。** 插件启动之后不能再增加命令。
 - **每次调用 `New` 都返回一个新对象。** 不要把状态放在包级变量里，否则测试之间会互相影响。
 
 ## 运行

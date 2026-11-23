@@ -5,7 +5,7 @@ description: 在插件启动和停止时做事，在消息处理前后插入逻�
 
 ## 生命周期回调
 
-插件启动、停止时要做的事，登记在这三个回调里：
+通过生命周期回调管理连接与后台任务：
 
 ```go
 func New() *sdk.Plugin {
@@ -36,10 +36,11 @@ func New() *sdk.Plugin {
 | --- | --- | --- |
 | `OnStart` | 配置和数据库准备好之后，开始接收消息之前 | 建立连接、加载数据、检查配置 |
 | `OnReady` | 即将开始接收消息时 | 启动后台协程 |
+| `OnSleep` | 空闲休眠时，先于 `OnStop` | 保存休眠前状态 |
 | `OnStop` | 停止之前 | 关闭连接、结束后台协程 |
 
 - `OnStart` 返回错误时插件启动失败，错误会显示在日志和管理界面里。配置不对时在这里报错，比运行到一半才出错好。
-- 每种回调只能登记一次。
+- 每种回调只能注册一次。
 - `OnStart` 和 `OnReady` 里**不能发消息**，此时插件还没有准备好。启动后要发通知的话，用[定时任务](schedule.md)或在后台协程里发。
 - 数据库由框架打开和关闭，不用在这里处理。
 
@@ -77,7 +78,7 @@ err := sdk.SendText(bg, session, "Something happened.")
 
 ## 消息 Hook
 
-Hook 让插件在**所有**消息的处理流程里插一脚，包括其他插件的消息。适合做全局的事情：过滤、统计、统一改写。
+Hook 在消息处理和发送前后执行，用于过滤、统计与改写。
 
 ### 处理之前：PreEvent
 
@@ -127,3 +128,15 @@ p.PreEvent(sdk.MessageCreated).Priority(-100).Handle(filter)
 ```
 
 Hook 会拖慢每一条消息的处理，里面不要做耗时的事。
+
+## AI Hook
+
+`sdk/agent/hook` 提供模型与工具执行阶段的 Hook：
+
+| 阶段 | 用途 |
+| --- | --- |
+| `BeforeRun`、`BeforeRequest` | 调整运行与模型输入 |
+| `RewriteResponse`、`RewriteStream` | 改写完整响应或流式增量 |
+| `BeforeToolCall`、`AfterToolCall` | 调整工具参数与结果 |
+
+通过插件对象与稳定 ID 注册，用 `Priority` 设置阶段内顺序。生成入口见[调用大模型](llm.md)。

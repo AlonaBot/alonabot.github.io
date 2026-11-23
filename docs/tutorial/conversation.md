@@ -41,10 +41,9 @@ Remove all items? Reply yes to confirm.
 All items removed.
 ```
 
-两处新东西：
+`.Continue()` 将 Handler 注册为延续调用，支持等待用户输入。普通 Handler 的执行期限为 30 秒。
 
-- **登记时加 `.Continue()`**。普通 Handler 必须在 30 秒内返回，加上它之后这个 Handler 可以运行更久，才能停下来等用户。
-- **`c.Wait(time.Minute)`** 停在这里，直到同一个用户在同一个会话里发来下一条消息，最多等一分钟。它返回一个新的 `Context`，代表用户的那条回答：`answer.Text()` 是回答的文字，`answer.Reply(...)` 回复那条消息。
+`c.Wait(time.Minute)` 等待同一用户在同一会话中的下一条消息，最长一分钟。返回的新 `Context` 对应这条回答：`answer.Text()` 读取文本，`answer.Reply(...)` 回复该消息。
 
 ## 等待期间发生了什么
 
@@ -96,11 +95,3 @@ When is it due?
 > tomorrow
 Added: buy milk (due tomorrow)
 ```
-
-## 限制
-
-- 等待的状态只在内存里。插件重启或更新后，正在进行的对话会结束，用户需要重新发命令。
-- 只有由用户消息触发的 Handler 能等待。定时任务没有「发消息的用户」，不能用 `Wait`。
-- 整个对话有总时长上限，缺省 15 分钟。
-
-需要用户点按钮而不是打字时，见[按钮](../advanced/buttons.md)。下一页：[测试](testing.md)。

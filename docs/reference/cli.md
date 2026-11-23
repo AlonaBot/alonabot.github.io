@@ -3,7 +3,7 @@ title: CLI 参考
 description: alonabot 命令的全部子命令和参数。
 ---
 
-所有命令都可以加 `--help` 查看说明。
+使用 `alonabot --version` 查看版本与构建日期，子命令加 `--help` 查看参数。
 
 ## 开发
 
@@ -75,7 +75,7 @@ alonabot build [目录]
 alonabot test [目录]
 ```
 
-编译组件，在临时环境里完整地启动再停止一次，报告登记了哪些命令。用来确认组件能正常装载。业务逻辑的测试用 `go test`，见[测试](../tutorial/testing.md)。
+编译组件并执行离线准备检查。消息与生命周期验证使用 `go test`，见[测试](../tutorial/testing.md)。
 
 ### alonabot pack
 
@@ -83,19 +83,17 @@ alonabot test [目录]
 alonabot pack [目录]
 ```
 
-打出安装包和 `release.json`，见[打包与发布](../advanced/publish.md)。
+生成组件平台归档，见[打包与发布](../advanced/publish.md)。
 
 | 参数 | 含义 |
 | --- | --- |
 | `--target` | 目标平台，如 `linux/amd64`，可以写多次。缺省是当前机器 |
-| `--key` | 签名用的私钥文件 |
-| `--asset-base` | 安装包下载地址的前缀。`source` 是 GitHub 仓库时可以省略 |
 | `--out` | 输出目录 |
 | `--tags` | Go build tags |
 
 ## 管理
 
-下面的命令连接正在运行的 Core，需要管理 token：设置环境变量 `ALONABOT_ADMIN_TOKEN`，或者加 `--token-file <文件>`。Core 不在缺省地址时加 `--admin-url <地址>`。
+下面的命令连接正在运行的 Core，会从所选数据目录自动读取持久管理凭据。远程管理可设置环境变量 `ALONABOT_ADMIN_TOKEN`，或者加 `--token-file <文件>`。Core 不在缺省地址时加 `--admin-url <地址>`。
 
 ### 组件
 
@@ -134,6 +132,9 @@ alonabot pack [目录]
 | `alonabot adapter instance create <组件ID> <账号名> [--config 文件]` | 添加账号 |
 | `alonabot adapter instance start <账号名>`、`stop <账号名>` | 启动、停止 |
 | `alonabot adapter instance delete <账号名>` | 删除 |
+| `alonabot adapter instance list` | 查看账号及运行状态 |
+| `alonabot adapter actions <账号名> [操作]` | 查询实时操作与输入 Schema |
+| `alonabot adapter call <账号名> <操作> --params '{}'` | 调用操作 |
 
 ### 配置文件
 
@@ -174,7 +175,7 @@ alonabot pack [目录]
 
 | 命令 | 作用 |
 | --- | --- |
-| `alonabot admin-token show` | 显示首次启动时生成、还没用过的管理 token |
+| `alonabot admin-token show` | 读取持久保存的管理 token |
 | `alonabot admin-token init` | 在启动 Core 之前生成管理 token |
 | `alonabot admin-token reset` | 重新生成，旧的失效。需要先停止 Core |
 

@@ -5,17 +5,17 @@ description: 通过 Agent 使用大模型，不用自己管理密钥和接口。
 
 插件不需要自己接大模型的 API。机器人主人在 [Agent](../usage/agent.md) 里配置好模型和密钥，所有插件通过 `sdk/llm` 共用。
 
-## 问一句
+## 生成文本
 
 ```go
 import "github.com/AlonaBot/AlonaBot/sdk/llm"
 
 	p.Command("ask").RawTail().Handle(func(c *sdk.Context, question string) error {
-		answer, err := llm.Ask(c, question)
+		resp, err := llm.Generate(c, llm.Request{Messages: []llm.Message{{Role: "user", Text: question}}})
 		if err != nil {
 			return err
 		}
-		return c.Reply(answer)
+		return c.Reply(resp.Text)
 	})
 ```
 
@@ -24,7 +24,7 @@ import "github.com/AlonaBot/AlonaBot/sdk/llm"
 The capital of France is Paris.
 ```
 
-## 更多控制
+## 模型与生成参数
 
 ```go
 	resp, err := llm.Generate(c, llm.Request{
@@ -56,13 +56,14 @@ The capital of France is Paris.
 机器人主人没有安装 Agent 或没有配置模型时，调用返回错误。给用户一个明确的提示：
 
 ```go
-	answer, err := llm.Ask(c, question)
+	resp, err := llm.Generate(c, llm.Request{Messages: []llm.Message{{Role: "user", Text: question}}})
 	if errcode.Of(err) == errcode.Unavailable {
 		return c.Reply("AI is not configured on this bot.")
 	}
 	if err != nil {
 		return err
 	}
+	return c.Reply(resp.Text)
 ```
 
 机器人主人也可以只允许部分插件调用模型。不在名单里时错误码是 `PERMISSION_DENIED`。
@@ -136,3 +137,9 @@ func TestAsk(t *testing.T) {
 ```
 
 想检查插件传给模型的内容，在这个函数里把 `req` 存下来再断言。
+
+## 工具循环
+
+需要模型调用工具时，通过 `sdk/agent` 的 `agent.Run` 传入 `agent.RunRequest`。其中 `Input` 使用同一 `llm.Request`，`Tools` 指定工具目录；返回 `Text`、模型与工具步骤，以及各步的完整错误。流式运行使用 `agent.RunStream`。
+
+`sdk/agent/goal` 用于创建持久目标，并查询状态、暂停、恢复或取消执行；目标按可验证条件验收。

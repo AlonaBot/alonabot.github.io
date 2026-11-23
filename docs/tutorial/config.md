@@ -7,9 +7,9 @@ description: 声明配置项，在代码里读取，保存密钥。
 
 ## 声明配置项
 
-配置项写在 `config_schema.json` 里，一个键是一项：
+配置项写在 `plugin_config_schema.json` 里，一个键是一项：
 
-```json title="config_schema.json"
+```json title="plugin_config_schema.json"
 {
   "limit": {
     "type": "int",
@@ -62,7 +62,7 @@ Added: buy milk (limit 3)
 | `string` | `String(key)` | 单行文字 |
 | `text` | `String(key)` | 多行文字 |
 | `int` | `Int(key)` | 整数，返回 `int64` |
-| `float` | `Float(key)` | 小数 |
+| `float` | `Float(key)` | 浮点数 |
 | `bool` | `Bool(key)` | 开关 |
 | `list` | `Strings(key)` | 一组文字 |
 | `object` | `Object(key)` | 一组子配置项，再用同样的方法读里面的值 |
@@ -75,7 +75,7 @@ Added: buy milk (limit 3)
 
 API 密钥这类不能泄露的值，加上 `"secret": true`：
 
-```json title="config_schema.json"
+```json title="plugin_config_schema.json"
 {
   "limit": { "type": "int", "description": "Maximum items per user", "default": 20 },
   "api_key": { "type": "string", "description": "API key", "secret": true }

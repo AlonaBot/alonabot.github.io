@@ -1,46 +1,4 @@
 {
-  "home.pageTitle": {
-    "message": "Home"
-  },
-  "home.cta.quickStart": {
-    "message": "Quick start"
-  },
-  "home.cta.plugin": {
-    "message": "Write your first plugin"
-  },
-  "home.status": {
-    "message": "Released"
-  },
-  "home.status.link": {
-    "message": "Features and platform support"
-  },
-  "chat.bot": {
-    "message": "bot"
-  },
-  "chat.today": {
-    "message": "Today"
-  },
-  "chat.telegram.placeholder": {
-    "message": "Message"
-  },
-  "chat.qq.group": {
-    "message": "AlonaBot Test Group"
-  },
-  "chat.qq.member": {
-    "message": "Lin"
-  },
-  "chat.qq.hello": {
-    "message": "Hi all"
-  },
-  "chat.qq.me": {
-    "message": "Me"
-  },
-  "chat.choosePlatform": {
-    "message": "Choose a platform"
-  },
-  "chat.illustrative": {
-    "message": "Illustration"
-  },
   "theme.ErrorPageContent.title": {
     "message": "This page crashed.",
     "description": "The title of the fallback page when the page crashed"
@@ -403,46 +361,70 @@
     "message": "Tags",
     "description": "The title of the tag list page"
   },
-  "home.subtitle": {
-    "message": "Build your bot in Go. Bring it to the chat platforms you choose."
+  "home.pageTitle": {
+    "message": "Home"
   },
-  "home.feature.platform.title": {
-    "message": "Write once, reuse across platforms"
+  "home.headline": {
+    "message": "Build your chatbot in Go."
   },
-  "home.feature.platform.body": {
-    "message": "Use one command and message SDK; adapters handle platform differences and expose each instance’s capabilities."
+  "home.summary": {
+    "message": "Connect chat platforms, combine plugins and AI, manage them together."
   },
-  "home.feature.testing.title": {
-    "message": "Test real replies locally"
+  "home.install": {
+    "message": "Deploy a bot"
   },
-  "home.feature.testing.body": {
-    "message": "Run a real Core with plugintest inside go test to check replies, permissions, storage and multi-turn interactions."
+  "home.develop": {
+    "message": "Build a plugin"
   },
-  "home.feature.hotdeploy.title": {
-    "message": "Reload a plugin, keep the rest running"
+  "home.features": {
+    "message": "Core features"
   },
-  "home.feature.hotdeploy.body": {
-    "message": "run --reload restarts only changed components. A failed build keeps the previous version running."
+  "home.read": {
+    "message": "Explore the docs"
   },
-  "home.feature.isolation.title": {
-    "message": "Choose dependencies per plugin"
+  "home.agent": {
+    "message": "AI conversations"
   },
-  "home.feature.isolation.body": {
-    "message": "Native plugins build and run separately. Each build selects its dependencies, and failures can be diagnosed by component."
+  "home.commands": {
+    "message": "Commands"
   },
-  "home.feature.rollback.title": {
-    "message": "Keep managed data when an update fails"
+  "home.services": {
+    "message": "Plugin services"
   },
-  "home.feature.rollback.body": {
-    "message": "Installed component updates use a SQLite candidate copy; failed preparation restores the previous generation and database."
+  "home.capability.isolation.title": {
+    "message": "Process isolation"
   },
-  "home.feature.collab.title": {
-    "message": "Reuse services and models"
+  "home.capability.isolation.body": {
+    "message": "Plugins run independently. Core restarts components after a crash."
   },
-  "home.feature.collab.body": {
-    "message": "Share existing functionality through Service calls, Bus broadcasts and the Agent’s model interface."
+  "home.capability.modular.title": {
+    "message": "Choose your components"
   },
-  "home.support": {
-    "message": "Start with /ping, then add storage, buttons and model calls."
+  "home.capability.modular.body": {
+    "message": "Install and replace platforms, AI and the management UI independently."
+  },
+  "home.capability.sleep.title": {
+    "message": "Sleep when idle"
+  },
+  "home.capability.sleep.body": {
+    "message": "Release idle plugin memory and wake automatically for incoming work."
+  },
+  "home.capability.develop.title": {
+    "message": "Go development"
+  },
+  "home.capability.develop.body": {
+    "message": "Commands, events, SQLite and configuration forms through one SDK."
+  },
+  "home.capability.reload.title": {
+    "message": "Save and run"
+  },
+  "home.capability.reload.body": {
+    "message": "Compile and reload source automatically. Test replies in the terminal."
+  },
+  "home.capability.manage.title": {
+    "message": "Manage together"
+  },
+  "home.capability.manage.body": {
+    "message": "Control accounts, models, permissions and logs in WebUI."
   }
 }

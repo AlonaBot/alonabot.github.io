@@ -3,14 +3,14 @@ title: 快速上手
 description: 安装 CLI，创建插件，在终端里和它对话。
 ---
 
-这一页用 0.1.0 创建一个能回复 `/hello` 的插件，在终端里直接和它对话，无需注册平台账号。
+这一页用 0.3.0 创建一个能回复 `/hello` 的插件，在终端里直接和它对话，无需注册平台账号。
 
 ## 1. 安装
 
 需要先装好 [Go](https://go.dev/dl/) 1.27.1 或更高版本，然后安装 `alonabot` 命令：
 
 ```sh
-go install github.com/AlonaBot/AlonaBot/cmd/alonabot@v0.1.0
+go install github.com/AlonaBot/AlonaBot/cmd/alonabot@v0.3.0
 ```
 
 确认装好了：
@@ -21,7 +21,7 @@ alonabot --help
 
 提示找不到命令时，把 `go env GOPATH` 输出的目录下的 `bin` 加进 `PATH`。
 
-`go install` 构建适合本页的本地插件开发。接入 Telegram 等官方 Adapter 时，请使用[0.1.0 官方发行归档](usage/install.md#手动)中的 CLI：发行构建内置官方发布者公钥，Core 自动安装 Adapter 时需要它。
+接入平台与管理界面，见[安装](usage/install.md)。
 
 ## 2. 创建插件
 
@@ -39,8 +39,8 @@ import "github.com/AlonaBot/AlonaBot/sdk"
 
 func New() *sdk.Plugin {
 	p := sdk.NewPlugin()
-	p.Command("hello").Description("Show a greeting").Handle(func(c *sdk.Context) error {
-		return c.Reply(c.T("hello"))
+	p.Command("hello").Description("Show a greeting").Menu().Handle(func(c *sdk.Context) error {
+		return c.Reply("Hello AlonaBot")
 	})
 	return p
 }
@@ -56,7 +56,7 @@ Core 启动后出现 `> ` 提示符，直接输入消息：
 
 ```text
 > /hello
-Hello!
+Hello AlonaBot
 ```
 
 这就是你的插件在回复。按 Ctrl-C 退出。
@@ -83,4 +83,4 @@ Hello from my first plugin!
 ## 接下来
 
 - [教程](tutorial/project.md)从这个工程出发，做一个待办清单插件，依次讲命令参数、回复、配置、存数据、多轮对话和测试。
-- 想马上接到真实平台，看[接入 Telegram](tutorial/telegram.md)。
+- 想马上接到真实平台，看[接入 Telegram](platforms/development.md)。

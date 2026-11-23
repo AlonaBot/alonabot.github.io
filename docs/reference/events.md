@@ -18,7 +18,7 @@ description: 标准事件、权限名，以及用户、会话、消息标识的�
 | `sdk.BotOffline` | `bot.offline` | 机器人账号下线 | `*message.BotOfflinePayload` |
 | `sdk.CommandInvoked` | `command.invoked` | 有命令被执行。只有命令的名字和结果，没有参数和聊天内容，适合做统计 | `*message.CommandInvokedPayload` |
 
-用法见[文本匹配与事件](../advanced/matching.md)。各平台实际会发出哪些事件见[平台功能对照](../usage/platforms.md)。
+用法见[文本匹配与事件](../advanced/matching.md)。平台专属事件见 [Telegram SDK](../platforms/telegram-sdk.md) 与 [OneBot 11 SDK](../platforms/onebot11-sdk.md)。
 
 ### 新消息的内容
 
@@ -66,17 +66,7 @@ type CreatedPayload struct {
 | `sdk.Admin` | `admin` | 机器人管理员 |
 | `sdk.ChatAdmin` | `chat_admin` | 当前群的管理员或群主 |
 
-平台特有的权限：
-
-| 平台 | 包 | 常量 | 名称 |
-| --- | --- | --- | --- |
-| Telegram | `adapters/telegram/perm` | `ChatOwner` | `telegram.chat_owner` |
-| | | `ChatAdmin` | `telegram.chat_admin` |
-| OneBot 11 | `adapters/onebot11/perm` | `GroupOwner` | `onebot11.group_owner` |
-| | | `GroupAdmin` | `onebot11.group_admin` |
-| | | `PrivateFriend` | `onebot11.private_friend` |
-
-用 `sdk.PermissionName(perm.GroupOwner)` 引用。群主、群管理员同时也满足 `sdk.ChatAdmin`。
+平台权限常量见 [Telegram SDK](../platforms/telegram-sdk.md) 与 [OneBot 11 SDK](../platforms/onebot11-sdk.md)。
 
 ## 标识的格式
 

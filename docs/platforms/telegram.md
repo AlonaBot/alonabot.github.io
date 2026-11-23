@@ -5,9 +5,9 @@ description: 接入 Telegram 机器人。
 
 ## 接入
 
-按下面的步骤配置账号后，Core 会在启动时自动安装并启用官方 Telegram Adapter，首次接入需要联网。曾手动卸载过的 Adapter 需要[手动重装](install.md#安装官方组件)。
+按下面的步骤配置账号后，Core 会在启动时自动安装并启用官方 Telegram Adapter，首次接入需要联网。曾手动卸载过的 Adapter 需要[手动重装](../usage/install.md#安装官方组件)。
 
-下面用 `/help` 检查接入结果。先在运行中的 Core 上[配置管理 token](manage.md#准备)，安装并启用 help 插件：
+下面用 `/help` 检查接入结果。先在运行中的 Core 上[配置管理 token](../usage/manage.md#准备)，安装并启用 help 插件：
 
 ```sh
 alonabot install --source AlonaBot/alonabot-plugin-help --yes
@@ -70,14 +70,10 @@ alonabot enable alonabot-plugin-help-official
 https://api.telegram.org/bot<token>/deleteWebhook
 ```
 
-**收不到图片或文件**
-
-Telegram 限制机器人下载的文件不超过 20 MB。
-
 **同一个 token 不能同时在两处运行**
 
 两个程序用同一个 token 接收消息会互相抢，表现为消息时有时无。
 
-## 支持的功能
+## 查询账号操作
 
-见[平台功能对照](platforms.md)。
+见[查询账号能力](index.md#查询账号能力)。

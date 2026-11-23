@@ -33,8 +33,8 @@ Core 启动组件进程后，两者之间建立一条连接，有两种方式：
 | 种类 | 方向 | 用途 |
 | --- | --- | --- |
 | HELLO / HELLO_ACK | 组件 → Core / Core → 组件 | 握手，确认协议版本 |
-| REGISTER | 组件 → Core | 组件报告自己登记了哪些命令、事件、服务 |
-| PREPARED | Core → 组件 | Core 接受了登记 |
+| REGISTER | 组件 → Core | 组件报告自己注册了哪些命令、事件、服务 |
+| PREPARED | Core → 组件 | Core 接受了注册 |
 | ACTIVATE / ACTIVATED | Core → 组件 / 组件 → Core | 开始工作 |
 | REQUEST / RESPONSE | 双向 | 一次调用和它的结果 |
 | CANCEL | 双向 | 取消一次还没结束的调用 |

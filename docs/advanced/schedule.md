@@ -52,7 +52,7 @@ func morning(c *sdk.Context) error {
 
 ## 用户创建的任务
 
-提醒这类功能，时间和内容由用户决定。先声明任务的参数，再登记处理函数：
+提醒这类功能，时间和内容由用户决定。先声明任务的参数，再注册处理函数：
 
 ```go
 import "github.com/AlonaBot/AlonaBot/sdk/task"

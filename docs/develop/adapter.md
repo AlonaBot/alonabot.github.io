@@ -5,7 +5,7 @@ description: 把一个新的聊天平台接入 AlonaBot。
 
 Adapter 负责和一个聊天平台通信：把平台上的消息转成统一格式交给 Core，把 Core 要发的消息发到平台上。
 
-这一页写一个最简单的 Adapter：它不连接任何平台，收到的每条消息来自一个定时器。结构和真实的 Adapter 相同，把定时器换成平台的接口就是真的了。
+这一页用定时器模拟入站消息，演示 Adapter 的事件交付与发送接口。接入平台时，将定时器替换为平台消息接收逻辑。
 
 ## 创建工程
 
@@ -25,7 +25,7 @@ cd alonabot-adapter-demo
 
 `--adapter-id demo` 是平台的标识。用户和会话的标识都以它开头，如 `demo:alice`。
 
-## 两个接口
+## Adapter 与 Instance 接口
 
 Adapter 要实现 `sdk/adapter` 包里的两个接口：
 
@@ -209,7 +209,7 @@ alonabot run . ../alonabot-plugin-hello
 send to=demo:alice text=Hello!
 ```
 
-这说明整条路走通了：你的 Adapter 交付了 `/hello`，Core 找到插件，插件回复，Core 调用了你的 `Send`。
+调用链为：Adapter 交付 `/hello` → Core 路由到插件 → 插件回复 → Core 调用 Adapter 的 `Send`。
 
 ## 从第三方源码调试
 
@@ -230,7 +230,7 @@ alonabot adapter instance create alonabot-adapter-qq qq-main --config ./qq-accou
 
 保存任一工程的代码后，CLI 自动重新编译并重启对应组件。这里使用独立数据目录：同一数据目录中，开发组件与已安装组件的 ID 或 Adapter 平台标识冲突时，Core 会拒绝启动。
 
-## 逐个说明
+## Adapter 方法
 
 ### 交付消息：core.Deliver
 
@@ -273,7 +273,7 @@ alonabot adapter instance create alonabot-adapter-qq qq-main --config ./qq-accou
 | `message.reference` | 能引用回复 |
 | `message.markdown` | 能显示格式化文字 |
 
-**只声明真正实现了的。**
+能力声明应与 Adapter 实现一致。
 
 ### 停止：Stop
 
@@ -333,3 +333,27 @@ return &adapter.Descriptor{
 ## 发布
 
 和插件相同，见[打包与发布](../advanced/publish.md)。组件 ID 用 `alonabot-adapter-` 开头。
+
+## 账号配置页面
+
+扫码登录、授权跳转与 token 校验可放进 Adapter 自己的账号页面，WebUI 在添加或编辑账号时打开：
+
+```go
+HTTP: []adapter.HTTPRoute{{
+    Method: http.MethodGet,
+    Path: "/account/",
+    Handler: http.HandlerFunc(serveAccountPage),
+    Page: &adapter.PageDescriptor{Title: "Connect account", Purpose: adapter.PageInstanceConfig},
+}},
+```
+
+页面加载 `kit.js`，通过 `AlonaBot.getConfigContext()` 读取创建或编辑模式、账号 ID 与当前配置，通过 `AlonaBot.completeConfig({patch})` 提交配置补丁。二维码可按需加载 `qrcode.js`。
+
+## 实时联调
+
+```fish
+alonabot adapter instance list
+alonabot adapter actions main
+```
+
+先查询账号提供的操作与输入 Schema，再用 `alonabot adapter call main <操作> --params '{}'` 调用。Go 工具可使用 `sdk/debug` 访问同一管理接口。

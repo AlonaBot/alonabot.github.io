@@ -1,9 +1,9 @@
 ---
 title: 回复消息
-description: 回复文字和图片，读取这条消息是谁在哪里发的。
+description: 回复文字和图片，读取用户、会话与消息信息。
 ---
 
-Handler 的第一个参数 `c` 代表「这一次调用」：谁发的消息、在哪个会话、怎么回复，都从它上面取。
+Handler 的第一个参数 `c` 是调用上下文（`*sdk.Context`），用于读取用户、会话和事件信息，以及回复消息。
 
 ## 回复
 
@@ -50,7 +50,7 @@ func add(c *sdk.Context, text string) error {
 
 ## 用返回值回复
 
-Handler 也可以直接把要回复的内容返回，少写一行：
+Handler 返回 `(message.Content, error)` 时，框架自动发送返回的内容：
 
 ```go
 	p.Command("ping").Handle(func(c *sdk.Context) (message.Content, error) {
@@ -60,7 +60,7 @@ Handler 也可以直接把要回复的内容返回，少写一行：
 
 返回 `nil` 表示这次不回复。
 
-## 这条消息的信息
+## 调用上下文
 
 | 写法 | 得到 |
 | --- | --- |
