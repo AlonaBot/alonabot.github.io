@@ -46,11 +46,13 @@ func New() *sdk.Plugin {
 }
 ```
 
-## 3. Run
+## 3. Run with hot reload
 
 ```sh
-alonabot run
+alonabot run --reload
 ```
+
+Use `--reload` during development: saving code automatically recompiles and restarts the plugin.
 
 When Core shows the `> ` prompt, enter a message:
 
@@ -59,11 +61,11 @@ When Core shows the `> ` prompt, enter a message:
 Hello AlonaBot
 ```
 
-The reply comes from your plugin. Press Ctrl-C to exit.
+The reply comes from your plugin. Keep the process running while you edit; press Ctrl-C when finished.
 
 ## 4. Make a change
 
-Keep `alonabot run` running and change the Handler in `plugin.go` to:
+Keep `alonabot run --reload` running and change the Handler in `plugin.go` to:
 
 ```go
 	p.Command("hello").Description("Show a greeting").Handle(func(c *sdk.Context) error {
