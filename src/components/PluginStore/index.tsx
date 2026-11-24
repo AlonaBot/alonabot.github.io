@@ -39,10 +39,10 @@ function StoreCard({ entry }: { entry: StoreEntry }): ReactNode {
       </div>
       <div className={styles.identity}>
         <div className={styles.nameLine}>
-          <h2><a href={repoURL}>{entry.name}</a></h2>
+          <h2><a href={repoURL} target="_blank" rel="noopener noreferrer">{entry.name}</a></h2>
           {official && <span className={styles.verified} role="img" aria-label={verified} title={verified}><Icon name="verified" /></span>}
         </div>
-        <a href={repoURL} className={styles.repo}>{entry.repo}</a>
+        <a href={repoURL} target="_blank" rel="noopener noreferrer" className={styles.repo}>{entry.repo}</a>
       </div>
       <span className={styles.role}>{roleLabels()[entry.role]}</span>
     </header>
@@ -50,15 +50,15 @@ function StoreCard({ entry }: { entry: StoreEntry }): ReactNode {
     {entry.tags.length > 0 && <ul className={styles.tags} aria-label={translate({ id: "store.tags", message: "标签" })}>
       {entry.tags.map((tag, index) => <li key={`${index}-${tag}`}>#{tag}</li>)}
     </ul>}
-    {!official && <a className={styles.owner} href={`https://github.com/${owner}`}>
+    {!official && <a className={styles.owner} href={`https://github.com/${owner}`} target="_blank" rel="noopener noreferrer">
       <img src={`https://github.com/${owner}.png?size=48`} width="24" height="24" alt="" loading="lazy" />
       <span>{owner}</span>
     </a>}
     <footer className={styles.cardFooter}>
-      <a href={`${repoURL}/stargazers`} aria-label={translate({ id: "store.stars", message: "GitHub Stars：{count}" }, { count: entry.stars === undefined ? unknown : String(entry.stars) })}>
+      <a href={`${repoURL}/stargazers`} target="_blank" rel="noopener noreferrer" aria-label={translate({ id: "store.stars", message: "GitHub Stars：{count}" }, { count: entry.stars === undefined ? unknown : String(entry.stars) })}>
         <Icon name="star" /><span>{entry.stars === undefined ? "—" : entry.stars.toLocaleString()}</span>
       </a>
-      <a href={entry.release_url}>v{entry.version}</a>
+      <a href={entry.release_url} target="_blank" rel="noopener noreferrer">v{entry.version}</a>
     </footer>
   </article>;
 }

@@ -23,7 +23,7 @@
 
 图示以 SVG 保存，需要英文标签时使用英文副本。静态资源经站点 base URL 解析，支持根路径和子路径部署。
 
-插件商店位于 `/store` 和 `/en/store`。浏览器读取 `AlonaBot/plugin-store` 仓库 `index` 分支的 `store.json`，页面随官方快照更新，无需重新构建站点。搜索和角色筛选保存在 URL 的 `q`、`role` 参数中。卡片优先显示快照 `icon_url` 提供的组件 logo，缺少或图片加载失败时使用默认 SVG 图标。AlonaBot 组织的仓库显示官方认证徽章；社区仓库显示 GitHub 所属用户或组织的头像与名称。名称与仓库链接至 GitHub，版本链接至对应 Release。
+插件商店位于 `/store` 和 `/en/store`。浏览器读取 `AlonaBot/plugin-store` 仓库 `index` 分支的 `store.json`，页面随官方快照更新，无需重新构建站点。搜索和角色筛选保存在 URL 的 `q`、`role` 参数中。卡片优先显示快照 `icon_url` 提供的组件 logo，缺少或图片加载失败时使用默认 SVG 图标。AlonaBot 组织的仓库显示官方认证徽章；社区仓库显示 GitHub 所属用户或组织的头像与名称。名称与仓库链接至 GitHub，版本链接至对应 Release；卡片外链均在新标签页打开。
 
 ## 构建与发布
 
