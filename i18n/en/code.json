@@ -440,7 +440,7 @@
     "message": "Adapter"
   },
   "store.role.all": {
-    "message": "All"
+    "message": "All categories"
   },
   "store.verified": {
     "message": "Official"
@@ -486,5 +486,47 @@
   },
   "store.entryErrors": {
     "message": "Index generation failed for {count} entries"
+  },
+  "store.selectTags": {
+    "message": "Select tags"
+  },
+  "store.searchRoles": {
+    "message": "Search categories"
+  },
+  "store.searchTags": {
+    "message": "Search tags"
+  },
+  "store.noTags": {
+    "message": "No matching tags"
+  },
+  "store.sort": {
+    "message": "Sort by stars"
+  },
+  "store.sortAscending": {
+    "message": "Stars: fewest first"
+  },
+  "store.sortDescending": {
+    "message": "Stars: most first"
+  },
+  "store.fewest": {
+    "message": "Fewest first"
+  },
+  "store.most": {
+    "message": "Most first"
+  },
+  "store.removeTag": {
+    "message": "Remove tag {tag}"
+  },
+  "store.pagination": {
+    "message": "Plugin pagination"
+  },
+  "store.pageStatus": {
+    "message": "Page {page} of {pages}, {count} results"
+  },
+  "store.previous": {
+    "message": "Previous page"
+  },
+  "store.next": {
+    "message": "Next page"
   }
 }

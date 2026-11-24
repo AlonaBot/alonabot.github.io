@@ -78,3 +78,17 @@ export function matchesSearch(entry: StoreEntry, query: string): boolean {
   const text = [entry.name, entry.id, entry.description, entry.repo, entry.author, ...entry.tags].join(" ");
   return text.toLowerCase().includes(query.trim().toLowerCase());
 }
+
+export const pageSize = 12;
+
+/** 同类标签采用并集，关键词与类别筛选叠加；缺失 Star 的条目始终排在已知数值之后。 */
+export function selectEntries(entries: StoreEntry[], filters: { query: string; role: Role | ""; tags: string[]; ascending: boolean }): StoreEntry[] {
+  return entries.filter(entry => matchesSearch(entry, filters.query)
+    && (!filters.role || entry.role === filters.role)
+    && (!filters.tags.length || filters.tags.some(tag => entry.tags.includes(tag))))
+    .sort((a, b) => {
+      if (a.stars === undefined) return b.stars === undefined ? 0 : 1;
+      if (b.stars === undefined) return -1;
+      return filters.ascending ? a.stars - b.stars : b.stars - a.stars;
+    });
+}

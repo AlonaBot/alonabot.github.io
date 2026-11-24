@@ -374,7 +374,7 @@
     "message": "适配器"
   },
   "store.role.all": {
-    "message": "全部"
+    "message": "全部类别"
   },
   "store.verified": {
     "message": "官方认证"
@@ -420,5 +420,47 @@
   },
   "store.entryErrors": {
     "message": "{count} 个条目的索引生成失败"
+  },
+  "store.selectTags": {
+    "message": "选择标签"
+  },
+  "store.searchRoles": {
+    "message": "搜索类别"
+  },
+  "store.searchTags": {
+    "message": "搜索标签"
+  },
+  "store.noTags": {
+    "message": "没有匹配的标签"
+  },
+  "store.sort": {
+    "message": "Star 排序"
+  },
+  "store.sortAscending": {
+    "message": "Star 最少优先"
+  },
+  "store.sortDescending": {
+    "message": "Star 最多优先"
+  },
+  "store.fewest": {
+    "message": "最少优先"
+  },
+  "store.most": {
+    "message": "最多优先"
+  },
+  "store.removeTag": {
+    "message": "移除标签 {tag}"
+  },
+  "store.pagination": {
+    "message": "插件分页"
+  },
+  "store.pageStatus": {
+    "message": "第 {page} / {pages} 页，共 {count} 项"
+  },
+  "store.previous": {
+    "message": "上一页"
+  },
+  "store.next": {
+    "message": "下一页"
   }
 }
