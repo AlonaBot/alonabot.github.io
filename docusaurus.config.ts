@@ -1,11 +1,11 @@
-// AlonaBot 文档站配置。站点地址由环境变量覆盖，本地缺省按根路径构建，Pages 工作流使用 /docs/。
+// AlonaBot 文档站配置。站点地址由环境变量覆盖，本地与 Pages 工作流均按根路径构建。
 import { themes as prismThemes } from "prism-react-renderer";
 
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
 const repoUrl = "https://github.com/AlonaBot/AlonaBot";
-const docsRepoUrl = "https://github.com/AlonaBot/docs";
+const docsRepoUrl = "https://github.com/AlonaBot/alonabot.github.io";
 
 // 当前文档对应的框架版本。
 const currentVersion = "0.3.0";
@@ -26,7 +26,7 @@ const config: Config = {
   trailingSlash: false,
 
   organizationName: "AlonaBot",
-  projectName: "docs",
+  projectName: "alonabot.github.io",
 
   onBrokenLinks: "throw",
   onBrokenAnchors: "throw",

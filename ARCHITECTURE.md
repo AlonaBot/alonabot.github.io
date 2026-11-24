@@ -26,4 +26,6 @@
 
 `npm run build` 构建两种语言，输出至 `build/`；链接与锚点错误会使构建失败。本地搜索索引随页面生成。
 
-`SITE_URL` 设置站点域名，`BASE_URL` 设置部署子路径。GitHub Actions 在 PR 中检查构建，合并到 `main` 后构建并部署 Pages。手动工作流也可选择部署。
+`SITE_URL` 设置站点域名，`BASE_URL` 设置部署子路径。组织站仓库为 `AlonaBot/alonabot.github.io`，Pages 使用 `BASE_URL=/` 发布到 `https://alonabot.github.io/`；中文正文位于 `/docs`，英文首页与正文分别位于 `/en/` 和 `/en/docs`。
+
+GitHub Actions 在 PR 中检查构建，合并到 `main` 后构建并部署 Pages。手动工作流也可选择部署。
