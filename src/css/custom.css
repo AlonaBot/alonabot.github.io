@@ -69,6 +69,13 @@ html[data-theme="dark"] {
   border-bottom: 1px solid var(--alona-line);
 }
 
+@media (max-width: 996px) {
+  /* 滤镜会改变固定定位的包含块；移动菜单和遮罩需要相对视口展开。 */
+  .navbar {
+    backdrop-filter: none;
+  }
+}
+
 .footer {
   border-top: 1px solid var(--alona-line);
 }
