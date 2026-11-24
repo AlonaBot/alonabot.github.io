@@ -9,7 +9,8 @@
 | `docs/` | 中文正文：教程、平台接入、进阶、部署、组件开发、参考与内部原理 |
 | `i18n/en/docusaurus-plugin-content-docs/current/` | 与中文路径对应的英文正文 |
 | `i18n/` | 导航、页脚、搜索与文档分类等界面翻译 |
-| `src/pages/` | 首页及其布局样式 |
+| `src/pages/` | 首页、插件商店入口及首页布局样式 |
+| `src/components/PluginStore/` | 官方快照读取、商店卡片与搜索筛选 |
 | `src/css/custom.css` | 全站阅读样式、颜色和明暗主题 |
 | `static/img/` | 标志、透明角色插画和文档图示 |
 | `sidebars.ts` | 文档分组与阅读顺序 |
@@ -21,6 +22,8 @@
 正文以 Markdown 编写，代码块由构建过程高亮。首页使用 React，通过 Docusaurus 翻译接口选择文字。英文正文与中文保持相同的相对路径；内部文档链接由 Docusaurus 解析为对应语言的页面地址。
 
 图示以 SVG 保存，需要英文标签时使用英文副本。静态资源经站点 base URL 解析，支持根路径和子路径部署。
+
+插件商店位于 `/store` 和 `/en/store`。浏览器读取 `AlonaBot/plugin-store` 仓库 `index` 分支的 `store.json`，页面随官方快照更新，无需重新构建站点。搜索和角色筛选保存在 URL 的 `q`、`role` 参数中。卡片优先显示快照 `icon_url` 提供的组件 logo，缺少或图片加载失败时使用默认 SVG 图标。AlonaBot 组织的仓库显示官方认证徽章；社区仓库显示 GitHub 所属用户或组织的头像与名称。名称与仓库链接至 GitHub，版本链接至对应 Release。
 
 ## 构建与发布
 
