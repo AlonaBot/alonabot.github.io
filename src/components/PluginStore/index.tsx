@@ -85,7 +85,8 @@ function FilterMenu({ label, icon, children, iconOnly = false }: { label: string
       ref.current?.querySelector("summary")?.focus();
     }
   }} onBlur={event => {
-    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) ref.current?.removeAttribute("open");
+    // 点击 label 的文字时，焦点会暂时为空，随后才激活关联的选项。
+    if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node)) ref.current?.removeAttribute("open");
   }}>
     <summary aria-label={label} title={label}>{icon}{!iconOnly && <span>{label}</span>}<Icon name="chevron" /></summary>
     <div className={styles.filterPanel}>{children}</div>
