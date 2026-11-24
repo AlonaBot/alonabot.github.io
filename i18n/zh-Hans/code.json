@@ -360,5 +360,65 @@
   "theme.tags.tagsPageTitle": {
     "message": "标签",
     "description": "The title of the tag list page"
+  },
+  "store.title": {
+    "message": "插件商店"
+  },
+  "store.metaDescription": {
+    "message": "浏览 AlonaBot 官方源收录的插件与组件。"
+  },
+  "store.role.plugin": {
+    "message": "插件"
+  },
+  "store.role.adapter": {
+    "message": "适配器"
+  },
+  "store.role.all": {
+    "message": "全部"
+  },
+  "store.verified": {
+    "message": "官方认证"
+  },
+  "store.unprovided": {
+    "message": "未提供"
+  },
+  "store.tags": {
+    "message": "标签"
+  },
+  "store.stars": {
+    "message": "GitHub Stars：{count}"
+  },
+  "store.clear": {
+    "message": "清除筛选"
+  },
+  "store.loading": {
+    "message": "正在加载插件…"
+  },
+  "store.total": {
+    "message": "共 {count} 个插件"
+  },
+  "store.search": {
+    "message": "搜索名称、组件 ID 或描述"
+  },
+  "store.roles": {
+    "message": "组件角色"
+  },
+  "store.results": {
+    "message": "插件列表"
+  },
+  "store.failed": {
+    "message": "插件目录读取失败"
+  },
+  "store.retry": {
+    "message": "重试"
+  },
+  "store.empty": {
+    "message": "官方目录暂无可展示的插件"
+  },
+  "store.noResults": {
+    "message": "没有找到匹配的插件"
+  },
+  "store.entryErrors": {
+    "message": "{count} 个条目的索引生成失败"
   }
 }

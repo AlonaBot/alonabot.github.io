@@ -103,6 +103,7 @@ const config: Config = {
       },
       items: [
         { type: "docSidebar", sidebarId: "docs", position: "left", label: "文档" },
+        { to: "/store", position: "left", label: "插件商店" },
         { type: "localeDropdown", position: "right" },
         { href: repoUrl, label: "GitHub", position: "right" },
       ],

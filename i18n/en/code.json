@@ -426,5 +426,65 @@
   },
   "home.capability.manage.body": {
     "message": "Control accounts, models, permissions and logs in WebUI."
+  },
+  "store.title": {
+    "message": "Plugin Store"
+  },
+  "store.metaDescription": {
+    "message": "Browse plugins and components listed in the official AlonaBot catalog."
+  },
+  "store.role.plugin": {
+    "message": "Plugin"
+  },
+  "store.role.adapter": {
+    "message": "Adapter"
+  },
+  "store.role.all": {
+    "message": "All"
+  },
+  "store.verified": {
+    "message": "Official"
+  },
+  "store.unprovided": {
+    "message": "Not provided"
+  },
+  "store.tags": {
+    "message": "Tags"
+  },
+  "store.stars": {
+    "message": "GitHub stars: {count}"
+  },
+  "store.clear": {
+    "message": "Clear filters"
+  },
+  "store.loading": {
+    "message": "Loading plugins…"
+  },
+  "store.total": {
+    "message": "{count} plugins in total"
+  },
+  "store.search": {
+    "message": "Search by name, component ID or description"
+  },
+  "store.roles": {
+    "message": "Component roles"
+  },
+  "store.results": {
+    "message": "Plugin list"
+  },
+  "store.failed": {
+    "message": "Could not load the plugin catalog"
+  },
+  "store.retry": {
+    "message": "Retry"
+  },
+  "store.empty": {
+    "message": "No plugins are available in the official catalog yet"
+  },
+  "store.noResults": {
+    "message": "No matching plugins found"
+  },
+  "store.entryErrors": {
+    "message": "Index generation failed for {count} entries"
   }
 }
