@@ -7,6 +7,18 @@ This tutorial builds a todo plugin: `/todo add buy milk` adds an item, and `/tod
 
 ## Create a project
 
+### Start from the plugin template
+
+[alonabot-plugin-template](https://github.com/AlonaBot/alonabot-plugin-template) includes the hello example, plugintest integration tests, and five-platform packaging with a GitHub Release workflow. Its hello example matches `alonabot init`.
+
+1. Select [Use this template](https://github.com/new?template_owner=AlonaBot&template_name=alonabot-plugin-template), then clone your new repository.
+2. Set the module in `go.mod` to your repository path, update the plugin identity and `source` in `plugin.yaml`, and replace the `owner` placeholder in `.github/`.
+3. Follow the [template README](https://github.com/AlonaBot/alonabot-plugin-template/blob/main/README.md) to set up the SDK and CLI, then continue with this page's New function and run steps. When replacing hello with the todo command, update the command and expected reply in `plugin_test.go` as well.
+
+### Create with the CLI
+
+For a basic project, run:
+
 ```sh
 alonabot init alonabot-plugin-todo
 cd alonabot-plugin-todo
@@ -19,7 +31,7 @@ The `alonabot-plugin-todo/` project contains:
 | `plugin.go` | Plugin code |
 | `plugin.yaml` | Plugin metadata, including name and version |
 | `plugin_config_schema.json` | Configuration field declarations |
-| `i18n/en-US.json` | User-facing text |
+| `i18n/` (optional) | Localized user-facing text |
 | `go.mod` | Go module and dependencies |
 | `.gitignore` | Excludes `data/` and `bin/` |
 
