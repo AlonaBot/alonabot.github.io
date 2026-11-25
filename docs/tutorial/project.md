@@ -7,6 +7,18 @@ description: 插件工程里每个文件的作用，以及 New 函数怎么写�
 
 ## 创建工程
 
+### 从插件模板创建
+
+使用 [alonabot-plugin-template](https://github.com/AlonaBot/alonabot-plugin-template) 可以获得 hello 示例、plugintest 集成测试，以及五平台打包与 GitHub Release 工作流。hello 示例与 `alonabot init` 一致。
+
+1. 点击模板仓库的 [Use this template](https://github.com/new?template_owner=AlonaBot&template_name=alonabot-plugin-template)，创建并克隆自己的仓库。
+2. 将 `go.mod` 的 module 改为自己的仓库路径，修改 `plugin.yaml` 中的插件身份与 `source`，替换 `.github/` 中的 `owner` 占位。
+3. 按[模板 README](https://github.com/AlonaBot/alonabot-plugin-template/blob/main/README.zh-CN.md) 准备 SDK 与 CLI，再继续本页的 `New` 函数与运行步骤。将示例改为 todo 命令时，同步调整 `plugin_test.go` 的命令与预期回复。
+
+### 使用 CLI 创建
+
+只需基础工程时，运行：
+
 ```sh
 alonabot init alonabot-plugin-todo
 cd alonabot-plugin-todo
@@ -19,7 +31,7 @@ cd alonabot-plugin-todo
 | `plugin.go` | 插件代码 |
 | `plugin.yaml` | 插件的名字、版本等信息 |
 | `plugin_config_schema.json` | 配置项声明 |
-| `i18n/en-US.json` | 给用户看的文字 |
+| `i18n/`（按需添加） | 给用户看的本地化文字 |
 | `go.mod` | Go module 与依赖 |
 | `.gitignore` | 忽略 `data/` 和 `bin/` |
 
