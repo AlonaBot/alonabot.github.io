@@ -6,7 +6,7 @@ description: Core 和各组件怎么配合，数据放在哪里。
 这一页说明 Core 与各组件如何配合，以及排查问题时该看哪些数据。
 
 import ArchitectureDiagram from "@site/static/img/diagrams/architecture.svg";
-import MessageFlow from "@site/static/img/diagrams/message-flow.svg";
+import MessageJourney from "@site/src/components/MessageJourney";
 
 ## 一个 Core，多个组件
 
@@ -27,9 +27,9 @@ import MessageFlow from "@site/static/img/diagrams/message-flow.svg";
 
 用户在 Telegram 里发了 `/todo add buy milk`：
 
-<div className="doc-diagram-scroll"><MessageFlow className="doc-diagram" /></div>
+<MessageJourney />
 
-Core 根据入站消息确认的用户身份检查权限。
+点击步骤可跳到对应阶段，进度条可以拖动。每一步下方标出负责的主仓库包。
 
 ## 数据放在哪里
 

@@ -27,6 +27,8 @@ docker compose exec alonabot alonabot admin-token show --data-dir /data
 
 Compose 使用 `ghcr.io/alonabot/alonabot:0.3.0`，支持 Linux amd64 和 arm64，以 UID/GID `10001:10001` 运行。数据保存在命名卷中；更新容器时保留同一个卷。
 
+端口只发布到本机 `127.0.0.1`。在本机领取并确认管理 token 之前，不要改成 `0.0.0.0` 或其他对外地址：确认前，能访问这个端口的人都能领取 token 并取得完整管理权限。
+
 WebUI 已启用，Agent 需先配置 Provider 和模型再启用。Telegram、OneBot 11 Adapter 会在配置账号并重启 Core 后自动安装；help 插件需[单独安装](#安装官方组件)。
 
 给机器人传入 token 等环境变量时，在 Compose 服务中添加 `environment`，再在设置里用 `${变量名}` 引用，见[设置](settings.md)。镜像包含 CA 证书；需要 shell、Node 或 Python 的 MCP stdio 服务，应使用包含这些运行时的自定义镜像。

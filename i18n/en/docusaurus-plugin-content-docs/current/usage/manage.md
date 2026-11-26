@@ -122,6 +122,14 @@ Temporarily increase a plugin's log verbosity:
 alonabot log-level alonabot-plugin-todo debug
 ```
 
+## Backup and recovery
+
+Stop Core before a backup, then copy the whole data directory. Copying only `state.sqlite` is not enough: it does not contain plugin data.
+
+To restore, stop Core, replace the whole data directory with the backup, then start Core. Data written after the backup is lost.
+
+External databases a plugin connects to, and files outside the data directory, are not included; back them up as that plugin documents.
+
 ## Diagnostics
 
 Export recent logs, settings, and component information:

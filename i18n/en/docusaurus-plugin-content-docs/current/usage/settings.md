@@ -150,6 +150,18 @@ Plugins with background tasks stay running. To keep a particular plugin active:
 { "sleep": { "mode": "component_idle", "plugins": { "alonabot-plugin-todo": "never" } } }
 ```
 
+While Core is running, inspect and change individual plugins with a command; changes take effect immediately:
+
+```sh
+# Global settings and the state of every plugin
+alonabot sleep-policy
+
+# Never exit, custom idle timeout, back to automatic
+alonabot sleep-policy alonabot-plugin-todo never
+alonabot sleep-policy alonabot-plugin-todo 30m
+alonabot sleep-policy alonabot-plugin-todo auto
+```
+
 ## Invalid settings
 
 - Invalid JSON: Core refuses to start and reports the line and column.

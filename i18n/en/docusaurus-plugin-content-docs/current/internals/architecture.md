@@ -6,7 +6,7 @@ description: How Core and components work together and store data.
 This chapter explains component relationships and the data used for troubleshooting.
 
 import ArchitectureDiagram from "@site/static/img/diagrams/en/architecture.svg";
-import MessageFlow from "@site/static/img/diagrams/en/message-flow.svg";
+import MessageJourney from "@site/src/components/MessageJourney";
 
 ## One Core, multiple components
 
@@ -27,9 +27,9 @@ import MessageFlow from "@site/static/img/diagrams/en/message-flow.svg";
 
 A user sends `/todo add buy milk` on Telegram:
 
-<div className="doc-diagram-scroll"><MessageFlow className="doc-diagram" /></div>
+<MessageJourney />
 
-Core checks permissions against the user identity verified by the inbound platform message.
+Select a step to jump to it, or drag the progress bar. Each step names the main-repository package that owns it.
 
 ## Data storage
 
