@@ -150,6 +150,18 @@ Core 的设置都在数据目录下的 `core_config.json` 里。第一次启动�
 { "sleep": { "mode": "component_idle", "plugins": { "alonabot-plugin-todo": "never" } } }
 ```
 
+运行中也可以用命令查看和调整单个插件，立即生效：
+
+```sh
+# 全局设置与每个插件的状态
+alonabot sleep-policy
+
+# 永不退出、自定义空闲时长、恢复自动
+alonabot sleep-policy alonabot-plugin-todo never
+alonabot sleep-policy alonabot-plugin-todo 30m
+alonabot sleep-policy alonabot-plugin-todo auto
+```
+
 ## 文件写错了
 
 - 不是合法的 JSON：Core 拒绝启动，并指出出错的行列。
