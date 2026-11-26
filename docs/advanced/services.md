@@ -36,6 +36,10 @@ var Query = service.JSON[QueryIn, QueryOut]("alonabot-plugin-weather/query")
 
 服务的名字是「提供方的插件 ID/服务名」。
 
+- 输入输出类型必须是包级的具名类型，不能是泛型；`alonabot build` 会检查并指出位置。
+- 修改类型的字段后运行 `alonabot build`。不兼容的修改给类型加上 `SchemaVersion() uint32` 方法并提高版本号，没有这个方法时版本为 1。
+- 已经有 Protobuf 定义时，用 `service.Proto` 声明，输入输出直接是 `proto.Message`。
+
 ### 提供
 
 ```go title="alonabot-plugin-weather/plugin.go"
@@ -76,6 +80,8 @@ import "example.com/alonabot-plugin-weather/api"
 > /weather Tokyo
 Sunny in Tokyo
 ```
+
+输入不符合声明时，提供方的 Handler 不会执行，调用方收到 `INVALID_ARGUMENT`（`invalid service input`）；返回值不符合声明时，调用方收到 `INTERNAL`（`invalid service output for "<服务名>"`）。
 
 ### 谁能调用
 
@@ -138,6 +144,8 @@ import (
 	})
 ```
 
+订阅的回调按顺序一个一个执行，里面不要做耗时的事，积压会占用插件的接收预算，连命令都会被拒绝。回调里没有用户和默认会话，发消息时用 `sdk.Send(ctx, 会话, 内容)` 或 `sdk.SendText(ctx, 会话, 文本)` 写明会话。
+
 ### 广播不保证送达
 
 订阅方没在运行，或者一时处理不过来，这次广播就丢了，发布方不会知道。**不能丢的事情用服务。**
@@ -164,6 +172,18 @@ import "github.com/AlonaBot/AlonaBot/sdk/tool"
 | `.Effect(tool.ReadOnly)` | 只读数据。还有 `tool.Write`（会修改数据）和 `tool.Destructive`（会删除数据） |
 
 会修改或删除数据的工具应该用 `DefaultConfirm`。这些是缺省值，机器人主人可以在管理界面里调整。
+
+### 在插件里调用工具
+
+插件自己也可以按机器人主人设定的策略调用工具：
+
+| 函数 | 作用 |
+| --- | --- |
+| `tool.List(c)` | 列出当前会话可用的工具，`Effect` 是声明的类别 |
+| `tool.Invoke(c, "插件ID/服务名", args)` | 调用工具。策略为拒绝时返回 `PERMISSION_DENIED`；需要确认时框架先在当前会话发出带「允许」「拒绝」按钮的确认，拒绝返回 `PERMISSION_DENIED`，超时返回 `DEADLINE_EXCEEDED` |
+| `tool.Confirm(c, operation, summary, effect)` | 插件自己执行敏感操作前请求许可，确认消息展示 `summary`；返回 nil 后再执行 |
+
+这三个函数都要在 Handler 或它的延续调用里使用。平台不支持按钮时，需要确认的调用返回 `UNSUPPORTED`。
 
 ## 测试
 

@@ -95,3 +95,23 @@ When is it due?
 > tomorrow
 Added: buy milk (due tomorrow)
 ```
+
+## Continue from inside a Handler
+
+An ordinary Handler can also hand the rest of its work to a continuation:
+
+```go
+return c.Continue(func(c *sdk.Context) error {
+	answer, err := c.Wait(time.Minute)
+	if err != nil {
+		return err
+	}
+	return answer.Reply("Got it.")
+})
+```
+
+The original Handler returns as usual; after it finishes successfully, fn runs in a new call. If the original Handler returns an error, fn does not run.
+
+- A continuation cannot call `Continue` again.
+- Waits and continuations are not persisted; they end when the plugin stops or updates.
+- `Wait` only works when a real user message started the call, not in background tasks.

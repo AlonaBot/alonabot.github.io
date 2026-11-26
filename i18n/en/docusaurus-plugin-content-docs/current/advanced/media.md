@@ -159,3 +159,21 @@ _, err := c.SendTo(session, message.Text("Hello"), sdk.Via("main"))
 Session identifiers use `platform:session-ID` format. Usually, save the value from `c.Session()`. To construct one, use `message.SID("telegram", "-100123456", "")`.
 
 Owners can restrict accounts available for proactive sends. Replies to the current message remain available.
+
+## Share with another plugin
+
+Only the plugin that uploaded a media object can read it. To hand it to another plugin, issue a new token with `media.Grant(c, token, otherPluginID, sessions...)`; the new token can only be equal or narrower, never wider in sessions or lifetime.
+
+## Read forwarded messages
+
+To expand a forwarded message, call `c.ReadNodes(forward)` with the `message.ForwardSegment` from the message. Each item keeps its author, time and content and may nest further; images and files inside can be read directly with `media.Open(c, segment.Source)`. In background tasks use `sdk.ReadNodes(ctx, session, forward, sdk.Via(account))`.
+
+## Send Markdown
+
+```go
+md := message.Markdown("**Title**\n[Link](https://example.com)")
+_, err := c.Send(md)             // converted to rich text where supported
+_, err = c.Send(md.PlainText())  // explicitly send plain text
+```
+
+The syntax is CommonMark with strikethrough. When the platform does not support Markdown, or the content contains images or HTML, `c.Send(md)` returns `UNSUPPORTED`; send `md.PlainText()` instead.

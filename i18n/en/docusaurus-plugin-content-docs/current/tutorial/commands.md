@@ -154,4 +154,38 @@ p.Command("ping").Description("Check the bot").Menu().Handle(func(c *sdk.Context
 
 Core synchronizes menus according to account configuration. Menu descriptions use the language file translations.
 
+Menus include only single-word root commands marked with `.Menu()`, filtered for each chat by its profile, plugin switch, permissions and the `/` prefix. Command names must match `^[a-z0-9_]{1,32}$`, and descriptions are 1 to 256 characters.
+
+### Manage menus yourself
+
+To give different chats different menus, the owner sets `auto_sync_commands` to `false` on the account, and the plugin writes a whole menu with `sdk/command` after `sdk.CommandMenuReady`:
+
+```go
+p.On(sdk.CommandMenuReady).Handle(func(c *sdk.Context, ready *message.CommandMenuReadyPayload) error {
+	if ready.ChatID == "" {
+		return nil
+	}
+	return command.Set(c, ready.AdapterInstanceID, command.Menu{
+		Scope:    command.Scope{Type: "chat", ChatID: ready.ChatID},
+		Commands: []command.Item{{Name: "hello", Description: "Say hello"}},
+	})
+})
+```
+
+An empty `ChatID` means the account as a whole is ready; a non-empty one means that chat can be set. Besides `chat`, scopes include `chat_administrators` and `chat_member` with a `UserID`. Each menu holds at most 100 entries; set each language through `LanguageCode`, where an empty string is the default language.
+
+| Function | Purpose |
+| --- | --- |
+| `command.Set` | Write the whole menu for one location |
+| `command.Get` | Read the platform's current menu |
+| `command.Delete` | Delete the menu at one location |
+| `command.Status` | Mode, readiness and the latest error |
+| `command.Sync` | Resynchronize; use it after external edits or a failed mode switch |
+
+`clear_commands_on_disable` (default `true`) controls whether menus the framework wrote are cleared when switching from automatic to manual.
+
+### List available commands
+
+For help-style plugins, `command.List(c)` returns the commands in effect for the current session: `entry.Path` and `entry.Aliases` are names, and `entry.Description` is the description in the current language. See the [official help plugin](https://github.com/AlonaBot/alonabot-plugin-help/blob/main/help.go) for a complete example.
+
 Next: [Replying to messages](messages.md).

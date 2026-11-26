@@ -306,6 +306,19 @@ func (demo) Start(ctx context.Context, req adapter.StartRequest, core adapter.Co
 
 平台有「群主」「群管理员」这类身份时，在 `Descriptor` 里声明，并在交付消息时把用户拥有的权限填进 `Actor.Permissions`。权限的名字以平台标识开头，如 `demo.group_owner`。把名字定义成常量放在单独的 `perm` 包里，插件作者可以直接导入使用。
 
+## 平台特有的事件和消息片段
+
+在 Adapter 的公开包里用 `adapter.Event[T](名称, 版本)` 声明扩展事件，用 `adapter.Extension[T](名称, 版本)` 声明扩展消息片段，`T` 是结构体。框架从类型推导 Schema：没有 `omitempty` 的字段是必需的，不允许多余的字段。推导失败时 `sdk.RunAdapter` 在启动时报错。插件用 `sdk.AdapterEvent[T]` 订阅（见[按内容匹配](../advanced/matching.md#平台特有的事件)），用 `message.Extension(...)` 发送扩展片段。
+
+## 平台命令菜单
+
+平台有命令菜单时，声明 `commands.sync` 能力并实现 `adapter.CommandMenuController`：
+
+- `CommandMenuConfig()` 返回账号的 `AutoSyncCommands` 和 `ClearCommandsOnDisable` 设置。
+- `SetCommandMenu`、`GetCommandMenu`、`DeleteCommandMenu` 每次只处理一个位置（范围加语言）的整份菜单。
+
+跨语言拆分、归属和自动或手动模式由框架处理；Adapter 只负责把整份菜单写到平台，并完整返回平台错误。插件侧的用法见[平台命令菜单](../tutorial/commands.md#平台命令菜单)。
+
 ## 接收平台的回调
 
 平台通过 webhook 推送消息时，在 `Descriptor` 里声明 HTTP 路由：
@@ -323,6 +336,8 @@ return &adapter.Descriptor{
 ```
 
 地址是 `<base_url>/plugins/<组件ID>/webhook`。`AuthPlatformToken` 表示这是公开地址，由你在 Handler 里验证平台的签名或 token。
+
+`Auth` 还可以是 `adapter.AuthStatic`：公开提供 GET 和 HEAD 的静态资源，不需要登录或平台凭证。省略 `Auth` 时要求机器人主人已登录 WebUI。
 
 ## 测试
 
@@ -348,6 +363,20 @@ HTTP: []adapter.HTTPRoute{{
 ```
 
 页面加载 `kit.js`，通过 `AlonaBot.getConfigContext()` 读取创建或编辑模式、账号 ID 与当前配置，通过 `AlonaBot.completeConfig({patch})` 提交配置补丁。二维码可按需加载 `qrcode.js`。
+
+- 每个 Adapter 最多一个账号配置页面，`Title` 必填，`Auth` 保持零值（要求登录）。
+- `getConfigContext()` 返回 `mode`（`create` 或 `edit`）、`instance_id`、当前表单配置（密钥只有脱敏值）和实例配置 Schema。`create` 模式的 `instance_id` 只是草稿名，不要用它保存数据；登录任务用 Adapter 自己生成的随机 ID。
+- `completeConfig({patch})` 按 RFC 7396 合并进表单，仍由用户在对话框里保存：省略的字段保留原值，`null` 删除字段。新增或替换密钥时写明文，保留原密钥时省略该字段。
+- 不在账号配置对话框里时，这两个调用都以 `FAILED_PRECONDITION` 拒绝。
+- 运行中需要刷新的凭据由 Adapter 按账号 ID 存在自己的存储里，配置里只放账号标识。查询登录状态用约两秒一次的轮询。
+
+扫码登录时在 `kit.js` 之后加载同目录的 `qrcode.js`，拿到平台的扫码文本后调用：
+
+```js
+AlonaBot.renderQRCode(document.getElementById("login-code"), loginURL, { size: 256 });
+```
+
+它把容器内容替换成跟随主题的二维码 SVG。
 
 ## 实时联调
 
