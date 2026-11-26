@@ -92,6 +92,13 @@ func New() *sdk.Plugin {
 
 页面顶部的插件名和搜索框由 WebUI 提供，页面里不用再画。
 
+- `AlonaBot.request` 返回的对象还有 `headers`、`body`（文本）和 `body_base64`，以及 `text()`、`json()` 方法；网络错误时 Promise 被拒绝，HTTP 错误状态从返回对象里读。
+- `onTheme(fn)`、`onLocale(fn)` 注册时立即交付当前状态，返回取消订阅的函数；在 `onLocale` 回调里重新 `await AlonaBot.t(...)` 渲染文字。
+- 页面里按 ⌘K / Ctrl+K 会转给 WebUI，打开全局搜索。
+- 直接在浏览器里打开页面（不在 WebUI 里）时，样式用浅色缺省值，`request` 会失败，`t` 返回键名。
+
+页面运行在沙箱里，加载图片、脚本这些资源时不带登录状态。页面自己的静态资源要用 `.Public(sdk.AuthStatic)` 注册（只允许 GET 和 HEAD），否则浏览器会拿到 401；页面本身和数据接口保持缺省的登录要求，数据通过 `AlonaBot.request` 获取。需要自己挂载套件时用 `page.Handler()`。
+
 ### 标题翻译
 
 ```json title="i18n/zh-CN.json"

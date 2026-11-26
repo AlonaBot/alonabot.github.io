@@ -48,6 +48,8 @@ func add(c *sdk.Context, text string) error {
 }
 ```
 
+回复群聊消息时，框架按配置文件的[回复方式](../usage/settings.md#回复方式)，自动给这次调用的第一条回复加上 @提及、引用或文字前缀；后台、定时任务和发往别的会话的消息不加。
+
 ## 用返回值回复
 
 Handler 返回 `(message.Content, error)` 时，框架自动发送返回的内容：
@@ -101,6 +103,8 @@ func done(c *sdk.Context, number int) error {
 	return c.Reply("Done.")
 }
 ```
+
+需要让调用方（比如调用你服务的插件）区分错误类型时，用 `sdk/errcode` 返回带错误码的错误，例如 `errcode.InvalidArgument.New("invalid input")` 或 `errcode.InvalidArgument.Errorf("invalid field %s", name)`；用 `errcode.Of(err)` 读取错误链里的错误码，全部错误码见[错误码](../reference/errors.md)。
 
 ## 日志
 

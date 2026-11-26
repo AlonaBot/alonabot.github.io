@@ -48,6 +48,8 @@ func add(c *sdk.Context, text string) error {
 }
 ```
 
+When replying in a group, the framework adds a mention, quote or text prefix to the first reply of the call according to the profile's [reply behavior](../usage/settings.md#reply-behavior); background, scheduled and cross-session sends get none.
+
 ## Reply through a return value
 
 When a Handler returns `(message.Content, error)`, the framework sends the returned content automatically:
@@ -101,6 +103,8 @@ func done(c *sdk.Context, number int) error {
 	return c.Reply("Done.")
 }
 ```
+
+When callers (such as plugins calling your service) need to tell errors apart, return coded errors from `sdk/errcode`, such as `errcode.InvalidArgument.New("invalid input")` or `errcode.InvalidArgument.Errorf("invalid field %s", name)`; `errcode.Of(err)` reads the code from an error chain. See [Error codes](../reference/errors.md) for the full list.
 
 ## Logging
 

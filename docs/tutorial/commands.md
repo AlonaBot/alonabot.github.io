@@ -154,4 +154,38 @@ p.Command("ping").Description("Check the bot").Menu().Handle(func(c *sdk.Context
 
 Core 根据账号配置同步菜单，菜单说明跟随语言文件翻译。
 
+菜单只收录标了 `.Menu()` 的单个词的根命令，并按每个聊天的配置文件、插件开关、权限和 `/` 前缀筛选。命令名要符合 `^[a-z0-9_]{1,32}$`，说明 1～256 个字符。
+
+### 自己管理菜单
+
+想给不同聊天不同的菜单时，机器人主人把账号的 `auto_sync_commands` 设为 `false`，插件在收到 `sdk.CommandMenuReady` 后用 `sdk/command` 写入整份菜单：
+
+```go
+p.On(sdk.CommandMenuReady).Handle(func(c *sdk.Context, ready *message.CommandMenuReadyPayload) error {
+	if ready.ChatID == "" {
+		return nil
+	}
+	return command.Set(c, ready.AdapterInstanceID, command.Menu{
+		Scope:    command.Scope{Type: "chat", ChatID: ready.ChatID},
+		Commands: []command.Item{{Name: "hello", Description: "Say hello"}},
+	})
+})
+```
+
+`ChatID` 为空表示账号整体就绪，有值表示这个聊天可以设置。范围除了 `chat`，还有 `chat_administrators` 和带 `UserID` 的 `chat_member`。每份菜单最多 100 条；不同语言按 `LanguageCode` 分别设置，空串是缺省语言。
+
+| 函数 | 作用 |
+| --- | --- |
+| `command.Set` | 写入一个位置的整份菜单 |
+| `command.Get` | 读取平台上的当前菜单 |
+| `command.Delete` | 删除一个位置的菜单 |
+| `command.Status` | 查看模式、是否就绪和最近一次错误 |
+| `command.Sync` | 重新同步；平台菜单被外部改乱或切换失败后用它修复 |
+
+`clear_commands_on_disable`（缺省 `true`）决定从自动切到手动时是否先清空框架写入的菜单。
+
+### 列出可用的命令
+
+写帮助类插件时，用 `command.List(c)` 取当前会话里生效的命令：`entry.Path`、`entry.Aliases` 是命令名，`entry.Description` 是当前语言的说明。完整例子见[官方 help 插件](https://github.com/AlonaBot/alonabot-plugin-help/blob/main/help.go)。
+
 下一页：[回复消息](messages.md)。

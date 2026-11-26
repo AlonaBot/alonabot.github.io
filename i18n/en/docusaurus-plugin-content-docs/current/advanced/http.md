@@ -92,6 +92,13 @@ Use `AlonaBot.request` for plugin requests. Pages run in a restricted environmen
 
 WebUI supplies the plugin name and search field above the page.
 
+- The object `AlonaBot.request` returns also has `headers`, `body` (text) and `body_base64`, plus `text()` and `json()` methods; network failures reject the Promise, while HTTP error statuses are read from the result.
+- `onTheme(fn)` and `onLocale(fn)` deliver the current state immediately and return an unsubscribe function; re-render text with `await AlonaBot.t(...)` inside the `onLocale` callback.
+- ⌘K / Ctrl+K inside the page is forwarded to the WebUI to open global search.
+- When the page is opened directly in a browser (outside the WebUI), styles use light defaults, `request` fails and `t` returns the key.
+
+Pages run in a sandbox, so images, scripts and other resources load without the login state. Register the page's own static assets with `.Public(sdk.AuthStatic)` (GET and HEAD only), or the browser gets 401; keep the default login requirement on the page and its data routes and fetch data through `AlonaBot.request`. Use `page.Handler()` to mount the kit yourself.
+
 ### Translate page titles
 
 ```json title="i18n/zh-CN.json"

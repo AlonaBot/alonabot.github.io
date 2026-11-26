@@ -306,6 +306,19 @@ For a permanent runtime disconnection, such as a revoked token, call `core.Repor
 
 Declare platform roles in `Descriptor` and include verified permissions in `Actor.Permissions`. Prefix names with the platform ID, such as `demo.group_owner`. Export constants from a `perm` package for plugin authors.
 
+## Platform-specific events and segments
+
+In the Adapter's public packages, declare extension events with `adapter.Event[T](name, version)` and extension message segments with `adapter.Extension[T](name, version)`, where `T` is a struct. The framework derives the Schema from the type: fields without `omitempty` are required and extra fields are rejected. If derivation fails, `sdk.RunAdapter` errors at startup. Plugins subscribe with `sdk.AdapterEvent[T]` (see [Matching](../advanced/matching.md#platform-specific-events)) and send extension segments with `message.Extension(...)`.
+
+## Platform command menus
+
+If the platform has command menus, declare the `commands.sync` capability and implement `adapter.CommandMenuController`:
+
+- `CommandMenuConfig()` returns the account's `AutoSyncCommands` and `ClearCommandsOnDisable` settings.
+- `SetCommandMenu`, `GetCommandMenu` and `DeleteCommandMenu` each handle the whole menu for one location (scope plus language).
+
+The framework handles per-language splitting, ownership and automatic or manual mode; the Adapter only writes whole menus to the platform and returns platform errors in full. For plugin usage see [Platform command menus](../tutorial/commands.md#platform-command-menus).
+
 ## Platform callbacks
 
 For webhook delivery, declare an HTTP route in `Descriptor`:
@@ -323,6 +336,8 @@ return &adapter.Descriptor{
 ```
 
 The URL is `<base_url>/plugins/<component-ID>/webhook`. `AuthPlatformToken` declares a public endpoint whose Handler verifies the platform signature or token.
+
+`Auth` can also be `adapter.AuthStatic`, which serves GET and HEAD static assets publicly without login or platform credentials. Omitting `Auth` requires the owner to be logged in to the WebUI.
 
 ## Testing
 
@@ -348,6 +363,20 @@ HTTP: []adapter.HTTPRoute{{
 ```
 
 Load `kit.js`. `AlonaBot.getConfigContext()` returns creation or editing mode, account ID, and current configuration. Submit a patch with `AlonaBot.completeConfig({patch})`. Load `qrcode.js` when needed.
+
+- Each Adapter has at most one account configuration page; `Title` is required and `Auth` stays zero (login required).
+- `getConfigContext()` returns `mode` (`create` or `edit`), `instance_id`, the current form configuration (secrets masked) and the instance configuration Schema. In `create` mode `instance_id` is only a draft name, so never persist data under it; login tasks use a random ID the Adapter generates.
+- `completeConfig({patch})` merges into the form per RFC 7396 and the user still saves the dialog: omitted fields keep their values and `null` deletes a field. Write plaintext for new or replaced secrets; omit a secret to keep it.
+- Outside the account configuration dialog, both calls reject with `FAILED_PRECONDITION`.
+- Credentials that need refreshing at run time are stored by the Adapter in its own storage keyed by account ID; the configuration holds only the account identity. Poll login status about every two seconds.
+
+For QR login, load `qrcode.js` from the same directory after `kit.js`, then call with the platform's login text:
+
+```js
+AlonaBot.renderQRCode(document.getElementById("login-code"), loginURL, { size: 256 });
+```
+
+It replaces the container content with a themed QR code SVG.
 
 ## Live debugging
 
