@@ -14,6 +14,15 @@ description: 发布插件前要对照的要求。
 - **启动时不做重活。** 包级变量和 `init` 函数里不加载大文件、不建连接，放到 `OnStart` 或第一次用到时再做。
 - **内存里的缓存要有上限。** 大的数据放数据库或文件，不要整个读进内存。
 - **数据库优先用 `sdk/sqlitedb`。** 它比 `sdk/gormdb` 少占约 1.5 MiB 内存。
+- **SDK 按功能分包。** 根包 `sdk` 提供插件对象、Handler 上下文和注册方法；定时任务、服务、广播、按钮、媒体、会话、AI 工具、平台动作、动态选项和命令菜单分别在 `sdk/task`、`sdk/service`、`sdk/bus`、`sdk/button`、`sdk/media`、`sdk/conversation`、`sdk/tool`、`sdk/action`、`sdk/options`、`sdk/command`。没导入的包不会链接进程序。
+
+## 休眠
+
+机器人主人开启空闲休眠后，一段时间没被用到的插件会退出；有命令、事件、服务调用、HTTP 请求或定时任务到期时，框架再自动启动它。插件缺省允许休眠（`plugin.yaml` 的 `sleep_capable` 缺省为 `true`）。
+
+- 插件依赖内存里的状态，或有不经 Handler 的后台活动（自己开的协程、长连接）时，在 `plugin.yaml` 里写 `sleep_capable: false`，插件会一直运行。
+- 允许休眠的插件要能在重启后接着工作：需要保留的状态放数据库或键值存储。
+- 定时任务到期会唤醒插件，不需要为了定时任务常驻。
 
 ## 数据
 
@@ -28,6 +37,7 @@ description: 发布插件前要对照的要求。
 - **不要往标准输出写任何内容**（`fmt.Println`、`print`）。标准输出被框架占用，往里写会让插件出错。
 - 日志用英文。
 - 不记录密钥、token、完整的配置、带密码的连接地址。
+- 插件自己的数据损坏、无法继续运行时，用 `slog.Log(ctx, sdk.LevelCritical, "component data is corrupt", "error", err)` 记一条 CRITICAL，提醒机器人主人立即处理。
 
 ## 文字
 
@@ -65,6 +75,8 @@ description: 发布插件前要对照的要求。
 | Adapter | `alonabot-adapter-` |
 | Agent | `alonabot-agent-` |
 | WebUI | `alonabot-webui-` |
+
+前缀后面用小写字母和数字，单词之间用一个连字符，不含下划线，整个 ID 不超过 64 个字符，例如 `alonabot-plugin-todo-list`。只在自己机器上用的组件可以不加前缀（ID 符合 `^[a-z][a-z0-9_-]{0,63}$` 即可），`alonabot init` 会给出提醒。
 
 ## 发布前
 

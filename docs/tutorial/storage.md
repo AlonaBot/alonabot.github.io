@@ -27,7 +27,17 @@ value, ok, err := kv.Get(c, "last-user")
 err = kv.Delete(c, "last-user")
 ```
 
-第一个参数传 Handler 的 `c`。键是字符串，值是字节，最大 1 MiB。
+第一个参数传 Handler 的 `c`。键是 1～512 字节的 UTF-8 字符串，不能恰好是 `.` 或 `..`；值是字节，可以为空，最大 1 MiB。键或值不合法时返回 `INVALID_ARGUMENT`。
+
+按前缀分页列出键：
+
+```go
+page, err := kv.List(c, "subscription/", "", 20)
+// page.Keys 是这一页的键，按字节序排列。
+// 把 page.Next 作为下一次的 cursor 继续取；Next 为空表示已经取完。
+```
+
+前缀按字面匹配，空前缀列出全部键。
 
 ## 数据库
 
@@ -153,6 +163,12 @@ dir := sdk.PluginDataDir(c)
 err := os.WriteFile(filepath.Join(dir, "export.txt"), data, 0o600)
 ```
 
-这个目录在插件重启和更新后保留。
+目录是数据目录下的 `plugin_data/<插件 ID>/`，只有运行机器人的系统用户能访问，在插件重启和更新后保留。
+
+- 文件不在框架管理的数据库里：更新失败恢复旧版本时，已经写入的文件不会回到旧内容。需要跟着版本一起恢复的数据放数据库或键值存储。
+- `OnStart`、`OnReady` 执行时还不能取这个目录，调用会 panic；在 Handler 里或之后使用。
+- 停用插件和普通卸载都保留文件；卸载时加 `--purge-data` 才会删除。
+
+机器人主人可以在 WebUI 插件详情的「数据」页浏览和编辑数据库表、键值与文件，也可以导出或清空。
 
 下一页：[多轮对话](conversation.md)。

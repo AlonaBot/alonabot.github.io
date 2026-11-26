@@ -14,6 +14,15 @@ Each enabled plugin is a running program. Owners may install dozens on a small s
 - **Defer expensive initialization.** Load large files and establish connections in `OnStart` or on first use, rather than package variables or `init`.
 - **Bound in-memory caches.** Store large datasets in a database or files.
 - **Prefer `sdk/sqlitedb`.** It uses about 1.5 MiB less memory than `sdk/gormdb`.
+- **Import SDK packages by feature.** The root `sdk` package provides the plugin object, Handler context and registration methods; scheduled tasks, services, broadcasts, buttons, media, conversations, AI tools, platform actions, dynamic options and command menus live in `sdk/task`, `sdk/service`, `sdk/bus`, `sdk/button`, `sdk/media`, `sdk/conversation`, `sdk/tool`, `sdk/action`, `sdk/options` and `sdk/command`. Packages you do not import are not linked.
+
+## Hibernation
+
+When the bot owner enables idle hibernation, plugins that stay unused for a while exit; the framework starts them again for a command, event, service call, HTTP request or due scheduled task. Plugins may hibernate by default (`sleep_capable` in `plugin.yaml` defaults to `true`).
+
+- If the plugin relies on in-memory state or runs background work outside Handlers (its own goroutines, long-lived connections), set `sleep_capable: false` in `plugin.yaml` to keep it running.
+- A plugin that may hibernate must resume after a restart: keep state that matters in the database or key-value storage.
+- Due scheduled tasks wake the plugin, so scheduled work does not require staying resident.
 
 ## Data
 
@@ -28,6 +37,7 @@ Each enabled plugin is a running program. Owners may install dozens on a small s
 - **Reserve standard output for framework communication.** `fmt.Println` and `print` corrupt it.
 - Write logs in English.
 - Exclude secrets, tokens, full configuration, and connection URLs containing passwords.
+- When the plugin's own data is corrupt and it cannot continue, log CRITICAL with `slog.Log(ctx, sdk.LevelCritical, "component data is corrupt", "error", err)` so the owner acts immediately.
 
 ## Text
 
@@ -65,6 +75,8 @@ Public component IDs use a role prefix:
 | Adapter | `alonabot-adapter-` |
 | Agent | `alonabot-agent-` |
 | WebUI | `alonabot-webui-` |
+
+After the prefix, use lowercase letters and digits with single hyphens between words, no underscores, and at most 64 characters in total, such as `alonabot-plugin-todo-list`. Components used only on your own machine may skip the prefix (the ID only needs to match `^[a-z][a-z0-9_-]{0,63}$`); `alonabot init` warns about it.
 
 ## Before publishing
 
