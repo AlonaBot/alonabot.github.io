@@ -132,7 +132,7 @@ Without permission, the Handler is skipped and no reply is sent.
 | Call between two plugins | Add multiple `plugintest.Plugin(...)` entries |
 | Simulate a platform without a feature | `plugintest.Capabilities("message.send")` retains only the listed capabilities |
 
-Call `h.Text` and related methods sequentially within a test.
+`h.Text` and similar calls wait for processing to finish, so call them in order within a test; use `h.Submit` to inject in parallel. See [Advanced testing](../advanced/testing.md) for simulated platform responses, multiple accounts and a controllable clock.
 
 ## Test on a real platform
 

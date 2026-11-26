@@ -131,6 +131,17 @@ state, err := task.Status(c, "cleanup")  // state.Paused、state.NextAt
 
 暂停状态在重启后保留。
 
+暂停状态在重启后保留，重复暂停或恢复也会成功；暂停时 `state.NextAt` 为 nil，`state.LastAt` 是本次 Core 运行中最后一次执行的时间。没注册过的任务名返回 `NOT_FOUND`。
+
+## 任务的规则
+
+- 任务的 key 最长 128 字节，包括你拼进去的用户和会话标识。
+- `task.Timezone` 只能和 `Cron` 一起用，用在 `At`、`Every` 上返回 `INVALID_ARGUMENT`。
+- 用同一个 key 再创建会替换规则和参数，正在执行的那一轮继续执行完；`Cancel` 会删除任务，并通知正在执行的那一轮停止。
+- 插件离线、未启动或暂停期间错过的触发直接作废，不补执行；过期的一次性任务会被删除。
+- 任务函数在插件就绪后才能调用，在 `OnStart`、`OnReady` 里调用返回 `FAILED_PRECONDITION`。在 Handler 里传 `c`。
+- 任务回调没有用户和默认会话，需要的会话、账号写进参数里。参数类型和服务一样，要用包级具名类型。
+
 ## 测试
 
 测试里不用等时间到，直接触发：

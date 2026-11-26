@@ -22,6 +22,8 @@ alonabot init [目录]
 | `--adapter-id` | 组件 ID | 平台标识，只用于 Adapter |
 | `--module` | 目录名 | Go module 路径。在已有的 Go module 里创建时不新建 |
 
+在已有的 Go module 里创建时沿用它的 `go.mod`。正式版 CLI 会写入自己的版本作为 SDK 依赖并运行 `go mod tidy`；从源码构建的开发版 CLI 会提示你用 `go get github.com/AlonaBot/AlonaBot@<版本>` 自己选版本。
+
 ### alonabot run
 
 ```sh
@@ -46,6 +48,14 @@ alonabot run [目录...]
 | --- | --- |
 | 任意文字 | 作为私聊消息发给机器人，你的身份是 `console:local`，是机器人管理员 |
 | `#编号` | 点击最近一条消息下面对应编号的按钮 |
+
+开发运行时：
+
+- 自动重载每 500 毫秒检查一次源码、`//go:embed` 资源、`go.mod`、`go.sum`、`plugin.yaml`、配置 Schema 和 `i18n/`，跳过数据目录、`vendor`、`testdata` 和以 `.`、`_` 开头的目录。间隔可以用 `--args DEV_RELOAD_POLL=1s` 修改。
+- 编译失败时保留旧版本继续运行；只改了组件的 `config.json` 时只重启这个组件，只改了某个平台账号的设置时只重启这个账号。
+- 组件的配置在数据目录的 `plugins/<组件 ID>/config.json`，数据库是同目录的 `dev.sqlite`，重启后保留。
+- `role: webui` 的工程直接用 `assets` 目录提供页面，改了文件刷新浏览器就能看到，不用重新编译。
+- `--stdio` 对这一次运行的所有独立进程组件都生效，包括已安装的组件。
 
 ### alonabot check
 
@@ -77,6 +87,8 @@ alonabot test [目录]
 
 编译组件并执行离线准备检查。消息与生命周期验证使用 `go test`，见[测试](../tutorial/testing.md)。
 
+它在全新的临时数据目录里完成真实的握手、准备、注册、激活和停止，报告注册的命令；任一步失败都以非零状态退出。
+
 ### alonabot pack
 
 ```sh
@@ -90,6 +102,8 @@ alonabot pack [目录]
 | `--target` | 目标平台，如 `linux/amd64`，可以写多次。缺省是当前机器 |
 | `--out` | 输出目录 |
 | `--tags` | Go build tags |
+
+归档名是 `<组件 ID>-<版本>-<系统>-<架构>.tar.gz`；只有静态资源的 WebUI 生成一个 `<组件 ID>-<版本>-any.tar.gz`。
 
 ## 管理
 

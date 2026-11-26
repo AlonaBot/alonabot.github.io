@@ -39,6 +39,7 @@ const sidebars: SidebarsConfig = {
         "advanced/http",
         "advanced/i18n",
         "advanced/profiles",
+        "advanced/testing",
         "advanced/publish",
       ],
     },

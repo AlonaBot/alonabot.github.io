@@ -132,7 +132,7 @@ func TestAdminOnly(t *testing.T) {
 | 两个插件互相调用 | 多写几个 `plugintest.Plugin(...)` |
 | 平台不支持某功能时 | `plugintest.Capabilities("message.send")` 只保留列出的能力 |
 
-同一个测试里的 `h.Text` 等调用要按顺序执行，不要并发调用。
+`h.Text` 等调用会等到这次处理结束，同一个测试里按顺序调用；需要并行注入时用 `h.Submit`。模拟平台返回、多个账号、可推进的时钟等用法见[测试进阶](../advanced/testing.md)。
 
 ## 真实平台联调
 
