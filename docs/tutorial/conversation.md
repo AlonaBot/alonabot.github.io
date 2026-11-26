@@ -95,3 +95,23 @@ When is it due?
 > tomorrow
 Added: buy milk (due tomorrow)
 ```
+
+## 在 Handler 中途转入延续调用
+
+普通 Handler 也可以在中途把后续工作交给延续调用：
+
+```go
+return c.Continue(func(c *sdk.Context) error {
+	answer, err := c.Wait(time.Minute)
+	if err != nil {
+		return err
+	}
+	return answer.Reply("Got it.")
+})
+```
+
+原 Handler 先照常返回；它成功结束后，fn 在新的调用里执行。原 Handler 返回错误时 fn 不执行。
+
+- 延续调用里不能再调用 `Continue`。
+- 等待和延续都不持久保存，插件停止或更新时结束。
+- `Wait` 只能由真实的用户消息触发，后台任务里不能用。

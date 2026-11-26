@@ -159,3 +159,21 @@ _, err := c.SendTo(session, message.Text("Hello"), sdk.Via("main"))
 会话标识的格式是「平台:会话 ID」。通常不用自己拼，用 `c.Session()` 取到后保存即可；需要拼时用 `message.SID("telegram", "-100123456", "")`。
 
 机器人主人可以限制插件能往哪些账号主动发消息。回复当前消息不受这个限制。
+
+## 交给其他插件读取
+
+媒体只能由上传它的插件读取。要交给另一个插件时，用 `media.Grant(c, token, 对方插件 ID, 会话...)` 签发一个新 token；新 token 只能和原来一样或更窄，不能扩大可用的会话或期限。
+
+## 读取合并转发
+
+收到合并转发的消息时，用 `c.ReadNodes(forward)` 展开（`forward` 是消息里的 `message.ForwardSegment`）。返回的每一项保留作者、时间和消息内容，可以继续嵌套；里面的图片和文件可以直接用 `media.Open(c, segment.Source)` 读取。后台任务里用 `sdk.ReadNodes(ctx, 会话, forward, sdk.Via(账号名))`。
+
+## 发送 Markdown
+
+```go
+md := message.Markdown("**Title**\n[Link](https://example.com)")
+_, err := c.Send(md)             // 平台支持时转换成富文本
+_, err = c.Send(md.PlainText())  // 明确发送纯文本
+```
+
+写法是 CommonMark 加删除线。平台不支持 Markdown，或者内容里有图片、HTML 时，`c.Send(md)` 返回 `UNSUPPORTED`，这时改发 `md.PlainText()`。

@@ -36,6 +36,10 @@ var Query = service.JSON[QueryIn, QueryOut]("alonabot-plugin-weather/query")
 
 Service names use `provider-plugin-ID/service-name` format.
 
+- Input and output types must be package-level named, non-generic types; `alonabot build` checks this and reports the location.
+- Run `alonabot build` after changing fields. For incompatible changes, add a `SchemaVersion() uint32` method and raise the version; without it the version is 1.
+- If you already have Protobuf definitions, declare with `service.Proto` and use `proto.Message` input and output.
+
 ### Provide
 
 ```go title="alonabot-plugin-weather/plugin.go"
@@ -76,6 +80,8 @@ import "example.com/alonabot-plugin-weather/api"
 > /weather Tokyo
 Sunny in Tokyo
 ```
+
+When the input does not match the declaration, the provider's Handler does not run and the caller gets `INVALID_ARGUMENT` (`invalid service input`); when the output does not match, the caller gets `INTERNAL` (`invalid service output for "<service>"`).
 
 ### Access control
 
@@ -138,6 +144,8 @@ import (
 	})
 ```
 
+Subscription callbacks run one at a time; keep them fast, because a backlog uses the plugin's receive budget and even commands get rejected. Callbacks have no user or default session, so send with `sdk.Send(ctx, session, content)` or `sdk.SendText(ctx, session, text)` and name the session explicitly.
+
 ### Delivery behavior
 
 Broadcasts are dropped if a subscriber is stopped or cannot keep up. The publisher receives no delivery result. **Use services when delivery matters.**
@@ -164,6 +172,18 @@ import "github.com/AlonaBot/AlonaBot/sdk/tool"
 | `.Effect(tool.ReadOnly)` | Read-only; alternatives are `tool.Write` for changes and `tool.Destructive` for deletion |
 
 Use `DefaultConfirm` for tools that modify or delete data. Owners can change these defaults in management.
+
+### Call tools from a plugin
+
+Plugins can also call tools under the policy the owner set:
+
+| Function | Purpose |
+| --- | --- |
+| `tool.List(c)` | Tools available in the current session; `Effect` is the declared category |
+| `tool.Invoke(c, "pluginID/service", args)` | Call a tool. A deny policy returns `PERMISSION_DENIED`; when confirmation is required, the framework first posts a confirmation with Allow and Deny buttons in the current session, and a denial returns `PERMISSION_DENIED` while a timeout returns `DEADLINE_EXCEEDED` |
+| `tool.Confirm(c, operation, summary, effect)` | Ask permission before the plugin performs a sensitive operation itself; the confirmation shows `summary`, and you proceed after it returns nil |
+
+All three must run inside a Handler or its continuation. When the platform has no buttons, calls that need confirmation return `UNSUPPORTED`.
 
 ## Testing
 

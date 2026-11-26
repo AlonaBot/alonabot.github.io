@@ -255,6 +255,15 @@ The form displays a conversation: `/hello` produces `Hello, Alice!`. Editing the
 ]
 ```
 
+Images may be PNG, JPEG, WebP or GIF, and the extension must match the content; `alonabot check`, `build` and `pack` verify references, and `pack` includes only referenced images.
+
+- Refer to object fields as `{group.greeting}`; options with `labels` show the label in the current language.
+- For templates, `{mode.$key}` is the selected template and `{mode.<template key>.<field>}` is one of its fields; unselected templates render as empty.
+- Secrets, `list`, `dict`, `object` and `template_list` fields cannot be referenced. Write literal braces as `{{` and `}}`.
+- A field can have several examples by making `example` an array. Add `condition` to show one only when it holds, for example `"condition": {"mode.$key": "simple", "enabled": true}`.
+
+Translate examples under `config.<field>.example` in `i18n/<locale>.json`, mirroring the original shape and overriding `input`, `reply` and segment `text` or `alt` by position; omitted items keep the original, and a skipped array item is written as `{}`.
+
 Previews display examples without executing the plugin.
 
 ## Translation

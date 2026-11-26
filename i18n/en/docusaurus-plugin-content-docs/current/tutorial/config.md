@@ -53,7 +53,9 @@ Saving restarts the plugin automatically:
 Added: buy milk (limit 3)
 ```
 
-In a deployed bot, owners edit the form on the WebUI plugin page.
+In a deployed bot, owners edit the form on the WebUI plugin page. After the plugin first starts successfully, its configuration is also exported to `plugins/<plugin ID>/config.json` under the data directory (secrets are stored as references); edit the file and run `alonabot reload <plugin ID>` to apply it.
+
+The WebUI lists leftover fields from removed or renamed options so owners can clean them up in one step.
 
 ## Field types
 
@@ -97,7 +99,7 @@ Outside a Handler, use `p.Config()`, for example to establish a connection durin
 	})
 ```
 
-`OnStart` runs once on each plugin startup. See [Lifecycle callbacks](../advanced/hooks.md#lifecycle-callbacks).
+`OnStart` runs once on each plugin startup. See [Lifecycle callbacks](../advanced/hooks.md#lifecycle-callbacks). `p.Config()` is available from `OnStart`; calling it in `OnConfigLoad` or earlier panics.
 
 ## Translate field descriptions
 
