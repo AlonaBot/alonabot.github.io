@@ -27,7 +27,17 @@ value, ok, err := kv.Get(c, "last-user")
 err = kv.Delete(c, "last-user")
 ```
 
-Pass the Handler context `c` as the first argument. Keys are strings; values are bytes, up to 1 MiB.
+Pass the Handler context `c` as the first argument. Keys are UTF-8 strings of 1 to 512 bytes and cannot be exactly `.` or `..`; values are bytes, may be empty, and are at most 1 MiB. Invalid keys or values return `INVALID_ARGUMENT`.
+
+List keys by prefix, one page at a time:
+
+```go
+page, err := kv.List(c, "subscription/", "", 20)
+// page.Keys holds this page, in byte order.
+// Pass page.Next as the next cursor; an empty Next means you have every key.
+```
+
+Prefixes match literally; an empty prefix lists every key.
 
 ## Database
 
@@ -153,6 +163,12 @@ dir := sdk.PluginDataDir(c)
 err := os.WriteFile(filepath.Join(dir, "export.txt"), data, 0o600)
 ```
 
-This directory persists across restarts and updates.
+The directory is `plugin_data/<plugin ID>/` under the data directory, accessible only to the OS user running the bot, and persists across restarts and updates.
+
+- Files are outside the framework-managed database: when a failed update restores the old version, written files keep their new content. Store data that must roll back with the version in the database or key-value storage.
+- The directory is not available while `OnStart` or `OnReady` runs; calling it there panics. Use it in Handlers or later.
+- Disabling and plain uninstalling keep the files; only uninstalling with `--purge-data` deletes them.
+
+Owners can browse and edit database tables, key-value entries and files on the Data tab of the WebUI plugin details, and export or clear them.
 
 Next: [Conversations](conversation.md).

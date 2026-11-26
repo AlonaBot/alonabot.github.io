@@ -255,6 +255,15 @@ import "github.com/AlonaBot/AlonaBot/sdk/options"
 ]
 ```
 
+图片支持 PNG、JPEG、WebP 和 GIF，扩展名要和内容一致；`alonabot check`、`build`、`pack` 会检查引用，`pack` 只打包被引用的图片。
+
+- 对象里的字段写成 `{group.greeting}`；带 `labels` 的选项显示当前语言的标签。
+- 模板用 `{mode.$key}` 取选中的模板，用 `{mode.<模板键>.<字段>}` 取该模板的字段；没选中的模板显示为空。
+- 密钥、`list`、`dict`、`object` 和 `template_list` 不能被引用。字面的花括号写成 `{{`、`}}`。
+- 一个字段可以有多个示例，`example` 写成数组。加上 `condition` 只在条件成立时显示，例如 `"condition": {"mode.$key": "simple", "enabled": true}`。
+
+示例的翻译写在 `i18n/<语言>.json` 的 `config.<字段>.example` 下，形状和原示例一致，按位置覆盖 `input`、`reply` 和片段的 `text`、`alt`；没写的沿用原文，跳过数组中间一项时填 `{}`。
+
 预览只是展示，不会真的运行插件。
 
 ## 翻译

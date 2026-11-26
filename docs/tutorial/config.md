@@ -53,7 +53,9 @@ Added: buy milk (limit 20)
 Added: buy milk (limit 3)
 ```
 
-正式部署后，机器人主人在 WebUI 的插件页面里填表单修改。
+正式部署后，机器人主人在 WebUI 的插件页面里填表单修改。插件第一次成功启动后，配置也会导出到数据目录下的 `plugins/<插件 ID>/config.json`（密钥项只保存引用），直接改文件后执行 `alonabot reload <插件 ID>` 生效。
+
+删掉或改名后留下的旧配置项，WebUI 会列出来，机器人主人可以一键清理。
 
 ## 配置项的类型
 
@@ -97,7 +99,7 @@ Handler 之外（比如启动时要用配置建立连接），用 `p.Config()`�
 	})
 ```
 
-`OnStart` 在插件每次启动时执行一次，见[生命周期回调](../advanced/hooks.md#生命周期回调)。
+`OnStart` 在插件每次启动时执行一次，见[生命周期回调](../advanced/hooks.md#生命周期回调)。`p.Config()` 从 `OnStart` 起可用，在 `OnConfigLoad` 里或更早调用会 panic。
 
 ## 翻译配置项的说明
 
