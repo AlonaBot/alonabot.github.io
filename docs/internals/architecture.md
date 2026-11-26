@@ -77,3 +77,17 @@ func main() {
 这样的程序要用 `alonabot build` 编译，直接 `go build` 出来的缺少配置声明和语言文件，启动时会提示。
 
 同进程模式下一个插件崩溃会带着整个程序退出，也没有自动重新加载，所以只适合测试、调试和嵌入。
+
+需要在启动后继续做别的事时，用 `alonabot.Start` 取得 `*Core`，再调用 `Wait`；传入的 `ctx` 取消（比如收到 SIGTERM）后，所有组件在停止预算（缺省 10 秒）内停止：
+
+```go
+core, err := alonabot.Start(ctx, alonabot.DataDir(dir), alonabot.Plugin(todo.New()))
+if err != nil {
+	return err
+}
+return core.Wait()
+```
+
+可用的选项有 `Plugin`、`Adapter`、`WebUI`、`DataDir`、`Args`、`Listen`、`LogLevel`、`LogFormat`。`alonabot build <main 所在目录>` 会扫描依赖里的组件（包括模块缓存中的第三方组件），输出 `<目录>/bin/<目录名>`。
+
+改了代码或资源后要重新 `alonabot build` 并重启程序。Handler 里的 panic 会被捕获并返回 `INTERNAL`；其他地方未捕获的 panic 会让整个程序退出。这样运行的组件不能在 WebUI 里更新、回退或卸载。

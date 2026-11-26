@@ -131,6 +131,17 @@ state, err := task.Status(c, "cleanup")  // state.Paused、state.NextAt
 
 The paused state persists across restarts.
 
+Pause state survives restarts, and pausing or resuming twice succeeds; while paused `state.NextAt` is nil, and `state.LastAt` is the last run during this Core run. Unknown task names return `NOT_FOUND`.
+
+## Task rules
+
+- A task key is at most 128 bytes, including any user and session identifiers you add.
+- `task.Timezone` works only with `Cron`; using it with `At` or `Every` returns `INVALID_ARGUMENT`.
+- Creating again with the same key replaces the rule and arguments, while a run in progress finishes; `Cancel` deletes the task and asks a run in progress to stop.
+- Triggers missed while the plugin is offline, not started or paused are dropped rather than run late; expired one-time tasks are deleted.
+- Task functions work only after the plugin is ready; calling them in `OnStart` or `OnReady` returns `FAILED_PRECONDITION`. Pass `c` inside Handlers.
+- Task callbacks have no user or default session, so put the session and account in the arguments. Argument types follow the same rules as services: package-level named types.
+
 ## Testing
 
 Trigger tasks directly in tests without waiting:

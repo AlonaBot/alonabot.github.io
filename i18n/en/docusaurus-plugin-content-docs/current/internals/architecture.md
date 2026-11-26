@@ -77,3 +77,17 @@ func main() {
 Build with `alonabot build`. A direct `go build` omits configuration declarations and language files, resulting in a startup error.
 
 In this mode, a plugin crash exits the entire program and automatic reload is unavailable. Use it for testing, debugging, and embedding.
+
+To keep doing other work after startup, get a `*Core` from `alonabot.Start` and call `Wait`; when `ctx` is cancelled (for example on SIGTERM), every component stops within the stop budget (10 seconds by default):
+
+```go
+core, err := alonabot.Start(ctx, alonabot.DataDir(dir), alonabot.Plugin(todo.New()))
+if err != nil {
+	return err
+}
+return core.Wait()
+```
+
+Options are `Plugin`, `Adapter`, `WebUI`, `DataDir`, `Args`, `Listen`, `LogLevel` and `LogFormat`. `alonabot build <main package directory>` scans components among dependencies (including third-party ones in the module cache) and writes `<directory>/bin/<directory name>`.
+
+Rebuild with `alonabot build` and restart after changing code or resources. Panics in Handlers are recovered and return `INTERNAL`; uncaught panics elsewhere exit the whole program. Components run this way cannot be updated, rolled back or uninstalled from the WebUI.

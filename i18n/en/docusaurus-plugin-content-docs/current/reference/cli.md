@@ -22,6 +22,8 @@ Create a component project in an empty directory; defaults to the current direct
 | `--adapter-id` | Component ID | Adapter platform identifier |
 | `--module` | Directory name | Go module path; reuses an existing module |
 
+Inside an existing Go module, its `go.mod` is reused. A released CLI writes its own version as the SDK requirement and runs `go mod tidy`; a development CLI built from source asks you to choose a version with `go get github.com/AlonaBot/AlonaBot@<version>`.
+
 ### alonabot run
 
 ```sh
@@ -46,6 +48,14 @@ In terminal chat:
 | --- | --- |
 | Text | Send a private message as bot administrator `console:local` |
 | `#number` | Click the numbered button on the latest message |
+
+During development runs:
+
+- Reload checks every 500 milliseconds for changes in source, `//go:embed` assets, `go.mod`, `go.sum`, `plugin.yaml`, configuration Schemas and `i18n/`, skipping the data directory, `vendor`, `testdata` and directories starting with `.` or `_`. Change the interval with `--args DEV_RELOAD_POLL=1s`.
+- A failed build keeps the old version running; changing only a component's `config.json` restarts just that component, and changing one platform account's settings restarts just that account.
+- Component configuration lives in `plugins/<component ID>/config.json` under the data directory, and the database is `dev.sqlite` beside it; both persist across restarts.
+- A `role: webui` project serves its `assets` directory directly, so changes appear on browser refresh without rebuilding.
+- `--stdio` applies to every separate-process component in this run, including installed ones.
 
 ### alonabot check
 
@@ -77,6 +87,8 @@ alonabot test [directory]
 
 Compile and run offline preparation checks. Use `go test` for message and lifecycle validation; see [Testing](../tutorial/testing.md).
 
+It performs a real handshake, preparation, registration, activation and stop in a fresh temporary data directory and reports registered commands; any failed step exits non-zero.
+
 ### alonabot pack
 
 ```sh
@@ -90,6 +102,8 @@ Produce platform archives; see [Packaging and publishing](../advanced/publish.md
 | `--target` | Target such as `linux/amd64`; repeatable; defaults to host |
 | `--out` | Output directory |
 | `--tags` | Go build tags |
+
+Archives are named `<component ID>-<version>-<os>-<arch>.tar.gz`; a static-only WebUI produces one `<component ID>-<version>-any.tar.gz`.
 
 ## Management
 
