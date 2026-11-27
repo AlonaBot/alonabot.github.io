@@ -32,6 +32,7 @@ The `alonabot-plugin-todo/` project contains:
 | `plugin.yaml` | Plugin metadata, including name and version |
 | `plugin_config_schema.json` | Configuration field declarations |
 | `i18n/` (optional) | Localized user-facing text |
+| `assets/` (optional) | [Fonts, templates, and other resources packaged with the plugin](../advanced/publish.md#ship-runtime-assets) |
 | `go.mod` | Go module and dependencies |
 | `.gitignore` | Excludes `data/` and `bin/` |
 
