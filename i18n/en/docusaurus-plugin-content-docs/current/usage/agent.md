@@ -20,6 +20,14 @@ Supported APIs: OpenAI-compatible, OpenAI Responses, Anthropic Messages, Gemini,
 
 Save and enable Agent. Reload it if already running. Test with `/ask hello`.
 
+### Example: Connect an OpenAI-compatible service
+
+Suppose your provider gives you the endpoint `https://llm.example.com/v1` and the model ID `example-chat`. Substitute the values from your provider.
+
+1. Under **Providers**, add an OpenAI template. Use `example-provider` as **Name**, select `openai-compatible` as **Protocol**, enter the endpoint as **Base URL**, and enter the provider-issued **API key**.
+2. Under **Models**, add a model. Set **Name** to `example-chat-local`, **Provider** to `example-provider`, **Model ID** to `example-chat`, and **Model type** to `chat`.
+3. Set **Chat model** to `example-chat-local`. Save and enable or reload Agent, then send `/ask Explain a to-do list in one sentence` in chat.
+
 ## Conversation triggers
 
 | Trigger | Behavior |

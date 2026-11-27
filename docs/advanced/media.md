@@ -164,9 +164,34 @@ _, err := c.SendTo(session, message.Text("Hello"), sdk.Via("main"))
 
 媒体只能由上传它的插件读取。要交给另一个插件时，用 `media.Grant(c, token, 对方插件 ID, 会话...)` 签发一个新 token；新 token 只能和原来一样或更窄，不能扩大可用的会话或期限。
 
+例如，在当前会话授权 `alonabot-plugin-preview` 读取文件，再通过已有的 Service 把 `sharedToken` 交给它。授权失败时直接返回错误。
+
+```go
+sharedToken, err := media.Grant(c, token, "alonabot-plugin-preview", c.Session())
+if err != nil {
+    return err
+}
+```
+
 ## 读取合并转发
 
 收到合并转发的消息时，用 `c.ReadNodes(forward)` 展开（`forward` 是消息里的 `message.ForwardSegment`）。返回的每一项保留作者、时间和消息内容，可以继续嵌套；里面的图片和文件可以直接用 `media.Open(c, segment.Source)` 读取。后台任务里用 `sdk.ReadNodes(ctx, 会话, forward, sdk.Via(账号名))`。
+
+例如，从 Handler 展开已有的 `forward` 片段，把一级条目里的文本追加到 `lines`（`[]string`）。`Source` 可能为空，`Chain` 只在平台返回正文时含有消息片段。
+
+```go
+items, err := c.ReadNodes(forward)
+if err != nil {
+    return err
+}
+for _, item := range items {
+    for _, segment := range item.Chain {
+        if text, ok := segment.(message.TextSegment); ok {
+            lines = append(lines, text.Text)
+        }
+    }
+}
+```
 
 ## 发送 Markdown
 

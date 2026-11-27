@@ -80,12 +80,37 @@ Packaged files follow the component version. Write persistent files your plugin 
 
 Point `icon` in `plugin.yaml` at an SVG, PNG or WebP file in the project; the WebUI and store display it.
 
+For example, save the to-do plugin’s icon as `assets/icons/todo.svg` and add `icon` at the top level of its existing manifest. The path is relative to the project root where `plugin.yaml` lives.
+
+```text
+alonabot-plugin-todo/
+├── plugin.yaml
+└── assets/
+    └── icons/
+        └── todo.svg
+```
+
+```yaml title="plugin.yaml"
+icon: assets/icons/todo.svg
+```
+
+Run `alonabot check` to validate the path, then `alonabot pack .` to include `assets/icons/todo.svg` in the archive. After installation, look for the icon in the WebUI component list.
+
 ## Release notes
 
 Each version can ship release notes that the WebUI shows after installation. Use one of two layouts:
 
 - A root `CHANGELOG.md` with one section per version, such as `## [1.2.1] - 2026-11-17`; the date is optional.
 - One file per version and language, such as `changelog/1.2.1/en-US.md` and `changelog/1.2.1/zh-CN.md`. Directory names are versions without `v` and not newer than `version` in `plugin.yaml`; every version needs `en-US.md`.
+
+For a plugin whose `plugin.yaml` has `version: 1.0.0`, the per-language layout looks like this. Put `- Add a command to list pending items.` in `en-US.md` and `- 新增列出未完成待办的命令。` in `zh-CN.md`.
+
+```text
+changelog/
+└── 1.0.0/
+    ├── en-US.md
+    └── zh-CN.md
+```
 
 `alonabot check` validates the format and `pack` includes it unchanged.
 

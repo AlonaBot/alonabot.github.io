@@ -80,12 +80,37 @@ func readMenuFont(ctx context.Context, fallbackRoot string) ([]byte, error) {
 
 在 `plugin.yaml` 里用 `icon` 指向工程内的 SVG、PNG 或 WebP 文件，WebUI 和商店会显示它。
 
+例如，把待办插件的图标存为 `assets/icons/todo.svg`，然后在现有 manifest 的顶层加 `icon`。路径从 `plugin.yaml` 所在的工程根目录算起。
+
+```text
+alonabot-plugin-todo/
+├── plugin.yaml
+└── assets/
+    └── icons/
+        └── todo.svg
+```
+
+```yaml title="plugin.yaml"
+icon: assets/icons/todo.svg
+```
+
+用 `alonabot check` 检查路径，再运行 `alonabot pack .`。归档中会包含 `assets/icons/todo.svg`。安装后可在 WebUI 的组件列表查看图标。
+
 ## 更新说明
 
 每个版本可以附上更新说明，安装后在 WebUI 里展示。两种写法选一种：
 
 - 根目录的 `CHANGELOG.md`，每个版本一节，例如 `## [1.2.1] - 2026-11-17`，日期可以省略。
 - 按版本和语言分文件，例如 `changelog/1.2.1/en-US.md`、`changelog/1.2.1/zh-CN.md`。目录名是不带 `v` 的版本号，不能高于 `plugin.yaml` 的 `version`；每个版本都要有 `en-US.md`。
+
+例如，待办插件的 `plugin.yaml` 写了 `version: 1.0.0`，用分语言写法时可以这样组织。`en-US.md` 可以直接写一行 `- Add a command to list pending items.`，`zh-CN.md` 对应写 `- 新增列出未完成待办的命令。`
+
+```text
+changelog/
+└── 1.0.0/
+    ├── en-US.md
+    └── zh-CN.md
+```
 
 `alonabot check` 检查格式，`pack` 原样打包。
 

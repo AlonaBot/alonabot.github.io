@@ -183,6 +183,15 @@ import "github.com/AlonaBot/AlonaBot/sdk/tool"
 
 机器人主人可在 WebUI 的工具策略中按操作设置 `confirm` 或 `deny`。插件操作的策略与注册 Agent 工具时的 `tool.DefaultConfirm` 分别生效。
 
+例如，在清理已完成待办的 Handler 内先检查 `todo.clear`。`clearCompleted` 是插件自己的删除函数。要每次询问，先在 WebUI 将 `todo.clear` 设为 `confirm`。
+
+```go
+if err := tool.Confirm(c, "todo.clear", "Clear completed to-do items", tool.Destructive); err != nil {
+    return err
+}
+return clearCompleted(c)
+```
+
 ## 由管理员管理组件
 
 使用 `sdk/packages` 在活跃 Handler 中管理组件。Core 根据触发原始消息的 Actor 检查管理员身份。
@@ -191,6 +200,25 @@ import "github.com/AlonaBot/AlonaBot/sdk/tool"
 - `packages.Install(c, "owner/repo")` — 从 GitHub Release 安装组件，返回组件信息、受影响对象和错误。出现错误时也保留已返回的结果
 
 安装请求视为管理员已确认来源信任和同类组件替换。提供聊天命令时，在发起安装前向管理员展示仓库和预期替换的组件。
+
+例如，在 `New` 中注册 `/components`，供 Core 管理员查看组件 ID 与版本。示例使用 `sdk/packages` 和 Go 标准库的 `strings`。
+
+```go
+p.Command("components").Permission(sdk.Admin).Handle(func(c *sdk.Context) error {
+    installed, err := packages.List(c)
+    if err != nil {
+        return err
+    }
+    if len(installed) == 0 {
+        return c.Reply("No installed components.")
+    }
+    lines := make([]string, 0, len(installed))
+    for _, component := range installed {
+        lines = append(lines, component.ID+" "+component.Version)
+    }
+    return c.Reply(strings.Join(lines, "\n"))
+})
+```
 
 ## 测试
 
