@@ -164,12 +164,10 @@ import "github.com/AlonaBot/AlonaBot/sdk/tool"
 		Handle(query)
 ```
 
-| 参数 | 含义 |
-| --- | --- |
-| 说明文字 | 告诉 AI 这个工具做什么，用英文写 |
-| `tool.DefaultAllow` | AI 可以直接调用 |
-| `tool.DefaultConfirm` | 调用前先问用户，用户点确认后才执行 |
-| `.Effect(tool.ReadOnly)` | 只读数据。还有 `tool.Write`（会修改数据）和 `tool.Destructive`（会删除数据） |
+- 说明文字 — 告诉 AI 这个工具做什么，用英文写
+- `tool.DefaultAllow` — AI 可以直接调用
+- `tool.DefaultConfirm` — 调用前先问用户，用户点确认后才执行
+- `.Effect(tool.ReadOnly)` — 只读数据。还有 `tool.Write`（会修改数据）和 `tool.Destructive`（会删除数据）
 
 会修改或删除数据的工具应该用 `DefaultConfirm`。这些是缺省值，机器人主人可以在管理界面里调整。
 
@@ -177,11 +175,9 @@ import "github.com/AlonaBot/AlonaBot/sdk/tool"
 
 插件自己也可以按机器人主人设定的策略调用工具：
 
-| 函数 | 作用 |
-| --- | --- |
-| `tool.List(c)` | 列出当前会话可用的工具，`Effect` 是声明的类别 |
-| `tool.Invoke(c, "插件ID/服务名", args)` | 调用工具。策略为拒绝时返回 `PERMISSION_DENIED`；需要确认时框架先在当前会话发出带「允许」「拒绝」按钮的确认，拒绝返回 `PERMISSION_DENIED`，超时返回 `DEADLINE_EXCEEDED` |
-| `tool.Confirm(c, operation, summary, effect)` | 检查插件操作的策略。缺省为 `allow`，`confirm` 会展示 `summary` 并等待确认，`deny` 返回 `PERMISSION_DENIED`。返回 nil 后再执行操作 |
+- `tool.List(c)` — 列出当前会话可用的工具，`Effect` 是声明的类别
+- `tool.Invoke(c, "插件ID/服务名", args)` — 调用工具。策略为拒绝时返回 `PERMISSION_DENIED`；需要确认时框架先在当前会话发出带「允许」「拒绝」按钮的确认，拒绝返回 `PERMISSION_DENIED`，超时返回 `DEADLINE_EXCEEDED`
+- `tool.Confirm(c, operation, summary, effect)` — 检查插件操作的策略。缺省为 `allow`，`confirm` 会展示 `summary` 并等待确认，`deny` 返回 `PERMISSION_DENIED`。返回 nil 后再执行操作
 
 这三个函数都要在 Handler 或它的延续调用里使用。平台不支持按钮时，需要确认的调用返回 `UNSUPPORTED`。
 
@@ -189,12 +185,10 @@ import "github.com/AlonaBot/AlonaBot/sdk/tool"
 
 ## 由管理员管理组件
 
-使用 `github.com/AlonaBot/AlonaBot/sdk/packages` 在活跃 Handler 中管理组件。Core 根据触发原始消息的 Actor 检查管理员身份。
+使用 `sdk/packages` 在活跃 Handler 中管理组件。Core 根据触发原始消息的 Actor 检查管理员身份。
 
-| 函数 | 结果 |
-| --- | --- |
-| `packages.List(c)` | 按 ID 排序的已安装组件，含版本、角色、来源及启用状态 |
-| `packages.Install(c, "owner/repo")` | 从 GitHub Release 安装组件，返回组件信息、受影响对象和错误。出现错误时也保留已返回的结果 |
+- `packages.List(c)` — 按 ID 排序的已安装组件，含版本、角色、来源及启用状态
+- `packages.Install(c, "owner/repo")` — 从 GitHub Release 安装组件，返回组件信息、受影响对象和错误。出现错误时也保留已返回的结果
 
 安装请求视为管理员已确认来源信任和同类组件替换。提供聊天命令时，在发起安装前向管理员展示仓库和预期替换的组件。
 
