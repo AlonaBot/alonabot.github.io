@@ -24,7 +24,7 @@ Alternatively, save the token to a file and add `--token-file <file>`.
 alonabot install --source yourname/alonabot-plugin-todo --yes
 
 # Install a downloaded archive
-alonabot install ./alonabot-plugin-todo-0.3.0-linux-amd64.tar.gz --yes
+alonabot install ./alonabot-plugin-todo-1.0.0-linux-amd64.tar.gz --yes
 
 # List installed components
 alonabot list

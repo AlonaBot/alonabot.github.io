@@ -3,14 +3,14 @@ title: Quick start
 description: Install the CLI, create a plugin, and chat with it in the terminal.
 ---
 
-Create a plugin that responds to `/hello` with 0.3.0, then try it in the terminal without registering a platform account.
+Create a plugin that responds to `/hello` with 0.4.0, then try it in the terminal without registering a platform account.
 
 ## 1. Install
 
 Install [Go](https://go.dev/dl/) 1.27.1 or later, then install the `alonabot` command:
 
 ```sh
-go install github.com/AlonaBot/AlonaBot/cmd/alonabot@v0.3.0
+go install github.com/AlonaBot/AlonaBot/cmd/alonabot@v0.4.0
 ```
 
 Check the installation:

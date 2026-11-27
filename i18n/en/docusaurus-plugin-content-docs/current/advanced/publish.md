@@ -31,6 +31,12 @@ alonabot pack . --target linux/amd64 --target linux/arm64 --target darwin/arm64 
 
 Each platform gets an archive containing the executable, `plugin.yaml`, and resources. Omitting `--target` builds for the host platform. `darwin/amd64` is also supported. `--out` defaults to the project `bin/` and `--tags` passes Go build tags. A static-only WebUI produces a single platform-independent `any` archive.
 
+### Ship runtime assets
+
+Place fonts and other runtime assets in the plugin project's root `assets/` directory. `alonabot pack` preserves the directory structure. The files ship in the archive alongside the executable.
+
+Use `sdk.PackageDir(ctx)` from a Handler or lifecycle callback. For example, resolve `assets/fonts/menu.ttf` with `filepath.Join(dir, "assets", "fonts", "menu.ttf")`. Local `alonabot run`, `alonabot test`, and `plugintest` use the project directory. When you run Core directly in library mode, the function returns an empty string. Pass an explicit resource path or use your own assets in that case. Store files that must survive restarts in `sdk.PluginDataDir(ctx)`.
+
 ## Component icon
 
 Point `icon` in `plugin.yaml` at an SVG, PNG or WebP file in the project; the WebUI and store display it.

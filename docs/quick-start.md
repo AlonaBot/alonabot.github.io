@@ -3,14 +3,14 @@ title: 快速上手
 description: 安装 CLI，创建插件，在终端里和它对话。
 ---
 
-这一页用 0.3.0 创建一个能回复 `/hello` 的插件，在终端里直接和它对话，无需注册平台账号。
+这一页用 0.4.0 创建一个能回复 `/hello` 的插件，在终端里直接和它对话，无需注册平台账号。
 
 ## 1. 安装
 
 需要先装好 [Go](https://go.dev/dl/) 1.27.1 或更高版本，然后安装 `alonabot` 命令：
 
 ```sh
-go install github.com/AlonaBot/AlonaBot/cmd/alonabot@v0.3.0
+go install github.com/AlonaBot/AlonaBot/cmd/alonabot@v0.4.0
 ```
 
 确认装好了：

@@ -41,7 +41,7 @@ type CreatedPayload struct {
 | `c.Instance()` | 收到消息的机器人账号的名字 |
 | `c.Text()` | 消息里的文字 |
 | `c.Event()` | 完整的事件 |
-| `c.ChatType()`、`c.IsPrivate()`、`c.IsGroup()`、`c.IsChannel()` | 会话的类型 |
+| `c.ChatType()`、`c.IsPrivate()`、`c.IsGroup()`、`c.IsChannel()` | 当前事件或 Service 调用继承的会话类型。没有真实入站事件时为 `message.ChatUnspecified` |
 | `c.Has(权限)` | 用户有没有这个权限 |
 | `c.Config()` | 配置 |
 | `c.Logger()` | 日志 |

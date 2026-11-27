@@ -91,7 +91,7 @@ Sunny in Tokyo
 | `service.AccessAllowlist, "插件ID", ...` | 列出的插件 |
 | `service.AccessPublic` | 所有插件 |
 
-提供方的 Handler 里，`c.User()` 仍然是最初发消息的那个用户，所以可以照常用 `.Permission(...)` 限制。`c.Caller()` 是调用方的插件 ID。
+提供方的 Handler 里，`c.User()` 仍然是最初发消息的那个用户，所以可以照常用 `.Permission(...)` 限制。`c.Session()` 和 `c.ChatType()` 沿用原消息的会话和会话类型。没有真实入站事件时，`c.ChatType()` 返回 `message.ChatUnspecified`。`c.Caller()` 是调用方的插件 ID。
 
 ### 对方不在时
 
@@ -181,9 +181,22 @@ import "github.com/AlonaBot/AlonaBot/sdk/tool"
 | --- | --- |
 | `tool.List(c)` | 列出当前会话可用的工具，`Effect` 是声明的类别 |
 | `tool.Invoke(c, "插件ID/服务名", args)` | 调用工具。策略为拒绝时返回 `PERMISSION_DENIED`；需要确认时框架先在当前会话发出带「允许」「拒绝」按钮的确认，拒绝返回 `PERMISSION_DENIED`，超时返回 `DEADLINE_EXCEEDED` |
-| `tool.Confirm(c, operation, summary, effect)` | 插件自己执行敏感操作前请求许可，确认消息展示 `summary`；返回 nil 后再执行 |
+| `tool.Confirm(c, operation, summary, effect)` | 检查插件操作的策略。缺省为 `allow`，`confirm` 会展示 `summary` 并等待确认，`deny` 返回 `PERMISSION_DENIED`。返回 nil 后再执行操作 |
 
 这三个函数都要在 Handler 或它的延续调用里使用。平台不支持按钮时，需要确认的调用返回 `UNSUPPORTED`。
+
+机器人主人可在 WebUI 的工具策略中按操作设置 `confirm` 或 `deny`。插件操作的策略与注册 Agent 工具时的 `tool.DefaultConfirm` 分别生效。
+
+## 由管理员管理组件
+
+使用 `github.com/AlonaBot/AlonaBot/sdk/packages` 在活跃 Handler 中管理组件。Core 根据触发原始消息的 Actor 检查管理员身份。
+
+| 函数 | 结果 |
+| --- | --- |
+| `packages.List(c)` | 按 ID 排序的已安装组件，含版本、角色、来源及启用状态 |
+| `packages.Install(c, "owner/repo")` | 从 GitHub Release 安装组件，返回组件信息、受影响对象和错误。出现错误时也保留已返回的结果 |
+
+安装请求视为管理员已确认来源信任和同类组件替换。提供聊天命令时，在发起安装前向管理员展示仓库和预期替换的组件。
 
 ## 测试
 

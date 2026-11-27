@@ -186,6 +186,6 @@ An empty `ChatID` means the account as a whole is ready; a non-empty one means t
 
 ### List available commands
 
-For help-style plugins, `command.List(c)` returns the commands in effect for the current session: `entry.Path` and `entry.Aliases` are names, and `entry.Description` is the description in the current language. See the [official builtin plugin](https://github.com/AlonaBot/alonabot-plugin-builtin/blob/main/internal/builtin/handler/help.go) for a complete example.
+For help-style plugins, `command.List(c)` returns the commands in effect for the current session: `entry.Path` and `entry.Aliases` are names, and `entry.Description` is the command description in the current language. Group by `entry.PluginID`, display the localized `entry.PluginName` and `entry.PluginDescription`, and use `Name`, `Optional`, and `Variadic` from `entry.Params` to format usage. See the [official builtin plugin](https://github.com/AlonaBot/alonabot-plugin-builtin/blob/main/internal/builtin/handler/help.go) for a complete example.
 
 Next: [Replying to messages](messages.md).

@@ -42,7 +42,7 @@ cd alonabot-plugin-todo
 ```yaml title="plugin.yaml"
 id: alonabot-plugin-todo
 name: alonabot-plugin-todo
-version: 0.3.0
+version: 0.1.0
 source: github.com/CHANGE-ME/CHANGE-ME
 role: plugin
 ```
