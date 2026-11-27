@@ -164,12 +164,10 @@ import "github.com/AlonaBot/AlonaBot/sdk/tool"
 		Handle(query)
 ```
 
-| Argument | Meaning |
-| --- | --- |
-| Description | Explain the tool's purpose to the model in English |
-| `tool.DefaultAllow` | Allow direct model calls |
-| `tool.DefaultConfirm` | Ask the user to confirm before execution |
-| `.Effect(tool.ReadOnly)` | Read-only; alternatives are `tool.Write` for changes and `tool.Destructive` for deletion |
+- Description — Explain the tool's purpose to the model in English
+- `tool.DefaultAllow` — Allow direct model calls
+- `tool.DefaultConfirm` — Ask the user to confirm before execution
+- `.Effect(tool.ReadOnly)` — Read-only; alternatives are `tool.Write` for changes and `tool.Destructive` for deletion
 
 Use `DefaultConfirm` for tools that modify or delete data. Owners can change these defaults in management.
 
@@ -177,11 +175,9 @@ Use `DefaultConfirm` for tools that modify or delete data. Owners can change the
 
 Plugins can also call tools under the policy the owner set:
 
-| Function | Purpose |
-| --- | --- |
-| `tool.List(c)` | Tools available in the current session; `Effect` is the declared category |
-| `tool.Invoke(c, "pluginID/service", args)` | Call a tool. A deny policy returns `PERMISSION_DENIED`; when confirmation is required, the framework first posts a confirmation with Allow and Deny buttons in the current session, and a denial returns `PERMISSION_DENIED` while a timeout returns `DEADLINE_EXCEEDED` |
-| `tool.Confirm(c, operation, summary, effect)` | Check the policy for a plugin operation. The default is `allow`. `confirm` shows `summary` and waits for a decision. `deny` returns `PERMISSION_DENIED`. Proceed when the call returns nil |
+- `tool.List(c)` — Tools available in the current session; `Effect` is the declared category
+- `tool.Invoke(c, "pluginID/service", args)` — Call a tool. A deny policy returns `PERMISSION_DENIED`; when confirmation is required, the framework first posts a confirmation with Allow and Deny buttons in the current session, and a denial returns `PERMISSION_DENIED` while a timeout returns `DEADLINE_EXCEEDED`
+- `tool.Confirm(c, operation, summary, effect)` — Check the policy for a plugin operation. The default is `allow`. `confirm` shows `summary` and waits for a decision. `deny` returns `PERMISSION_DENIED`. Proceed when the call returns nil
 
 All three must run inside a Handler or its continuation. When the platform has no buttons, calls that need confirmation return `UNSUPPORTED`.
 
@@ -189,12 +185,10 @@ Owners can set an operation to `confirm` or `deny` in WebUI tool policies. An op
 
 ## Manage components as an administrator
 
-Import `github.com/AlonaBot/AlonaBot/sdk/packages` and call it from an active Handler. Core checks whether the actor who sent the original message is a Core administrator.
+Call `sdk/packages` from an active Handler. Core checks whether the actor who sent the original message is a Core administrator.
 
-| Function | Result |
-| --- | --- |
-| `packages.List(c)` | Installed components sorted by ID, including version, role, source, and enabled state |
-| `packages.Install(c, "owner/repo")` | Install a component from GitHub Releases and return component information, affected items, and any error. Preserve returned results even when an error is present |
+- `packages.List(c)` — Installed components sorted by ID, including version, role, source, and enabled state
+- `packages.Install(c, "owner/repo")` — Install a component from GitHub Releases and return component information, affected items, and any error. Preserve returned results even when an error is present
 
 The install request counts as the administrator’s consent to trust the source and replace a component of the same kind. If you expose this as a chat command, show the administrator the repository and the component that may be replaced before submitting the install.
 
