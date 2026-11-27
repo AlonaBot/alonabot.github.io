@@ -29,7 +29,7 @@ Compose uses `ghcr.io/alonabot/alonabot:0.3.0`, supports Linux amd64 and arm64, 
 
 The port is published only on host `127.0.0.1`. Keep it that way until you have claimed and confirmed the management token locally: before confirmation, anyone who can reach the port can claim the token and gain full management access.
 
-WebUI is enabled. Configure a Provider and model before enabling Agent. Telegram and OneBot 11 Adapters install automatically after account configuration and a Core restart. Install the help plugin [separately](#install-official-components).
+WebUI is enabled. Configure a Provider and model before enabling Agent. Telegram and OneBot 11 Adapters install automatically after account configuration and a Core restart. Install the builtin plugin [separately](#install-official-components).
 
 To supply tokens through environment variables, add `environment` to the Compose service and reference `${VARIABLE}` in settings; see [Settings](settings.md). The image includes CA certificates. For MCP stdio services requiring a shell, Node, or Python, use a custom image with those runtimes.
 

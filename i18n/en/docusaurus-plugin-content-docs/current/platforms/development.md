@@ -63,7 +63,7 @@ Configure a proxy in `core_config.json` and let the account use it:
 
 ## 4. Set yourself as an administrator
 
-Commands with `sdk.Admin` require a bot administrator. Install and enable the help plugin following [Telegram setup](telegram.md#connect), then send `/whoami` on Telegram to get your user identifier:
+Commands with `sdk.Admin` require a bot administrator. Install and enable the builtin plugin following [Telegram setup](telegram.md#connect), then send `/whoami` on Telegram to get your user identifier:
 
 ```text
 telegram:123456789

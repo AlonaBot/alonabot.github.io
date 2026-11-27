@@ -63,7 +63,7 @@ Core 启动时发现设置里有 Telegram 账号，会自动启用对应的 Adap
 
 ## 4. 把自己设为管理员
 
-用了 `sdk.Admin` 的命令只有机器人管理员能用。先按[Telegram 接入说明](telegram.md#接入)安装并启用 help 插件，再在 Telegram 里发 `/whoami`，机器人会回复你的用户标识：
+用了 `sdk.Admin` 的命令只有机器人管理员能用。先按[Telegram 接入说明](telegram.md#接入)安装并启用 builtin 插件，再在 Telegram 里发 `/whoami`，机器人会回复你的用户标识：
 
 ```text
 telegram:123456789

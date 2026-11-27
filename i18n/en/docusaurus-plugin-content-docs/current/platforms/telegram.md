@@ -7,11 +7,11 @@ description: Connect a Telegram bot.
 
 After configuring an account, Core installs and enables the official Telegram Adapter at startup. First use requires internet access. [Reinstall manually](../usage/install.md#install-official-components) if you previously uninstalled it.
 
-Use `/help` to check the connection. First [configure the management token](../usage/manage.md#preparation) for the running Core, then install and enable the help plugin:
+Use `/help` to check the connection. First [configure the management token](../usage/manage.md#preparation) for the running Core, then install and enable the builtin plugin:
 
 ```sh
-alonabot install --source AlonaBot/alonabot-plugin-help --yes
-alonabot enable alonabot-plugin-help-official
+alonabot install --source AlonaBot/alonabot-plugin-builtin --yes
+alonabot enable alonabot-plugin-builtin-official
 ```
 
 1. Find [@BotFather](https://t.me/BotFather) on Telegram and send `/newbot` to create a bot and obtain a token.
