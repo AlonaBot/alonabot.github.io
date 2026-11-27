@@ -1,11 +1,11 @@
 ---
 title: Installation
-description: Install AlonaBot 0.3.0, set up management, and run it as a service.
+description: Install AlonaBot 0.4.0, set up management, and run it as a service.
 ---
 
 For deployment, use **Docker Compose**: WebUI and Agent are preinstalled on first startup. Configure bot accounts in WebUI, then restart Core to install and enable the official Adapter automatically. For plugin development, start with [Quick start](../quick-start.md).
 
-The 0.3.0 platform archives and installation script provide Core. Install other components as needed.
+The 0.4.0 platform archives and installation script provide Core. Install other components as needed.
 
 | Method | Suitable for | Includes |
 | --- | --- | --- |
@@ -15,17 +15,17 @@ The 0.3.0 platform archives and installation script provide Core. Install other 
 
 ## Docker
 
-Download the Compose file for 0.3.0:
+Download the Compose file for 0.4.0:
 
 ```sh
-curl --fail --location -o docker-compose.yml https://raw.githubusercontent.com/AlonaBot/AlonaBot/v0.3.0/docker-compose.yml
+curl --fail --location -o docker-compose.yml https://raw.githubusercontent.com/AlonaBot/AlonaBot/v0.4.0/docker-compose.yml
 docker compose up -d
 docker compose exec alonabot alonabot admin-token show --data-dir /data
 ```
 
 Open `http://127.0.0.1:7650`, copy the displayed token, and confirm you have saved it to sign in. The third command also reads the token.
 
-Compose uses `ghcr.io/alonabot/alonabot:0.3.0`, supports Linux amd64 and arm64, and runs as UID/GID `10001:10001`. Data is stored in a named volume; retain the same volume when replacing the container.
+Compose uses `ghcr.io/alonabot/alonabot:0.4.0`, supports Linux amd64 and arm64, and runs as UID/GID `10001:10001`. Data is stored in a named volume; retain the same volume when replacing the container.
 
 The port is published only on host `127.0.0.1`. Keep it that way until you have claimed and confirmed the management token locally: before confirmation, anyone who can reach the port can claim the token and gain full management access.
 
@@ -41,10 +41,10 @@ Supports Linux with systemd and the current user's macOS login session, on amd64
 curl --fail --location -o install.sh https://raw.githubusercontent.com/AlonaBot/AlonaBot/main/deploy/install.sh
 
 # Linux
-sudo sh install.sh --version 0.3.0
+sudo sh install.sh --version 0.4.0
 
 # macOS
-sh install.sh --version 0.3.0
+sh install.sh --version 0.4.0
 ```
 
 The script downloads and verifies the archive, registers a service, and starts it. First startup saves management credentials. Read them with the commands below.
@@ -63,7 +63,7 @@ With Core running, [install official components](#install-official-components) i
 
 ## Manual
 
-Download the archive for your system and architecture from the [0.3.0 Release](https://github.com/AlonaBot/AlonaBot/releases/tag/v0.3.0):
+Download the archive for your system and architecture from the [0.4.0 Release](https://github.com/AlonaBot/AlonaBot/releases/tag/v0.4.0):
 
 | System | Architecture | Format |
 | --- | --- | --- |

@@ -186,6 +186,6 @@ p.On(sdk.CommandMenuReady).Handle(func(c *sdk.Context, ready *message.CommandMen
 
 ### 列出可用的命令
 
-写帮助类插件时，用 `command.List(c)` 取当前会话里生效的命令：`entry.Path`、`entry.Aliases` 是命令名，`entry.Description` 是当前语言的说明。完整例子见[官方 builtin 插件](https://github.com/AlonaBot/alonabot-plugin-builtin/blob/main/internal/builtin/handler/help.go)。
+写帮助类插件时，用 `command.List(c)` 取当前会话里生效的命令：`entry.Path`、`entry.Aliases` 是命令名，`entry.Description` 是当前语言的命令说明。按 `entry.PluginID` 分组，用本地化的 `entry.PluginName` 和 `entry.PluginDescription` 展示插件，再用 `entry.Params` 中的 `Name`、`Optional` 和 `Variadic` 生成参数用法。完整例子见[官方 builtin 插件](https://github.com/AlonaBot/alonabot-plugin-builtin/blob/main/internal/builtin/handler/help.go)。
 
 下一页：[回复消息](messages.md)。

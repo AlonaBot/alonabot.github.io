@@ -8,7 +8,7 @@ const repoUrl = "https://github.com/AlonaBot/AlonaBot";
 const docsRepoUrl = "https://github.com/AlonaBot/alonabot.github.io";
 
 // 当前文档对应的框架版本。
-const currentVersion = "0.3.0";
+const currentVersion = "0.4.0";
 
 // 构建时按语言选择站点标语。
 const isEnglish = process.env.DOCUSAURUS_CURRENT_LOCALE === "en";

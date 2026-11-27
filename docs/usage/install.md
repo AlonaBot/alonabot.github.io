@@ -1,11 +1,11 @@
 ---
 title: 安装
-description: 安装 AlonaBot 0.3.0，配置管理界面并长期运行。
+description: 安装 AlonaBot 0.4.0，配置管理界面并长期运行。
 ---
 
 想直接部署机器人，建议使用 **Docker Compose**：首次启动已预装 WebUI 与 Agent，打开管理界面后配置机器人账号，重启 Core 即可自动安装并启用对应的官方 Adapter。想开发插件，可以从[快速上手](../quick-start.md)开始。
 
-0.3.0 的平台归档和安装脚本提供 Core，其他组件按需安装。
+0.4.0 的平台归档和安装脚本提供 Core，其他组件按需安装。
 
 | 方式 | 适合 | 包含内容 |
 | --- | --- | --- |
@@ -15,17 +15,17 @@ description: 安装 AlonaBot 0.3.0，配置管理界面并长期运行。
 
 ## Docker
 
-下载 0.3.0 对应的 Compose 文件：
+下载 0.4.0 对应的 Compose 文件：
 
 ```sh
-curl --fail --location -o docker-compose.yml https://raw.githubusercontent.com/AlonaBot/AlonaBot/v0.3.0/docker-compose.yml
+curl --fail --location -o docker-compose.yml https://raw.githubusercontent.com/AlonaBot/AlonaBot/v0.4.0/docker-compose.yml
 docker compose up -d
 docker compose exec alonabot alonabot admin-token show --data-dir /data
 ```
 
 打开 `http://127.0.0.1:7650`，复制界面显示的 token 并确认保存，即可登录。第三条命令也可读取 token。
 
-Compose 使用 `ghcr.io/alonabot/alonabot:0.3.0`，支持 Linux amd64 和 arm64，以 UID/GID `10001:10001` 运行。数据保存在命名卷中；更新容器时保留同一个卷。
+Compose 使用 `ghcr.io/alonabot/alonabot:0.4.0`，支持 Linux amd64 和 arm64，以 UID/GID `10001:10001` 运行。数据保存在命名卷中；更新容器时保留同一个卷。
 
 端口只发布到本机 `127.0.0.1`。在本机领取并确认管理 token 之前，不要改成 `0.0.0.0` 或其他对外地址：确认前，能访问这个端口的人都能领取 token 并取得完整管理权限。
 
@@ -41,10 +41,10 @@ WebUI 已启用，Agent 需先配置 Provider 和模型再启用。Telegram、On
 curl --fail --location -o install.sh https://raw.githubusercontent.com/AlonaBot/AlonaBot/main/deploy/install.sh
 
 # Linux
-sudo sh install.sh --version 0.3.0
+sudo sh install.sh --version 0.4.0
 
 # macOS
-sh install.sh --version 0.3.0
+sh install.sh --version 0.4.0
 ```
 
 脚本下载安装包、校验完整性、注册服务并启动。首次启动会保存管理凭据。按下表命令读取。
@@ -63,7 +63,7 @@ Core 启动后，在另一终端[安装官方组件](#安装官方组件)。
 
 ## 手动
 
-从 [0.3.0 Release](https://github.com/AlonaBot/AlonaBot/releases/tag/v0.3.0) 下载对应系统和架构的归档：
+从 [0.4.0 Release](https://github.com/AlonaBot/AlonaBot/releases/tag/v0.4.0) 下载对应系统和架构的归档：
 
 | 系统 | 架构 | 格式 |
 | --- | --- | --- |

@@ -41,7 +41,7 @@ type CreatedPayload struct {
 | `c.Instance()` | Receiving bot account name |
 | `c.Text()` | Message text |
 | `c.Event()` | Full event |
-| `c.ChatType()`, `c.IsPrivate()`, `c.IsGroup()`, `c.IsChannel()` | Chat type |
+| `c.ChatType()`, `c.IsPrivate()`, `c.IsGroup()`, `c.IsChannel()` | Chat type from the current event or inherited by a Service call. Without an inbound event, it is `message.ChatUnspecified` |
 | `c.Has(permission)` | Permission check |
 | `c.Config()` | Configuration |
 | `c.Logger()` | Logger |

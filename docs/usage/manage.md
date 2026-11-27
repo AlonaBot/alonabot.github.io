@@ -24,7 +24,7 @@ set -gx ALONABOT_ADMIN_TOKEN '你的管理 token'
 alonabot install --source yourname/alonabot-plugin-todo --yes
 
 # 从下载好的文件安装
-alonabot install ./alonabot-plugin-todo-0.3.0-linux-amd64.tar.gz --yes
+alonabot install ./alonabot-plugin-todo-1.0.0-linux-amd64.tar.gz --yes
 
 # 看装了什么
 alonabot list

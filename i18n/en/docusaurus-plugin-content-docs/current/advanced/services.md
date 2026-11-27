@@ -91,7 +91,7 @@ When the input does not match the declaration, the provider's Handler does not r
 | `service.AccessAllowlist, "plugin-ID", ...` | Listed plugins |
 | `service.AccessPublic` | All plugins |
 
-In the provider Handler, `c.User()` remains the original sender, so `.Permission(...)` applies normally. `c.Caller()` identifies the calling plugin.
+In the provider Handler, `c.User()` remains the original sender, so `.Permission(...)` applies normally. `c.Session()` and `c.ChatType()` preserve the original message’s session and chat type. Without an inbound event, `c.ChatType()` returns `message.ChatUnspecified`. `c.Caller()` identifies the calling plugin.
 
 ### Handle an unavailable provider
 
@@ -181,9 +181,22 @@ Plugins can also call tools under the policy the owner set:
 | --- | --- |
 | `tool.List(c)` | Tools available in the current session; `Effect` is the declared category |
 | `tool.Invoke(c, "pluginID/service", args)` | Call a tool. A deny policy returns `PERMISSION_DENIED`; when confirmation is required, the framework first posts a confirmation with Allow and Deny buttons in the current session, and a denial returns `PERMISSION_DENIED` while a timeout returns `DEADLINE_EXCEEDED` |
-| `tool.Confirm(c, operation, summary, effect)` | Ask permission before the plugin performs a sensitive operation itself; the confirmation shows `summary`, and you proceed after it returns nil |
+| `tool.Confirm(c, operation, summary, effect)` | Check the policy for a plugin operation. The default is `allow`. `confirm` shows `summary` and waits for a decision. `deny` returns `PERMISSION_DENIED`. Proceed when the call returns nil |
 
 All three must run inside a Handler or its continuation. When the platform has no buttons, calls that need confirmation return `UNSUPPORTED`.
+
+Owners can set an operation to `confirm` or `deny` in WebUI tool policies. An operation policy applies independently of `tool.DefaultConfirm` on a registered Agent tool.
+
+## Manage components as an administrator
+
+Import `github.com/AlonaBot/AlonaBot/sdk/packages` and call it from an active Handler. Core checks whether the actor who sent the original message is a Core administrator.
+
+| Function | Result |
+| --- | --- |
+| `packages.List(c)` | Installed components sorted by ID, including version, role, source, and enabled state |
+| `packages.Install(c, "owner/repo")` | Install a component from GitHub Releases and return component information, affected items, and any error. Preserve returned results even when an error is present |
+
+The install request counts as the administrator’s consent to trust the source and replace a component of the same kind. If you expose this as a chat command, show the administrator the repository and the component that may be replaced before submitting the install.
 
 ## Testing
 

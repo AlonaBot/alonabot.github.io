@@ -31,6 +31,12 @@ alonabot pack . --target linux/amd64 --target linux/arm64 --target darwin/arm64 
 
 每个平台生成一个归档，包含程序、`plugin.yaml` 与组件资源。不指定 `--target` 时构建本机平台；另支持 `darwin/amd64`。`--out` 缺省为工程的 `bin/`，`--tags` 传入 Go 构建标签。只有静态资源的 WebUI 只生成一个通用的 `any` 归档。
 
+### 随包分发资源
+
+把字体等运行时资源放在插件工程根目录的 `assets/`。`alonabot pack` 会保留原目录结构。文件随归档安装，保持在可执行文件之外。
+
+在 Handler 或生命周期回调中，用 `sdk.PackageDir(ctx)` 取得当前包目录。例如，读取 `assets/fonts/menu.ttf` 时用 `filepath.Join(dir, "assets", "fonts", "menu.ttf")`。本地 `alonabot run`、`alonabot test` 和 `plugintest` 使用工程目录。直接使用库模式时返回空串，此时请显式提供资源路径或使用自备资源。需要跨重启保存的文件放在 `sdk.PluginDataDir(ctx)`。
+
 ## 组件图标
 
 在 `plugin.yaml` 里用 `icon` 指向工程内的 SVG、PNG 或 WebP 文件，WebUI 和商店会显示它。
