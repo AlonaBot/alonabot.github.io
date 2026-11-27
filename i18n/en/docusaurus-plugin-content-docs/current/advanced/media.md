@@ -164,9 +164,34 @@ Owners can restrict accounts available for proactive sends. Replies to the curre
 
 Only the plugin that uploaded a media object can read it. To hand it to another plugin, issue a new token with `media.Grant(c, token, otherPluginID, sessions...)`; the new token can only be equal or narrower, never wider in sessions or lifetime.
 
+For example, grant `alonabot-plugin-preview` access in the current session, then pass `sharedToken` to it through an existing Service. Return the error if the grant fails.
+
+```go
+sharedToken, err := media.Grant(c, token, "alonabot-plugin-preview", c.Session())
+if err != nil {
+    return err
+}
+```
+
 ## Read forwarded messages
 
 To expand a forwarded message, call `c.ReadNodes(forward)` with the `message.ForwardSegment` from the message. Each item keeps its author, time and content and may nest further; images and files inside can be read directly with `media.Open(c, segment.Source)`. In background tasks use `sdk.ReadNodes(ctx, session, forward, sdk.Via(account))`.
+
+For example, expand the `forward` segment from a Handler and append the top-level text to `lines` (`[]string`). `Source` can be nil, and `Chain` contains segments when the platform returns the message body.
+
+```go
+items, err := c.ReadNodes(forward)
+if err != nil {
+    return err
+}
+for _, item := range items {
+    for _, segment := range item.Chain {
+        if text, ok := segment.(message.TextSegment); ok {
+            lines = append(lines, text.Text)
+        }
+    }
+}
+```
 
 ## Send Markdown
 

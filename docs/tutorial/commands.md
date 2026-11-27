@@ -188,4 +188,18 @@ p.On(sdk.CommandMenuReady).Handle(func(c *sdk.Context, ready *message.CommandMen
 
 写帮助类插件时，用 `command.List(c)` 取当前会话里生效的命令：`entry.Path`、`entry.Aliases` 是命令名，`entry.Description` 是当前语言的命令说明。按 `entry.PluginID` 分组，用本地化的 `entry.PluginName` 和 `entry.PluginDescription` 展示插件，再用 `entry.Params` 中的 `Name`、`Optional` 和 `Variadic` 生成参数用法。完整例子见[官方 builtin 插件](https://github.com/AlonaBot/alonabot-plugin-builtin/blob/main/internal/builtin/handler/help.go)。
 
+例如，在已有的帮助 Handler 中，把待办插件的命令名和说明追加到 `lines`（`[]string`）。用 `strings.Join` 保留多级命令各词之间的空格。
+
+```go
+entries, err := command.List(c)
+if err != nil {
+    return err
+}
+for _, entry := range entries {
+    if entry.PluginID == "alonabot-plugin-todo" {
+        lines = append(lines, strings.Join(entry.Path, " ")+" — "+entry.Description)
+    }
+}
+```
+
 下一页：[回复消息](messages.md)。

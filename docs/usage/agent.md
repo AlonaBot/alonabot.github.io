@@ -20,6 +20,14 @@ Agent 是官方的 AI 对话组件。Docker Compose 已预装；使用归档或�
 
 保存配置后启用 Agent；已经运行的 Agent 需要重新加载。发 `/ask 你好` 测试。
 
+### 示例：接入 OpenAI 兼容服务
+
+假设服务商提供的接口地址是 `https://llm.example.com/v1`，模型 ID 是 `example-chat`。实际配置时替换成服务商提供的值。
+
+1. 在 **Providers** 添加 OpenAI 模板。**Name** 填 `example-provider`，**Protocol** 选 `openai-compatible`，**Base URL** 填接口地址，**API key** 填服务商发放的密钥。
+2. 在 **Models** 添加模型。**Name** 填 `example-chat-local`，**Provider** 选 `example-provider`，**Model ID** 填 `example-chat`，**Model type** 选 `chat`。
+3. 把 **Chat model** 设为 `example-chat-local`。保存并启用或重新加载 Agent 后，在聊天里发送 `/ask 用一句话解释什么是待办清单`。
+
 ## 怎么触发
 
 | 方式 | 说明 |

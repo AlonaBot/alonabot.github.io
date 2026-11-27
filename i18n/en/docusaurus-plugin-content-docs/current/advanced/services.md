@@ -183,6 +183,15 @@ All three must run inside a Handler or its continuation. When the platform has n
 
 Owners can set an operation to `confirm` or `deny` in WebUI tool policies. An operation policy applies independently of `tool.DefaultConfirm` on a registered Agent tool.
 
+For example, check the `todo.clear` policy from the Handler before clearing completed items. `clearCompleted` is the plugin’s own delete function. Set `todo.clear` to `confirm` in WebUI to prompt before each execution.
+
+```go
+if err := tool.Confirm(c, "todo.clear", "Clear completed to-do items", tool.Destructive); err != nil {
+    return err
+}
+return clearCompleted(c)
+```
+
 ## Manage components as an administrator
 
 Call `sdk/packages` from an active Handler. Core checks whether the actor who sent the original message is a Core administrator.
@@ -191,6 +200,25 @@ Call `sdk/packages` from an active Handler. Core checks whether the actor who se
 - `packages.Install(c, "owner/repo")` — Install a component from GitHub Releases and return component information, affected items, and any error. Preserve returned results even when an error is present
 
 The install request counts as the administrator’s consent to trust the source and replace a component of the same kind. If you expose this as a chat command, show the administrator the repository and the component that may be replaced before submitting the install.
+
+For example, register `/components` in `New` so Core administrators can view component IDs and versions. This uses `sdk/packages` and Go’s standard `strings` package.
+
+```go
+p.Command("components").Permission(sdk.Admin).Handle(func(c *sdk.Context) error {
+    installed, err := packages.List(c)
+    if err != nil {
+        return err
+    }
+    if len(installed) == 0 {
+        return c.Reply("No installed components.")
+    }
+    lines := make([]string, 0, len(installed))
+    for _, component := range installed {
+        lines = append(lines, component.ID+" "+component.Version)
+    }
+    return c.Reply(strings.Join(lines, "\n"))
+})
+```
 
 ## Testing
 
