@@ -32,6 +32,7 @@ cd alonabot-plugin-todo
 | `plugin.yaml` | 插件的名字、版本等信息 |
 | `plugin_config_schema.json` | 配置项声明 |
 | `i18n/`（按需添加） | 给用户看的本地化文字 |
+| `assets/`（按需添加） | [随插件打包的字体、模板等资源](../advanced/publish.md#随包分发资源) |
 | `go.mod` | Go module 与依赖 |
 | `.gitignore` | 忽略 `data/` 和 `bin/` |
 

@@ -31,11 +31,50 @@ alonabot pack . --target linux/amd64 --target linux/arm64 --target darwin/arm64 
 
 每个平台生成一个归档，包含程序、`plugin.yaml` 与组件资源。不指定 `--target` 时构建本机平台；另支持 `darwin/amd64`。`--out` 缺省为工程的 `bin/`，`--tags` 传入 Go 构建标签。只有静态资源的 WebUI 只生成一个通用的 `any` 归档。
 
-### 随包分发资源
+## 随包分发资源
 
-把字体等运行时资源放在插件工程根目录的 `assets/`。`alonabot pack` 会保留原目录结构。文件随归档安装，保持在可执行文件之外。
+把字体、模板等随版本发布的文件放在插件工程根目录的 `assets/`。例如，待办插件的菜单字体放在 `assets/fonts/menu.ttf`。
 
-在 Handler 或生命周期回调中，用 `sdk.PackageDir(ctx)` 取得当前包目录。例如，读取 `assets/fonts/menu.ttf` 时用 `filepath.Join(dir, "assets", "fonts", "menu.ttf")`。本地 `alonabot run`、`alonabot test` 和 `plugintest` 使用工程目录。直接使用库模式时返回空串，此时请显式提供资源路径或使用自备资源。需要跨重启保存的文件放在 `sdk.PluginDataDir(ctx)`。
+```text title="打包前 · 插件工程"
+alonabot-plugin-todo/
+├── go.mod
+├── plugin.go
+├── plugin.yaml
+└── assets/
+    └── fonts/
+        └── menu.ttf
+```
+
+`alonabot pack` 会生成可执行文件，并把 `assets/` 原样放进归档。解包后，字体相对于包根目录的路径与工程内相同。
+
+```text title="解包后 · 插件包根目录（节选，Linux）"
+.
+├── component
+├── plugin.yaml
+└── assets/
+    └── fonts/
+        └── menu.ttf
+```
+
+### 在插件中读取
+
+在 Handler 或 Session 就绪后的生命周期回调中传入当前 `ctx`。使用 Go 标准库的 `os` 和 `path/filepath`，以 `sdk.PackageDir(ctx)` 为路径起点。
+
+```go
+func readMenuFont(ctx context.Context, fallbackRoot string) ([]byte, error) {
+    root := sdk.PackageDir(ctx)
+    if root == "" {
+        root = fallbackRoot
+    }
+    return os.ReadFile(filepath.Join(root, "assets", "fonts", "menu.ttf"))
+}
+```
+
+- **已安装的插件**使用当前包根目录。
+- **`alonabot run`、`alonabot test` 和 `plugintest`** 使用插件工程目录。
+- **直接嵌入 Core 的库模式**返回空串。由宿主传入含 `assets/` 的目录作为 `fallbackRoot`。
+
+随包文件跟着组件版本走。插件运行时生成的持久文件写入 [`sdk.PluginDataDir(ctx)`](../tutorial/storage.md)，这样重启后仍可读取。
 
 ## 组件图标
 

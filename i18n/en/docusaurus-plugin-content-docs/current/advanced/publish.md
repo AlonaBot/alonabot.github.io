@@ -31,11 +31,50 @@ alonabot pack . --target linux/amd64 --target linux/arm64 --target darwin/arm64 
 
 Each platform gets an archive containing the executable, `plugin.yaml`, and resources. Omitting `--target` builds for the host platform. `darwin/amd64` is also supported. `--out` defaults to the project `bin/` and `--tags` passes Go build tags. A static-only WebUI produces a single platform-independent `any` archive.
 
-### Ship runtime assets
+## Ship runtime assets
 
-Place fonts and other runtime assets in the plugin project's root `assets/` directory. `alonabot pack` preserves the directory structure. The files ship in the archive alongside the executable.
+Put fonts, templates, and other files you release with the plugin in the project’s root `assets/` directory. For example, put the to-do plugin’s menu font at `assets/fonts/menu.ttf`.
 
-Use `sdk.PackageDir(ctx)` from a Handler or lifecycle callback. For example, resolve `assets/fonts/menu.ttf` with `filepath.Join(dir, "assets", "fonts", "menu.ttf")`. Local `alonabot run`, `alonabot test`, and `plugintest` use the project directory. When you run Core directly in library mode, the function returns an empty string. Pass an explicit resource path or use your own assets in that case. Store files that must survive restarts in `sdk.PluginDataDir(ctx)`.
+```text title="Before packaging · Plugin project"
+alonabot-plugin-todo/
+├── go.mod
+├── plugin.go
+├── plugin.yaml
+└── assets/
+    └── fonts/
+        └── menu.ttf
+```
+
+`alonabot pack` generates the executable and copies `assets/` into the archive unchanged. After extraction, the font has the same path relative to the package root as it had in the project.
+
+```text title="After extraction · Plugin package root (excerpt, Linux)"
+.
+├── component
+├── plugin.yaml
+└── assets/
+    └── fonts/
+        └── menu.ttf
+```
+
+### Read assets from the plugin
+
+Pass the current `ctx` from a Handler or from a lifecycle callback once the Session is ready. Use the standard library’s `os` and `path/filepath` packages to read the file relative to `sdk.PackageDir(ctx)`.
+
+```go
+func readMenuFont(ctx context.Context, fallbackRoot string) ([]byte, error) {
+    root := sdk.PackageDir(ctx)
+    if root == "" {
+        root = fallbackRoot
+    }
+    return os.ReadFile(filepath.Join(root, "assets", "fonts", "menu.ttf"))
+}
+```
+
+- **Installed plugins** use the current package root.
+- **`alonabot run`, `alonabot test`, and `plugintest`** use the plugin project directory.
+- **Core embedded directly as a library** returns an empty string. Have the host pass the directory containing `assets/` as `fallbackRoot`.
+
+Packaged files follow the component version. Write persistent files your plugin creates at runtime to [`sdk.PluginDataDir(ctx)`](../tutorial/storage.md) so they remain available after a restart.
 
 ## Component icon
 
