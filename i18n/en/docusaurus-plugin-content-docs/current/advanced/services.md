@@ -185,7 +185,7 @@ Owners can set an operation to `confirm` or `deny` in WebUI tool policies. An op
 
 ## Manage components as an administrator
 
-Import `sdk/packages` and call it from an active Handler. Core checks whether the actor who sent the original message is a Core administrator.
+Call `sdk/packages` from an active Handler. Core checks whether the actor who sent the original message is a Core administrator.
 
 - `packages.List(c)` — Installed components sorted by ID, including version, role, source, and enabled state
 - `packages.Install(c, "owner/repo")` — Install a component from GitHub Releases and return component information, affected items, and any error. Preserve returned results even when an error is present
